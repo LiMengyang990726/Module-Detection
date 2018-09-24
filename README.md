@@ -11,9 +11,9 @@
                        1. Classic model
                        2. Barabasi-ALbert Model
                        3. Duplication-Divergence Model
-* **Modularity**: The original formula was introducted in this [paper](https://arxiv.org/pdf/cond-mat/0308217.pdf)
-              Then there are some modified forms introduced [here](https://en.wikipedia.org/wiki/Modularity_(networks))
-              Another form is introduced as the picture ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Modularity form")
+* **Modularity**: The original formula was introducted in this [paper](https://arxiv.org/pdf/cond-mat/0308217.pdf).
+              Then there are some modified forms introduced [here](https://en.wikipedia.org/wiki/Modularity_(networks)).
+              Another form is introduced as the picture.
 * **Centraility**: a significant measurement to find out the most important nodes
                Have three types: Degree centraility, Closeness centraility, and Betweeness centraility
 
