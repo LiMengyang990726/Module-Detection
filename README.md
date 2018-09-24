@@ -33,5 +33,3 @@
     [Details elaboration](https://arxiv.org/pdf/0803.0476.pdf) 
     [Code implementation here](https://github.com/taynaud/python-louvain)
 * **Markov Chain Algorithm** (Unsupervised)
-
-                  
