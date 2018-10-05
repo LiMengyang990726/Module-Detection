@@ -4,7 +4,9 @@
 * **High clustering coefficient**
 
 ## Mathematical Preliminary (Details refer to [this](https://arxiv.org/pdf/q-bio/0604006.pdf))
-* **Shortest path / Geodesic distance**: δ(u, v)
+* **Shortest path / Geodesic distance**: δ(u, v) 
+
+    In our case, we are using unweighted graph. Commonly used instructions: `nx.shortest_path_length[G,source,target]`,`nx.all_shortest_path[G,source,target]`. [Please refer to this for the full shortest-path documentation](https://networkx.github.io/documentation/stable/reference/algorithms/shortest_paths.html)
 * **Clustering coefficient**
 * **Degree distribution**: in scale-free networks, most nodes have relatively low degrees. Those nodes with unusually high degrees are called hubs.
                        when building degree distribution, the following mathematical models are used:
@@ -20,9 +22,11 @@
 ## Module detection algorithm
 * **Agglomerative** Bottom-up
     1. Original way: Expressed in the Dendrogram form.
-                     Merge pair of clusters that are closest. [Details](https://www.youtube.com/watch?v=XJ3194AmH40)
-    2. Greedy way: Optimize modularity approach
-                   [Details](https://arxiv.org/pdf/cond-mat/0408187.pdf)
+                     Merge pair of clusters that are closest. [Please refer to this for more details.](https://www.youtube.com/watch?v=XJ3194AmH40)
+              
+        Disadvantage: Tendency to find only the cores of community
+    2. Greedy way: Optimize modularity approach.
+                   [Please refer to this for more details.](https://arxiv.org/pdf/cond-mat/0408187.pdf)
 * **Divisive** Top-down (Details refer to [this](https://arxiv.org/pdf/cond-mat/0308217.pdf))
     Remove the edges with the highest betweeness from the graph, and recalculate after each change.
     The betweeness have three commonly-used definition:
