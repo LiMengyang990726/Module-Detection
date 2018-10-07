@@ -125,7 +125,7 @@
 
     Re-normalizing is called: **MCL Inflation**, and this is in order to strengthens strong currents, and weakens already weak currents. The formula for inflation is shown as below:
 
-    ![MCL Inflation]()
+    ![MCL Inflation](https://github.com/LiMengyang990726/Module-Detection/blob/master/MCL%20Inflation.png)
     
     Repeat the above process until it reaches a *convergent* state. **Attractors** will attract the postive values in the same row, and sometimes overlapping clusters will occur.
     
