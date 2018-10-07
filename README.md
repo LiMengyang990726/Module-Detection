@@ -20,6 +20,21 @@
               Another matric form is introduced as the picture.
 * **Centraility**: a significant measurement to find out the most important nodes
                Have three types: Degree centraility, Closeness centraility, and Betweeness centraility
+* **Markov Centraility**: a concept that reflects the notion of how central a node *t* is in a network relative to a particular node *r* or all nodes *R*. [For more details, please refer to this.](http://datamining.dongguk.ac.kr/graph/p266-white.pdf) The importance that node *t* relative to root node(s) *R* is denoted:
+
+  I(t|R) = 1/( (1/|R|) * Σr∈R mrt )
+
+  where mrt = Σ (end:∞ from:n=1) nf(n)
+
+  f(n) is the probalibity of transitioning from node i to node j. If there is an edge between node i and node j, f(n) = 1/doutj; Otherwise, f(n) = 0
+
+  The I(t|R) formula is derived from its orginal definition formula:
+
+  I(t|r) = Σ (end: all paths from t to r; from the first path) λ to the power of -|ith path length|
+
+  Here, we choose the path as K-short node-disjoint path.
+
+  A random walk is an example of **Markov Chain** using the transition matrix.
 
 ## Module detection algorithm
 * **Agglomerative** Bottom-up
@@ -63,24 +78,47 @@
      iii) Repeat ii) until only one community remains.
 
      Disadvantage: Using max heap can help us find the largest value quickly, it also requires more effort to maintain it, means reform the max heap after updating. In real case, we often use the simplified version, that is to say, ignore the process of reforming the max heap. Instead, directly search the next largest value in the 'max heap'.
-* **Divisive** Top-down (Details refer to [this](https://arxiv.org/pdf/cond-mat/0308217.pdf)
+* **Divisive** Top-down (Details refer to [this](https://arxiv.org/pdf/cond-mat/0308217.pdf))
 
     Remove the edges with the highest betweeness from the graph, and recalculate after each change.
-    
+
     The betweeness have three commonly-used definition:
 
     i) Shortest parth betweeness: use BFS algorithm
 
-    ii) Random walk betweeness: How often on average random walks starting at vertex s will pass down a particular edge from vertex v to vertex w. For more details, can refer to [this](https://arxiv.org/pdf/cond-mat/0308217.pdf) or [this]()
+    ii) Random walk betweeness: How often on average random walks starting at vertex s will pass down a particular edge from vertex v to vertex w before reaching the target t. For more details, can refer to [this.](https://arxiv.org/pdf/cond-mat/0308217.pdf)
 
+    (Probability matrix) M = (Adjacency matrix) A * (Diagonal matrix of the degree of each node) D^(-1)
+
+    To prevent the edge reaching *t*, we delete the t's row and column. Denoted as: *M<sub>t</sub>*
+
+    Assume we start from s, take *n* steps to end up with node v (different with t). Denoted as: *[M<sub>t</sub><sup>n</sup>]<sub>vs</sub>*
+
+    Summing over all n (the mean number of times that a walk of any length) traverses the edge from v to w is:
+    *k<sub>v</sub><sup>-1</sup>[I-M<sub>t</sub>]<sub>vs</sub><sup>-1</sup>.* Denotes as *V<sub>v</sub>*. 
+
+    Similar for from w to v. 
+
+    The random walk betweeness of edge (v,w) is |V<sub>v</sub>-V<sub>w</sub>|.
+    
     iii) Current-flow betweeness
 
     Disadvantage: Demand heavy computational power, O(m²n) with m edges and n nodes, O(n³) for a spare graph.
 * **Louvain algorithm** (Modularity Optimazation)
-    [Details elaboration](https://arxiv.org/pdf/0803.0476.pdf)
-    [Code implementation here](https://github.com/taynaud/python-louvain)
+    It will merge a large network into several communities according to which types of grouping will give the largest increase in Q (formula is give in the orginal paper). Do it repeatedly until get the required number of communities.
+    
+    [Original paper.](https://arxiv.org/pdf/0803.0476.pdf)
+    
+    [Code implementation here.](https://github.com/taynaud/python-louvain)
 * **Markov Chain Algorithm** (Unsupervised)
-
+    
+    
 ## Networkx Environment setup
 * **Install Networkx**
+
+    Install in terminal: `$ pip install networkx`.
+
+    Details refer to [here.](https://networkx.github.io/documentation/stable/install.html)
 * **Setup Microsoft Remote desktop**
+
+    Intall the version 10
