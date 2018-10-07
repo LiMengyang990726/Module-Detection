@@ -119,6 +119,18 @@
     
     ![MCL Elaboration](https://github.com/LiMengyang990726/Module-Detection/blob/master/MCL%20Process.png)
     
+    The process is done through several round of raising to a non-negative power, then re-normalizing. 
+
+    Raising to a non-negative power is called: Expansion.
+
+    Re-normalizing is called: **MCL Inflation**, and this is in order to strengthens strong currents, and weakens already weak currents. The formula for inflation is shown as below:
+
+    ![MCL Inflation]()
+    
+    Repeat the above process until it reaches a *convergent* state. **Attractors** will attract the postive values in the same row, and sometimes overlapping clusters will occur.
+    
+    Disadvantage: For clusters with *large diameters*, MCL requires long expansion and low inflation, and requires many itereations as small changes are turbulent to the whole. *Speed* could be further improved by: setting small values to zero at beginning
+    
     [Understanding purpose.](https://www.cs.ucsb.edu/~xyan/classes/CS595D-2009winter/MCL_Presentation2.pdf)
     
     [Original paper.](https://dspace.library.uu.nl/bitstream/handle/1874/848/full.pdf?sequence=1&isAllowed=y)
@@ -127,6 +139,8 @@
     [Implementation code](https://www.micans.org/mcl/)
     
     [Detailed implementation code](https://github.com/GuyAllard/markov_clustering)
+    
+    [Analysis on Protein-Protein networks](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1637120/)
 ## Networkx Environment setup
 * **Install Networkx**
 
