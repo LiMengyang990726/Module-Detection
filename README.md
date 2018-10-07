@@ -111,8 +111,20 @@
     
     [Code implementation here.](https://github.com/taynaud/python-louvain)
 * **Markov Chain Algorithm** (Unsupervised)
+
+    MCL is based on: if start traversing from a random node, it is more likely to traverse inside a cluster instead of traverse between clusters.
     
+    Flow is easier within dense regions than across sparse boundaries, however, in the long run this effect disappears.
+    This process can be oberserved: ![MCL Elaboration]()
     
+    [Understanding purpose.](https://www.cs.ucsb.edu/~xyan/classes/CS595D-2009winter/MCL_Presentation2.pdf)
+    
+    [Original paper.](https://dspace.library.uu.nl/bitstream/handle/1874/848/full.pdf?sequence=1&isAllowed=y)
+    
+
+    [Implementation code](https://www.micans.org/mcl/)
+    
+    [Detailed implementation code](https://github.com/GuyAllard/markov_clustering)
 ## Networkx Environment setup
 * **Install Networkx**
 
