@@ -115,7 +115,9 @@
     MCL is based on: if start traversing from a random node, it is more likely to traverse inside a cluster instead of traverse between clusters.
     
     Flow is easier within dense regions than across sparse boundaries, however, in the long run this effect disappears.
-    This process can be oberserved: ![MCL Elaboration]()
+    This process can be oberserved: 
+    
+    ![MCL Elaboration](https://github.com/LiMengyang990726/Module-Detection/blob/master/MCL%20Process.png)
     
     [Understanding purpose.](https://www.cs.ucsb.edu/~xyan/classes/CS595D-2009winter/MCL_Presentation2.pdf)
     
