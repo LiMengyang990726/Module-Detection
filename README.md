@@ -38,7 +38,11 @@ Community detection algorithms:
 [5] Van Dongen, S. M. (2000). Graph clustering by flow simulation (Doctoral dissertation).
 
 -------------------------------------------------
+<<<<<<< Updated upstream
 # Journal 
+=======
+# Journal
+>>>>>>> Stashed changes
 ## Network basics
 * **Small world property**: the average path length is usually log(n) , n is the number of nodes. [Details](https://en.wikipedia.org/wiki/Small-world_network)
 * **High clustering coefficient**
@@ -74,7 +78,7 @@ Community detection algorithms:
 
   Here, we choose the path as K-short node-disjoint path.
 
-  A random walk is an example of **Markov Chain** using the transition matrix.
+  A random walk is an example of  **Markov Chain** using the transition matrix.
 
 ## Module detection algorithm
 * **Agglomerative** Bottom-up
@@ -135,51 +139,51 @@ Community detection algorithms:
     Assume we start from s, take *n* steps to end up with node v (different with t). Denoted as: *[M<sub>t</sub><sup>n</sup>]<sub>vs</sub>*
 
     Summing over all n (the mean number of times that a walk of any length) traverses the edge from v to w is:
-    *k<sub>v</sub><sup>-1</sup>[I-M<sub>t</sub>]<sub>vs</sub><sup>-1</sup>.* Denotes as *V<sub>v</sub>*. 
+    *k<sub>v</sub><sup>-1</sup>[I-M<sub>t</sub>]<sub>vs</sub><sup>-1</sup>.* Denotes as *V<sub>v</sub>*.
 
-    Similar for from w to v. 
+    Similar for from w to v.
 
     The random walk betweeness of edge (v,w) is |V<sub>v</sub>-V<sub>w</sub>|.
-    
+
     iii) Current-flow betweeness
 
     Disadvantage: Demand heavy computational power, O(m²n) with m edges and n nodes, O(n³) for a spare graph.
 * **Louvain algorithm** (Modularity Optimazation)
     It will merge a large network into several communities according to which types of grouping will give the largest increase in Q (formula is give in the orginal paper). Do it repeatedly until get the required number of communities.
-    
+
     [Original paper.](https://arxiv.org/pdf/0803.0476.pdf)
-    
+
     [Code implementation here.](https://github.com/taynaud/python-louvain)
 * **Markov Chain Algorithm** (Unsupervised)
 
     MCL is based on: if start traversing from a random node, it is more likely to traverse inside a cluster instead of traverse between clusters.
-    
+
     Flow is easier within dense regions than across sparse boundaries, however, in the long run this effect disappears.
-    This process can be oberserved: 
-    
+    This process can be oberserved:
+
     ![MCL Elaboration](https://github.com/LiMengyang990726/Module-Detection/blob/master/MCL%20Process.png)
-    
-    The process is done through several round of raising to a non-negative power, then re-normalizing. 
+
+    The process is done through several round of raising to a non-negative power, then re-normalizing.
 
     Raising to a non-negative power is called: Expansion.
 
     Re-normalizing is called: **MCL Inflation**, and this is in order to strengthens strong currents, and weakens already weak currents. The formula for inflation is shown as below:
 
     ![MCL Inflation](https://github.com/LiMengyang990726/Module-Detection/blob/master/MCL%20Inflation.png)
-    
+
     Repeat the above process until it reaches a *convergent* state. **Attractors** will attract the postive values in the same row, and sometimes overlapping clusters will occur.
-    
+
     Disadvantage: For clusters with *large diameters*, MCL requires long expansion and low inflation, and requires many itereations as small changes are turbulent to the whole. *Speed* could be further improved by: setting small values to zero at beginning
-    
+
     [Understanding purpose.](https://www.cs.ucsb.edu/~xyan/classes/CS595D-2009winter/MCL_Presentation2.pdf)
-    
+
     [Original paper.](https://dspace.library.uu.nl/bitstream/handle/1874/848/full.pdf?sequence=1&isAllowed=y)
-    
+
 
     [Implementation code](https://www.micans.org/mcl/)
-    
+
     [Detailed implementation code](https://github.com/GuyAllard/markov_clustering)
-    
+
     [Analysis on Protein-Protein networks](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1637120/)
 ## Networkx Environment setup
 * **Install Networkx**

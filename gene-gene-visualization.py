@@ -1,8 +1,8 @@
-# import networkx as nx
-# import matplotlib.pyplot as plt
-#
-# G = nx.read_edgelist("./gene-network.tsv",comments = "#", nodetype = int)
-# pos = nx.spring_layout(G)
+import networkx as nx
+import matplotlib.pyplot as plt
+
+G = nx.read_edgelist("./gene-network.tsv",comments = "#", nodetype = int)
+pos = nx.spring_layout(G)
 
 disease_dic = {}
 disease_file  = open("gene-disease0.TSV", 'r')
