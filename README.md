@@ -1,4 +1,44 @@
+-------------------------------
+#Please refer to this general guideline for paper writing
+Network Topological properties of network：[1]
+- Local:
+  - Clustering coefficient
+  - Shortest path
+  - Centraility
+- Global
+  - Modularity
+  - Clustering coefficient
 
+Modules in molecular networks:
+1) Topological modules
+2) Functional modules
+3) Disease modules
+
+Community detection algorithms:
+1. Modularity based
+  - Louvain algorithm [2]
+  - Greedy optimization [3]
+  - Divisive Link community [4]
+2. Random flow based
+  - MCL [5]
+
+**Question:
+  How to Reference those files that are in ppt format, youtube or github link?**
+
+*References:*
+
+[1] Mason, O., & Verwoerd, M. (2007). Graph theory and networks in biology. IET systems biology, 1(2), 89-119.
+
+[2] Blondel, V. D., Guillaume, J. L., Lambiotte, R., & Lefebvre, E. (2008). Fast unfolding of communities in large networks. Journal of statistical mechanics: theory and experiment, 2008(10), P10008.
+
+[3] Clauset, A., Newman, M. E., & Moore, C. (2004). Finding community structure in very large networks. Physical review E, 70(6), 066111.
+
+[4] Newman, M. E., & Girvan, M. (2004). Finding and evaluating community structure in networks. Physical review E, 69(2), 026113.
+
+[5] Van Dongen, S. M. (2000). Graph clustering by flow simulation (Doctoral dissertation).
+
+-------------------------------------------------
+# Journal 
 ## Network basics
 * **Small world property**: the average path length is usually log(n) , n is the number of nodes. [Details](https://en.wikipedia.org/wiki/Small-world_network)
 * **High clustering coefficient**
