@@ -189,6 +189,23 @@ Community detection algorithms:
     Install in terminal: `$ pip install networkx`.
 
     Details refer to [here.](https://networkx.github.io/documentation/stable/install.html)
+* **Operation to the remote server through terminal**
+
+   1) Copy a directory:
+   `scp -r <local/file/path> username@IPaddress:<remote path>`
+
+      E.g. `scp -r ~/Workspaces/Module-Detection lime0400@172.21.32.87:~`
+  2) Edit a file inside the remote server:
+
+      `vim <file name>`
+
+      press `i` to enter `insert` mode
+
+      after the change, press  `esc` to exit from the `insert` mode
+
+      key in `:wq` to save the changes
+
+      [Source](https://help.dreamhost.com/hc/en-us/articles/115006413028-Creating-and-editing-a-file-via-SSH)
 * **Setup Microsoft Remote desktop**
 
     Intall the version 10
