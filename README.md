@@ -38,11 +38,8 @@ Community detection algorithms:
 [5] Van Dongen, S. M. (2000). Graph clustering by flow simulation (Doctoral dissertation).
 
 -------------------------------------------------
-<<<<<<< Updated upstream
-# Journal 
-=======
+
 # Journal
->>>>>>> Stashed changes
 ## Network basics
 * **Small world property**: the average path length is usually log(n) , n is the number of nodes. [Details](https://en.wikipedia.org/wiki/Small-world_network)
 * **High clustering coefficient**
@@ -185,6 +182,7 @@ Community detection algorithms:
     [Detailed implementation code](https://github.com/GuyAllard/markov_clustering)
 
     [Analysis on Protein-Protein networks](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1637120/)
+* **Diamond Algorithm
 ## Networkx Environment setup
 * **Install Networkx**
 
