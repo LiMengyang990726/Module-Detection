@@ -33,3 +33,7 @@ E.g.g `mv orginDir/ copyDir/` means to move the directory inside the other
 `rm -rf`: recursively remove and forced remove (for both file and directory)
 
 `q`: for quit
+
+`git pull` move the local pointer to the most updated status and also update the origin(convention for the remote server) changes to local
+
+`git fetch` only update the origin changes to local but will not shift the pointer

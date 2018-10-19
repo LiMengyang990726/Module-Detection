@@ -195,6 +195,8 @@ Community detection algorithms:
    `scp -r <local/file/path> username@IPaddress:<remote path>`
 
       E.g. `scp -r ~/Workspaces/Module-Detection lime0400@172.21.32.87:~`
+
+      [Source](https://medium.com/dev-blogs/transferring-files-between-remote-server-and-local-system-133d78d58137)
   2) Edit a file inside the remote server:
 
       `vim <file name>`
@@ -213,7 +215,7 @@ Community detection algorithms:
 * **File explanation**
 
     `gene-network.tsv` contains all nodes and edges that are in our experiment (extracted from the `interactome.tsv` file)
-    
+
     `gene-disease0` contains the seed nodes of 70 diseases after small modification to feed the gene-visualization.py file
 
     `gene-disease` contains the seed nodes of 70 diseases (original)
