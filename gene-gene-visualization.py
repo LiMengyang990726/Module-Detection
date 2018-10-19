@@ -1,4 +1,6 @@
 import networkx as nx
+import matplotlib
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.colors as col
 import warnings
@@ -6,7 +8,7 @@ import warnings
 warnings.filterwarnings("ignore", message="numpy.dtype size changed")
 warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
-G = nx.read_edgelist("./gene-network.tsv",comments = "#", nodetype = int)
+G = nx.read_edgelist("./gene-network.tsv")
 pos = nx.spring_layout(G)
 
 disease_dic = {}
@@ -26,16 +28,24 @@ for line in disease_file:
 # plot the network with color
 # if they are in the same community, same color
 # if not covered by any community, grey
-i = 10 # random starting point for the color changing
+c = plt.get_cmap("plasma")
+gene_network_list = G.nodes()
+# as we found that gene-network lists didn't contain all the nodes
+for key in disease_dic.keys():
+    gene_network_list = list(set(disease_dic[key]) | set(gene_network_list))
+
 for key in disease_dic.keys(): # draw the hightlighted nodes
-    nx.draw_networkx_nodes(G,pos,
+    try:
+        nx.draw_networkx_nodes(G,pos,
                            nodelist=disease_dic[key],
                            node_size=500,
-                           node_color=col.Colormap(plasma,N=i),
-                           edge_color=col.Colormap(plasma,N=i),
-                           # cmap=plt.cm.plasma)
-                           )
-    i++
+                           cmap = c)
+        plt.axis('off')
+        plt.savefig("gene-visualization.png") # save as png
+        plt.show()
+    except:
+        print ("the node has some error but I want to ignore it first")
+
 # draw those that aren't mentioned
 all_nodes = G.nodes()
 for key in disease_dic.keys():

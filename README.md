@@ -209,3 +209,11 @@ Community detection algorithms:
 * **Setup Microsoft Remote desktop**
 
     Intall the version 10
+
+* **File explanation**
+
+    `gene-network.tsv` contains all nodes and edges that are in our experiment (extracted from the `interactome.tsv` file)
+    
+    `gene-disease0` contains the seed nodes of 70 diseases after small modification to feed the gene-visualization.py file
+
+    `gene-disease` contains the seed nodes of 70 diseases (original)

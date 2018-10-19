@@ -8,13 +8,17 @@
 
 `cp <original-file> <copy-file>`: to copy the file
 
-`cp <dir> <copy-dir>`: to copy a directory (copy-dir has to exist first)
+`cp -r <dir> <copy-dir>`: to copy a directory (copy-dir has to exist first)
 
 `mv <old-name> <new-name>`: to rename a file
 
 `mv <file> <path>`: to move a file
 
-`mv <file> <path/new-name>`: to move it and rename it. E.g. `mv orgin.txt ../text.txt`
+`mv <file> <path/new-name>`: to move it and rename it.
+
+E.g. `mv orgin.txt ../text.txt`
+
+E.g.g `mv orginDir/ copyDir/` means to move the directory inside the other
 
 `rm`: to remove a file (different from removing from the finder)
 
@@ -27,3 +31,5 @@
 `rm -r`: recursively remove
 
 `rm -rf`: recursively remove and forced remove (for both file and directory)
+
+`q`: for quit
