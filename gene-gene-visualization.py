@@ -34,10 +34,11 @@ for line in disease_file:
 c = plt.get_cmap("plasma")
 all_nodes = G.nodes()
 # as we found that gene-network lists didn't contain all the nodes
+
 f = open('all_nodes.tsv', 'w')
 sys.stdout = f
 for key in disease_dic.keys():
-    all_nodes = list(set(disease_dic[key]) | set(gene_network_list)) # get all nodes, however still have problem in finding some nodes
+    all_nodes = list(set(disease_dic[key]) | set(all_nodes)) # get all nodes, however still have problem in finding some nodes
 allLength = len(all_nodes)
 c = 0
 for c in range(allLength):
@@ -45,6 +46,7 @@ for c in range(allLength):
     f.write("\n")
 f.close()
 
+# removing the mentioned nodes from the
 for key in disease_dic.keys():
     length = len(disease_dic[key])
     tempList = disease_dic[key]
