@@ -207,6 +207,11 @@ Community detection algorithms:
 
       key in `:wq` to save the changes
 
+      Open the SSH access in MAC OS(local): `systemsetup -f -setremotelogin on`
+
+      Transfering files from remote server to local desktop: `scp -r gene-network.png MCL\ Inflation.png limengyang@172.22.188.255:/Users/limengyang/Module-Detection/
+`
+
       [Source](https://help.dreamhost.com/hc/en-us/articles/115006413028-Creating-and-editing-a-file-via-SSH)
 * **Setup Microsoft Remote desktop**
 
@@ -219,3 +224,15 @@ Community detection algorithms:
     `gene-disease0` contains the seed nodes of 70 diseases after small modification to feed the gene-visualization.py file
 
     `gene-disease` contains the seed nodes of 70 diseases (original)
+
+
+"Predicting disease modules using machine learning based Approach"
+    Introduction
+    -What is the paper about
+    - what is your objective
+    Background
+    -What methods are there to predict disease modules?
+    Material and Methods
+    Results and Discussion
+    Conclusion
+    References
