@@ -12,6 +12,8 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
 G = nx.read_edgelist("./gene-network.tsv")
 pos = nx.spring_layout(G)
+nx.draw(G.node_size=1)
+plt.show()
 
 disease_dic = {}
 disease_file  = open("gene-disease0.TSV", 'r')
@@ -32,20 +34,41 @@ for line in disease_file:
 # if not covered by any community, grey
 
 c = plt.get_cmap("plasma")
-all_nodes = G.nodes()
-# as we found that gene-network lists didn't contain all the nodes
+all_nodes = list(G.nodes) # len(all_nodes) = 13460
 
-f = open('all_nodes.tsv', 'w')
-sys.stdout = f
+
+def Union(lst1, lst2): 
+    final_list = lst1 + lst2 
+    return final_list 
+
+all_disease_nodes = []
 for key in disease_dic.keys():
-    all_nodes = list(set(disease_dic[key]) | set(all_nodes)) # get all nodes, however still have problem in finding some nodes
-allLength = len(all_nodes)
-c = 0
-for c in range(allLength):
-    f.write(all_nodes[allLength])
-    f.write("\n")
-f.close()
+    all_disease_nodes = Union(disease_dic[key], all_disease_nodes) 
+# len(all_disease_nodes) = 2843
 
+all_nodes = Union(all_disease_nodes,all_nodes) # len(all_nodes) = 16303 
+# c = 0
+# for c in range(allLength):
+#     f.write(all_nodes[allLength])
+#     f.write("\n")
+# f.close()
+
+all_rest_nodes = 
+nx.draw_networkx_nodes(G,pos,
+                        nodelist=all_disease_nodes,
+                        node_size=50,
+                        cmap = c)
+nx.draw_networkx_nodes(G,pos,
+                       nodelist= all_nodes,
+                       node_size=50,
+                       node_color='gray',
+                       alpha=0.8)
+nx.draw_networkx_edges(G.pos,
+                       edgelist = )
+
+plt.axis('off')
+plt.savefig("gene-visualization.png") # save as png
+plt.show()                      
 # removing the mentioned nodes from the
 for key in disease_dic.keys():
     length = len(disease_dic[key])
