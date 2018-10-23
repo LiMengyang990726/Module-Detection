@@ -1,5 +1,5 @@
 import time
-import cPickle
+import pickle
 import networkx as nx
 import numpy as np
 import copy
@@ -11,6 +11,12 @@ import sys
 # =============================================================================
 # Prepare all math calculations
 # =============================================================================
+
+def Union(lst1, lst2): 
+    final_list = lst1 + lst2 
+    return final_list 
+
+# =============================================================================   
 def compute_all_gamma_ln(N):
     gamma_ln = {}
     for i in range(1,N+1):
@@ -81,12 +87,12 @@ def reduce_not_in_cluster_nodes(all_degrees,neighbors,G,not_in_cluster,cluster_n
 
     # Going to choose the node with largest kb, given k                                
     k2kb = defaultdict(dict)                                                           
-    for kb,k2node in kb2k.iteritems():                                                 
+    for kb,k2node in kb2k.items():                                                 
         min_k = min(k2node.keys())                                                     
         node = k2node[min_k]                                                           
         k2kb[min_k][kb] = node                                                         
                                                                                        
-    for k,kb2node in k2kb.iteritems():                                                 
+    for k,kb2node in k2kb.items():                                                 
         max_kb = max(kb2node.keys())                                                   
         node = kb2node[max_kb]                                                         
         reduced_not_in_cluster[node] =(max_kb,k)                                       
@@ -157,7 +163,7 @@ def diamond_iteration_of_first_X_nodes(G,S,X,alpha):
                                                              not_in_cluster,
                                                              cluster_nodes,alpha)
         
-        for node,kbk in reduced_not_in_cluster.iteritems():
+        for node,kbk in reduced_not_in_cluster.items():
             # Getting the p-value of this kb,k
             # combination and save it in all_p, so computing it only once!
             kb,k = kbk
@@ -195,15 +201,15 @@ def diamond_iteration_of_first_X_nodes(G,S,X,alpha):
 #   M A I N    D I A M O n D    A L G O R I T H M
 # 
 # ===========================================================================
-def DIAMOnD(G_original,seed_genes,max_number_of_added_nodes,alpha,outfile = None):
+def DIAMOnD(G_original,seed_genes,max_number_of_added_nodes,alpha,outfile):
     # 1. throwing away the seed genes that are not in the network
     all_genes_in_network = set(G_original.nodes())
     seed_genes = set(seed_genes)
     disease_genes = seed_genes & all_genes_in_network
 
     if len(disease_genes) != len(seed_genes):
-        print "DIAMOnD(): ignoring %s of %s seed genes that are not in the network" %(
-            len(seed_genes - all_genes_in_network), len(seed_genes))
+        print ("DIAMOnD(): ignoring %s of %s seed genes that are not in the network" %(
+            len(seed_genes - all_genes_in_network), len(seed_genes)))
    
 
 
@@ -214,13 +220,13 @@ def DIAMOnD(G_original,seed_genes,max_number_of_added_nodes,alpha,outfile = None
                                                      max_number_of_added_nodes,alpha)
     # 3. saving the results 
     with open(outfile,'w') as fout:
-        print>>fout,'\t'.join(['#rank','DIAMOnD_node'])
+        fout.write('\t'.join(['#rank','DIAMOnD_node']))
         rank = 0
         for DIAMOnD_node_info in added_nodes:
             rank += 1
             DIAMOnD_node = DIAMOnD_node_info[0]
             p = float(DIAMOnD_node_info[3])
-            print>>fout,'\t'.join(map(str,([rank,DIAMOnD_node])))
+            fout.write('\t'.join(map(str,([rank,DIAMOnD_node]))))
 
     return added_nodes
 
@@ -238,23 +244,24 @@ if __name__ == '__main__':
     disease_dic = {}
     disease_file  = open("gene-disease0.TSV", 'r')
     for line in disease_file:
-    li = line.strip()
-    if not li.startswith("#"):
-        li2 = li.split(' ',1)
-        disease_key = li2[0]
-        print ("the key is: "+disease_key)
-        disease_list = [l for l in (li2[1]).split('/')]
-        print (disease_list)
-        disease_dic.update({disease_key: disease_list})
+        li = line.strip()
+        if not li.startswith("#"):
+            li2 = li.split(' ',1)
+            disease_key = li2[0]
+            print ("the key is: "+disease_key)
+            disease_list = [l for l in (li2[1]).split('/')]
+            print (disease_list)
+            disease_dic.update({disease_key: disease_list})
     for key in disease_dic.keys():
         seed_genes = Union(seed_genes,disease_dic[key])
 
     max_number_of_added_nodes = 200
     alpha = 2
     outfile_name = "duplicateExperiment"
+    outfile = outfile_name
     added_nodes = DIAMOnD(G_original,
                           seed_genes,
                           max_number_of_added_nodes,alpha,
-                          outfile=outfile_name)
+                          outfile)
     
-    print "\n results have been saved to '%s' \n" %outfile_name
+    print ("\n results have been saved to '%s' \n" %outfile_name)

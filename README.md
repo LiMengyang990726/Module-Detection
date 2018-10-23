@@ -196,6 +196,8 @@ Community detection algorithms:
 
       E.g. `scp -r ~/Workspaces/Module-Detection lime0400@172.21.32.87:~`
 
+      E.g. `scp -r ~/Workspaces/Module-Detection/diamond_self.py lime0400@172.21.32.87:/home2/lime0400/Module-Detection`
+
       [Source](https://medium.com/dev-blogs/transferring-files-between-remote-server-and-local-system-133d78d58137)
   2) Edit a file inside the remote server:
 

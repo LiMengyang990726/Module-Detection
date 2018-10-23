@@ -39,7 +39,6 @@ all_rest_nodes = list(G) # at the end should be
 for key in disease_dic.keys():
     temp = [list(map(int, x)) for x in disease_dic[key]]
     all_rest_nodes = [x for x in all_rest_nodes if x not in temp]
-
 nx.draw_networkx_nodes(G,pos,
                         nodelist= all_rest_nodes,
                         node_size=5,
