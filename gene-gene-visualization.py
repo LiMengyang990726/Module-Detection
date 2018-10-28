@@ -12,9 +12,9 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
 G = nx.read_edgelist("./gene-network.tsv")
 pos = nx.spring_layout(G)
-nx.draw(G.node_size=1)
-plt.show()
-plt.savefig("Gene-network-overview.png")
+# nx.draw(G,node_size=1)
+# plt.show()
+# plt.savefig("Gene-network-overview.png")
 
 disease_dic = {}
 disease_file  = open("gene-disease0.TSV", 'r')
@@ -35,10 +35,11 @@ for line in disease_file:
 # ===============================================================
 # # plot all rest nodes from gene-networkx except seed genes
 # ===============================================================
-all_rest_nodes = list(G) # at the end should be 
+all_rest_nodes = list(G) # at the end should be
 for key in disease_dic.keys():
     temp = [list(map(int, x)) for x in disease_dic[key]]
     all_rest_nodes = [x for x in all_rest_nodes if x not in temp]
+
 nx.draw_networkx_nodes(G,pos,
                         nodelist= all_rest_nodes,
                         node_size=5,
@@ -46,18 +47,51 @@ nx.draw_networkx_nodes(G,pos,
                         alpha=0.8)
 nx.draw_networkx_edges(G,pos,
                        edgelist=list(G.edges()),
-                       width=8,alpha=0.5,edge_color='r')
+                       width=8,alpha=0.5,edge_color='gray')
 
+# ===============================================================
+# # plot all seed genes in one color first
+# ===============================================================
+for key in disease_dic.keys():
+    try:
+        nx.draw_networkx_nodes(G,pos,
+                            nodelist=disease_dic[key],
+                            node_size=5,
+                            node_color='red')
+    except:
+        print ("node not in pos")
+plt.axis('off')
+plt.savefig("gene-visualization-single-color.png")
+plt.show()
 # ===============================================================
 # # plot all seed genes
 # ===============================================================
-c = plt.get_cmap("plasma")
-for key in disease_dic.keys(): 
-    nx.draw_networkx_nodes(G,pos,
+import random
+def colors(n):
+    ret = []
+    r = int(random.random() * 256)
+    g = int(random.random() * 256)
+    b = int(random.random() * 256)
+    step = 256 / n
+    for i in range(n):
+        r += step
+        g += step
+        b += step
+        r = float((int(r) % 256)/256)
+        g = float((int(g) % 256)/256)
+        b = float((int(b) % 256)/256)
+        ret.append((r,g,b))
+    return ret
+
+for key in disease_dic.keys():
+    try:
+        nx.draw_networkx_nodes(G,pos,
                             nodelist=disease_dic[key],
                             node_size=5,
-                            cmap = c)
+                            node_color=colors)
+    except:
+        print ("node not in pos")
 
 plt.axis('off')
-plt.savefig("gene-visualization.png")
+plt.savefig("gene-visualization-multiple-color.png")
 plt.show()

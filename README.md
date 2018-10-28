@@ -1,31 +1,94 @@
 -------------------------------
-#Please refer to this general guideline for paper writing
-Network Topological properties of network：[1]
-- Local:
-  - Clustering coefficient
-  - Shortest path
-  - Centraility
-- Global
-  - Modularity
-  - Clustering coefficient
+## Title
 
-Modules in molecular networks:
-1) Topological modules
-2) Functional modules
-3) Disease modules
+"Predicting disease modules using machine learning based Approach"
 
-Community detection algorithms:
-1. Modularity based
-  - Louvain algorithm [2]
-  - Greedy optimization [3]
-  - Divisive Link community [4]
-2. Random flow based
-  - MCL [5]
+## Introduction
+- Purpose of the research:
+  - Evaluate the Diamond Disease Module Detection algorithm
+  - Use machine learning approach to detect the module in a network
 
-**Question:
-  How to Reference those files that are in ppt format, youtube or github link?**
+## Background
+I)  Network Topological properties of network：[1]
 
-*References:*
+Understanding Topological properties is essential to understand the previous algorithms for detecting modules
+
+  - Local:
+    - Clustering coefficient: **Fraction of interconnections**
+
+    Star network/A highly centrailized network has a clustering coefficient of 0.  
+
+    Let v be a node, and k<sub>v</sub> denotes v's degree, and N<sub>v</sub> denotes number of links between neighbors of v.
+
+    CC(v) = 2N<sub>v</sub>/(k<sub>v</sub> * (k<sub>v</sub>-1))
+
+    - Shortest path: **Longer the shortest path distance from the seed node, less relevant**
+
+    - Centrality: **Identify the most important nodes in a graph**
+
+    Betweenness is a centrality measure, and it had been used in the Divisive Link Community algorithm.
+
+    - Modularity: **Measure how well is it to group the network in certain way. Represents the possibility difference with the observed edges and the expected edges.**
+
+
+    The original formula was introduced in this [paper](https://arxiv.org/pdf/cond-mat/0308217.pdf).
+
+    Then there are some modified forms introduced [here](https://en.wikipedia.org/wiki/Modularity_(networks)).
+
+    Derivation between the above two forms are shown [here](https://arxiv.org/pdf/cond-mat/0408187.pdf)
+  - Global
+    - Modularity
+    - Clustering coefficient
+
+    CC(G) = avg<sub>v in G</sub>(CC(v))
+
+II) Previous Algorithm
+
+There are handful of module detection algorithms in the previous studies, and some of the most commonly used ones are summarized as below
+
+  - Modularity based
+      - Louvain algorithm [2]
+      - Greedy optimization [3]
+      - Divisive Link community [4]
+  - Random flow based
+      - MCL [5]
+  - Most recent
+      - Diamond (based on connectivity significance)
+      - this paper proposed a machine learning approach
+
+III) Comparison for the previous work (use a table)
+
+
+IV) Types of Modules in molecular networks
+
+Specifically for protein-protein network, or generally for a biological network (regulatory and metabolic networks etc.), the following three types of modules should be taken care.
+
+  - Topological modules
+
+  Can be found through: Compute and determine certain thing through the calculation of one or more topological network properties
+
+  - Functional modules
+
+  A functional module (5) is defined as a group of genes or their products which are related by one or more genetic or cellular interactions.
+
+  A functional module has more relations between themselves rather than with others.
+
+
+  Integrative(meaning independent but biologically related data sets or different genetic and molecular networks) data analysis has been performed with correlation mapping and mean Pearson correlations.
+
+  [Read more](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC275479/#gkg838c5)
+
+  - Disease modules
+
+
+
+##Material and Methods
+
+##Results and Discussion
+
+##Conclusion
+
+##References:
 
 [1] Mason, O., & Verwoerd, M. (2007). Graph theory and networks in biology. IET systems biology, 1(2), 89-119.
 
@@ -36,6 +99,16 @@ Community detection algorithms:
 [4] Newman, M. E., & Girvan, M. (2004). Finding and evaluating community structure in networks. Physical review E, 69(2), 026113.
 
 [5] Van Dongen, S. M. (2000). Graph clustering by flow simulation (Doctoral dissertation).
+
+[6]Hartwell L.H., Hopfield,J.J., Leibler,S. and Murray,A.W. (1999) From molecular to modular cell biology. Nature, 402 (suppl.), C47–C52
+
+[7] Tornow, S., & Mewes, H. W. (2003). Functional modules by relating protein interaction networks and gene expression. Nucleic acids research, 31(21), 6283-9.
+
+-------------------------------
+**Question 1:
+  How to Reference those files that are in ppt format, youtube or github link?**
+**Question 2:
+  If the paper refered to other papers, how should we write the refercen?**
 
 -------------------------------------------------
 
@@ -226,15 +299,3 @@ Community detection algorithms:
     `gene-disease0` contains the seed nodes of 70 diseases after small modification to feed the gene-visualization.py file
 
     `gene-disease` contains the seed nodes of 70 diseases (original)
-
-
-"Predicting disease modules using machine learning based Approach"
-    Introduction
-    -What is the paper about
-    - what is your objective
-    Background
-    -What methods are there to predict disease modules?
-    Material and Methods
-    Results and Discussion
-    Conclusion
-    References
