@@ -82,13 +82,13 @@ Specifically for protein-protein network, or generally for a biological network 
 
 
 
-##Material and Methods
+## Material and Methods
 
-##Results and Discussion
+## Results and Discussion
 
-##Conclusion
+## Conclusion
 
-##References:
+## References:
 
 [1] Mason, O., & Verwoerd, M. (2007). Graph theory and networks in biology. IET systems biology, 1(2), 89-119.
 
