@@ -11,10 +11,8 @@ warnings.filterwarnings("ignore", message="numpy.ufunc size changed")
 
 
 G = nx.read_edgelist("./gene-network.tsv")
-pos = nx.spring_layout(G)
-# nx.draw(G,node_size=1)
-# plt.show()
-# plt.savefig("Gene-network-overview.png")
+Gc = max(nx.connected_component_subgraphs(G), key=len)
+pos = nx.spring_layout(Gc)
 
 disease_dic = {}
 disease_file  = open("gene-disease0.TSV", 'r')
@@ -35,26 +33,56 @@ for line in disease_file:
 # ===============================================================
 # # plot all rest nodes from gene-networkx except seed genes
 # ===============================================================
-all_rest_nodes = list(G) # at the end should be
+all_rest_nodes = list(Gc) # at the end should be
 for key in disease_dic.keys():
     temp = [list(map(int, x)) for x in disease_dic[key]]
     all_rest_nodes = [x for x in all_rest_nodes if x not in temp]
 
-nx.draw_networkx_nodes(G,pos,
+nx.draw_networkx_nodes(Gc,pos,
                         nodelist= all_rest_nodes,
                         node_size=5,
-                        node_color='gray',
+                        node_color='black',
                         alpha=0.8)
-nx.draw_networkx_edges(G,pos,
-                       edgelist=list(G.edges()),
-                       width=8,alpha=0.5,edge_color='gray')
+nx.draw_networkx_edges(Gc,pos,
+                       edgelist=list(Gc.edges()),
+                       width=1,edge_color='gray')
+
+# ===============================================================
+# # plot single color for one disease
+# ===============================================================
+
+Gtemp = nx.Graph()
+len(disease_dic["adrenalglanddiseases"]) # 18
+for i in range(17):
+    for x in xrange(i,17):
+    Gtemp.add_edge(disease_dic["adrenalglanddiseases"][i],nx.common_neighbors(Gc,disease_dic["adrenalglanddiseases"][i],disease_dic["adrenalglanddiseases"][x]))
+
+posTemp = nx.spring_layout(Gtemp)
+
+nx.draw_networkx_nodes(Gtemp,posTemp,
+                        nodelist= Gtemp.nodes,
+                        node_size=5,
+                        node_color='black',
+                        alpha=0.8)
+nx.draw_networkx_edges(Gtemp,posTemp,
+                       edgelist=list(Gtemp.edges()),
+                       width=1,edge_color='gray')
+
+# disease_dic["adrenalglanddiseases"].remove('1187')
+
+nx.draw_networkx_nodes(Gtemp,posTemp,
+                    nodelist=disease_dic["adrenalglanddiseases"],
+                    node_size=8,
+                    node_color='red')
+plt.axis('off')
+plt.savefig("adrenalglanddiseases.png")
 
 # ===============================================================
 # # plot all seed genes in one color first
 # ===============================================================
 for key in disease_dic.keys():
     try:
-        nx.draw_networkx_nodes(G,pos,
+        nx.draw_networkx_nodes(Gc,pos,
                             nodelist=disease_dic[key],
                             node_size=5,
                             node_color='red')
@@ -85,7 +113,7 @@ def colors(n):
 
 for key in disease_dic.keys():
     try:
-        nx.draw_networkx_nodes(G,pos,
+        nx.draw_networkx_nodes(Gc,pos,
                             nodelist=disease_dic[key],
                             node_size=5,
                             node_color=colors)
