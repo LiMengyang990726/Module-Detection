@@ -50,13 +50,17 @@ nx.draw_networkx_edges(Gc,pos,
 # ===============================================================
 # # plot single color for one disease
 # ===============================================================
+def second_neighbors(graph, node):
+    for neighbor_list in [graph.neighbors(n) for n in graph.neighbors(node)]:
+        for n in neighbor_list:
+            yield n
 
 Gtemp = nx.Graph()
 len(disease_dic["adrenalglanddiseases"]) # 18
 for i in range(17):
-    for x in xrange(i,17):
-    Gtemp.add_edge(disease_dic["adrenalglanddiseases"][i],nx.common_neighbors(Gc,disease_dic["adrenalglanddiseases"][i],disease_dic["adrenalglanddiseases"][x]))
-
+    for x in range(i,17):
+        Gtemp.add_edge(disease_dic["adrenalglanddiseases"][i],nx.neighbors(Gc,disease_dic["adrenalglanddiseases"][i]))
+        Gtemp.add_edge(disease_dic["adrenalglanddiseases"][i],second_neighbors(Gc,disease_dic["adrenalglanddiseases"][i]))
 posTemp = nx.spring_layout(Gtemp)
 
 nx.draw_networkx_nodes(Gtemp,posTemp,
@@ -77,6 +81,26 @@ nx.draw_networkx_nodes(Gtemp,posTemp,
 plt.axis('off')
 plt.savefig("adrenalglanddiseases.png")
 
+Gtemp2 = nx.Graph()
+for i in range(29):
+    for x in range(i,29):
+        Gtemp2.add_edge(disease_dic["alzheimerdisease"][i],nx.neighbors(Gc,disease_dic["alzheimerdisease"][i]))
+        Gtemp2.add_edge(disease_dic["alzheimerdisease"][i],second_neighbors(Gc,disease_dic["alzheimerdisease"][i]))
+posTemp2 = nx.spring_layout(Gtemp2)
+nx.draw_networkx_nodes(Gtemp2,posTemp2,
+                        nodelist= Gtemp2.nodes,
+                        node_size=5,
+                        node_color='black',
+                        alpha=0.8)
+nx.draw_networkx_edges(Gtemp2,posTemp2,
+                       edgelist=list(Gtemp2.edges()),
+                       width=1,edge_color='gray')
+nx.draw_networkx_nodes(Gtemp2,posTemp2,
+                    nodelist=disease_dic["alzheimerdisease"],
+                    node_size=8,
+                    node_color='red')
+plt.axis('off')
+plt.savefig("alzheimerdisease.png")
 # ===============================================================
 # # plot all seed genes in one color first
 # ===============================================================

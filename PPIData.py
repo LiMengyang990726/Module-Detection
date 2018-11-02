@@ -26,7 +26,11 @@ f.write("\nThe largest connected component ")
 f.write("\n\t\tNumber of nodes " + str(len(Gc)))
 f.write("\n\t\tNumber of edges " + str(Gc.number_of_edges()))
 f.write("\n\t\tAverage shortest path length " + str(nx.average_shortest_path_length(Gc)))
-f.write("\n\t\tEdge edge_betweenness_centrality " + str(nx.edge_betweenness_centrality(Gc)))
+f1 = open("Edge_Betweenness.txt","w+")
+f1.write(nx.edge_betweenness_centrality(Gc))
+for line in f1:
+
+
 f.close()
 
 # ===============================================================
