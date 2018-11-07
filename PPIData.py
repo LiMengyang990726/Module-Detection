@@ -90,7 +90,7 @@ for key in disease_dic:
     nodes = []
     for i in range(l):
         if disease_dic[key][i] in Gc.nodes:
-            nodes.append(int(disease_dic[key][i]))
+            nodes.append(disease_dic[key][i])
     sub = Gc.subgraph(nodes)
     n = nx.number_connected_components(sub)
     print("number of connected components is " + str(n) + "\n")
