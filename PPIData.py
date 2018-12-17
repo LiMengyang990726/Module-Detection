@@ -9,9 +9,10 @@ import subprocess as sp # for clear console: tmp = sp.call('clear',shell=True)
 disease_dic = {}
 G = nx.Graph
 Gc = nx.Graph
-
+diseases = []
+componentDic = {}
 # ===============================================================
-# Input
+# Input, version of networkx installed is 2.1
 # ===============================================================
 
 def readInput():
@@ -25,6 +26,9 @@ def readInput():
             disease_key = li2[0]
             print ("the key is: "+disease_key)
             disease_list = [l for l in (li2[1]).split('/')]
+            length = len(disease_list)
+            for i in range(length):
+                diseases.append(disease_list[i])
             print (disease_list)
             disease_dic.update({disease_key: disease_list})
 
@@ -91,7 +95,6 @@ def writePercentage():
 # Convert Data Into Features
 # ===============================================================
 def featureConverting():
-    componentDic = {}
     count = 0
     for key in disease_dic:
         l = len(disease_dic[key])
@@ -106,13 +109,26 @@ def featureConverting():
             LCC = "LCC" + str(count)
             componentDic[LCC] = componentlist[i]
             count += 1
-    return count # should be 1890, while componentDic is added not following the sequence
+    # return count # should be 1890, while componentDic is added not following the sequence
 
 def LCCFingerPrint(count):
-    totalSeed = 0
-    for key in disease_dic:
-        totalSeed += len(disease_dic[key])
-    Matrix = [[0 for x in range(count)] for y in range(totalSeed)]
+    Matrix = [[0 for x in range(count)] for y in range(count)]
+
+    length1 = len(diseases)
+    for i in range(length1):
+        for key in disease_dic:
+            length2 = len(disease_dic[key])
+            for j in range(length2):
+
+    for key1 in disease_dic:
+        for i in disease_dic[key1]:
+            for key in
+            print(i)
+        for j in range(totalSeed):
+            if disease_dic[]
+    for i in range(count):
+        for j in range(totalSeed):
+            if disease_list
 
 # ===============================================================
 # Main
@@ -120,3 +136,6 @@ def LCCFingerPrint(count):
 if __name__ == '__main__':
     readInput()
     featureConverting()
+    f= open("AllLCC.txt","w+")
+    for key in componentDic:
+        f.write(str(componentDic[key]))
