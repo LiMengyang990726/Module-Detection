@@ -35,11 +35,13 @@ def readInput():
 Gc,disease_dic,diseases=readInput()
 
 # average shortest path length:
+# rationale: Longer the shortest path distance from the seed node, less relevant
 for i in range(len(diseases)):
-    if(Gc.has_node(str(i))):
+    print(str(i)+" "+diseases[i])
+    if(Gc.has_node(str(diseases[i]))):
         print("Added")
     else:
-        del diseases[i]
+        diseases.pop(i)
 
 f= open("AvgSP.txt","w+")
 f.write("Gene_ID      Average Shortest Path to all Disease genes\n")
@@ -50,10 +52,13 @@ for i in Gc.nodes:
     f.write(str(a/float(len(diseases)))+"\n")
 
 # local clustering coefficient
-# see each node's clustering coefficient in each disease's network
+# rationale: the higher a node's clustering coefficient in each disease's network,
+#            more likely the node belongs to this disease network
+
 
 # degree centrality
 
+# 
 # markov chain centraility (see the proportion of each gene's importance)
 
-# modularity 
+# modularity
