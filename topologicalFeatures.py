@@ -36,6 +36,12 @@ def readInput():
 
 Gc,disease_dic,diseases=readInput()
 
+for i in range(len(diseases)):
+    print(str(i)+" "+diseases[i])
+    if(Gc.has_node(str(diseases[i]))):
+        print("Added")
+    else:
+        diseases.pop(i)
 
 # ==============================================================================
 #
@@ -43,13 +49,6 @@ Gc,disease_dic,diseases=readInput()
 # rationale: Longer the shortest path distance from the seed node, less relevant
 #
 # ==============================================================================
-
-for i in range(len(diseases)):
-    print(str(i)+" "+diseases[i])
-    if(Gc.has_node(str(diseases[i]))):
-        print("Added")
-    else:
-        diseases.pop(i)
 
 f= open("AvgSP.txt","w+")
 f.write("Gene_ID      Average Shortest Path to all Disease genes\n")
@@ -298,36 +297,46 @@ class articulationGraph:
 #
 # ==============================================================================
 
- # Count nodes and edges
-    N = len(G.nodes())
-    m = sum([d.get('weight', 1) for u, v, d in G.edges(data=True)])
-    q0 = 1.0 / (2.0*m)
+# # Global modularity
+# from networkx.algorithms.community.quality import modularity
+#
+# N = len(Gc.nodes())
+# m = sum([d.get('weight', 1) for u, v, d in Gc.edges(data=True)])
+# q0 = 1.0 / (2.0*m)
+#
+# # Map node labels to contiguous integers
+# label_for_node = dict((i, v) for i, v in enumerate(Gc.nodes()))
+# node_for_label = dict((label_for_node[i], i) for i in range(N))
+#
+# # Calculate degrees
+# k_for_label = Gc.degree(Gc.nodes())
+# k = [k_for_label[label_for_node[i]] for i in range(N)]
+#
+# # Initialize community
+# communities = dict((i, frozenset([i])) for i in range(N))
+#
+# # Initial modularity
+# partition = [[label_for_node[x] for x in c] for c in communities.values()]
+# print(modularity(Gc, partition))
 
-    # Map node labels to contiguous integers
-    label_for_node = dict((i, v) for i, v in enumerate(G.nodes()))
-    node_for_label = dict((label_for_node[i], i) for i in range(N))
-
-    # Calculate degrees
-    k_for_label = G.degree(G.nodes(), weight=weight)
-    k = [k_for_label[label_for_node[i]] for i in range(N)]
-
-    # Initialize community and merge lists
-    communities = dict((i, frozenset([i])) for i in range(N))
-    merges = []
-
-    # Initial modularity
-    partition = [[label_for_node[x] for x in c] for c in communities.values()]
-    q_cnm = modularity(G, partition)
-
-
+# Local modularity
+f = open("Modularity.txt",'w+')
+f.write("GeneID     Modularity")
+B = nx.modularity_matrix(Gc)
 
 # Notes:
 # 1. Due to the computational power limit and restraint of logging in through ssh,
 #    all the above computations are only partially done. Please run the whole script
-#    to get all output files that contain the final features as a panda dataframe
+#    to get all output files.
 # 2. Networkx's percolation_centrality package has some fallacy, and I might need
-#    some time to fix it
+#    some time to fix it.
 # 3. Networkx doesn't have function to calculate markov centrality, and I am confused
 #    by the difference between markov centrality, random walk betweenness, and pagerank.
 #    If neccessary, I will try to implement the calculation of random walk betweennes
-#
+# 4. I haven't finish the implementation of converting modularity_matrix to a series,
+#    and haven't finishe the implementation of finding articulation protein.
+# Questions:
+# 1. Shall we convert all proteins represented in Uniprot and GO term form
+#    into geneID representation?
+# 2. If we are going to use geneID representation, geneID is generic to an individual
+#    while it doesn't have topological properties
