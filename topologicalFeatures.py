@@ -6,6 +6,13 @@ import collections
 import xlsxwriter
 import subprocess as sp # for clear console: tmp = sp.call('clear',shell=True)
 
+
+# ==============================================================================
+#
+# Read input
+#
+# ==============================================================================
+
 def readInput():
     G = nx.read_edgelist("./gene-network.tsv")
     Gc = max(nx.connected_component_subgraphs(G), key=len)
@@ -29,8 +36,14 @@ def readInput():
 
 Gc,disease_dic,diseases=readInput()
 
+
+# ==============================================================================
+#
 # F1 average shortest path length:
 # rationale: Longer the shortest path distance from the seed node, less relevant
+#
+# ==============================================================================
+
 for i in range(len(diseases)):
     print(str(i)+" "+diseases[i])
     if(Gc.has_node(str(diseases[i]))):
@@ -47,9 +60,15 @@ for i in Gc.nodes:
     f.write(str(a/float(len(diseases)))+"\n")
 f.close()
 
+
+# ==============================================================================
+#
 # F2 local clustering coefficient
 # rationale: the higher a node's clustering coefficient in each disease's network,
 #            more likely the node belongs to this disease network
+#
+# ==============================================================================
+
 neighbors_of_diseases = []
 f= open("LocalCC.txt","w+")
 f.write("Only the first level neighbors of disease nodes are shown here\n")
@@ -76,6 +95,9 @@ for i in range(len(neighbors_of_diseases)):
     f.write(str(neighbors_of_diseases[i])+ "   "+str(localCC)+"\n")
 f.close()
 
+
+# ==============================================================================
+#
 # F3 degree centrality
 # rationale: Higher, more likely to be involved in a more important functional module
 
@@ -86,6 +108,15 @@ f.close()
 # rationale: An important node will lie on a higher proportion of the paths.
 
 # F6 eigenvector centrality
+# rationale: the influence of a node in a network
+
+# F7 Percolation centrality
+# rationale: importance of a node in purely topological terms, despite the network dynamic
+
+# F8 pagerank
+# rationale: the notion of how central a node is in a networkx relative to a particular node
+#
+# ==============================================================================
 
 import xlsxwriter
 def output(Gc):
@@ -98,8 +129,10 @@ def output(Gc):
     worksheet.write(row, col,'GeneID')
     worksheet.write(row, col+1,'DegreeCentrality')
     worksheet.write(row, col+2,'ClosenessCentrality')
-    worksheet.write(row, col+3,'EigenvectoreCentrality')
-    worksheet.write(row, col+4,'MarkovChainCentrality')
+    worksheet.write(row, col+3,'BetweennessCentrality')
+    worksheet.write(row, col+4,'EigenvectoreCentrality')
+    worksheet.write(row, col+5,'PercolationCentrality')
+    worksheet.write(row, col+5,'PercolationCentrality')
 
     row += 1
 
@@ -116,27 +149,85 @@ def output(Gc):
         s3 += [value]
 
     s4 = []
-    dic4 = nx.eigenvector_centrality(Gc)
+    dic4 = nx.betweeness_centrality(Gc)
     for key,value in dic4.items():
         s4 += [value]
+
+    s5 = []
+    dic5 = nx.eigenvector_centrality(Gc)
+    for key,value in dic5.items():
+        s5 += [value]
+
+    s6 = []
+    dic6 = nx.percolation_centrality(Gc)
+    for key,value in dic6.items():
+        s6 += [value]
+
+    s7 = []
+    dic7 = nx.pagerank(Gc)
+    for key,value in dic7.items():
+        s7 += [value]
 
     for i in len(s1):
         worksheet.write(row, col,s1[i])
         worksheet.write(row, col+1,s2[i])
         worksheet.write(row, col+2,s3[i])
         worksheet.write(row, col+3,s4[i])
+        worksheet.write(row, col+4,s5[i])
+        worksheet.write(row, col+5,s6[i])
+        worksheet.write(row, col+6,s7[i])
         row += 1
 
     workbook.close()
 output(Gc)
 
-# markov chain centraility
-# rationale: see the proportion of each gene's importance)
 
-
+# ==============================================================================
+#
 # connectivity significance
+#
+# ==============================================================================
 
+from scipy.special import comb
+
+f= open("ConnectivitySignificance.txt","w+")
+f.write("GeneID      ConnectivitySignificance\n")
+alpha = 2
+for node in Gc.nodes():
+    neighbors = set(Gc.neighbors(node))
+
+    k = Gc.degree(node)
+
+    ks = 0
+    for neighbor in neighbors:
+        if neighbor in diseases:
+            ks += 1
+
+    ks0 = ks + (alpha-1)*ks
+
+    s = len(diseases)
+
+    s0 = s + (alpha-1)*s
+
+    n1 = comb(s0,ks0)                               # numerator 1
+    n2 = comb((N-s),(k-ks))                         # numerator 2
+    d = comb((N+(alpha-1)*ks),(k+(alpha-1)*ks))     # denominator
+    if (d == 0):
+        pvalue = -1                                 # set those invalid number to nan, meaning those nodes doesn't have connection with disease node
+    else:
+        pvalue = (n1*n2)/d
+    f.write(str(node)+"    "+str(pvalue)+"\n")
+
+# Remaining problem:
+# There are results "nan" and "runtime error" problem unsolved
+
+
+# ==============================================================================
+#
 # articulation protein
+#
+# ==============================================================================
+
 class articulationGraph:
 
     def __init__(self,networkxGraph):
@@ -200,4 +291,43 @@ class articulationGraph:
             if value == True:
                 print(index)
 
+
+# ==============================================================================
+#
 # modularity
+#
+# ==============================================================================
+
+ # Count nodes and edges
+    N = len(G.nodes())
+    m = sum([d.get('weight', 1) for u, v, d in G.edges(data=True)])
+    q0 = 1.0 / (2.0*m)
+
+    # Map node labels to contiguous integers
+    label_for_node = dict((i, v) for i, v in enumerate(G.nodes()))
+    node_for_label = dict((label_for_node[i], i) for i in range(N))
+
+    # Calculate degrees
+    k_for_label = G.degree(G.nodes(), weight=weight)
+    k = [k_for_label[label_for_node[i]] for i in range(N)]
+
+    # Initialize community and merge lists
+    communities = dict((i, frozenset([i])) for i in range(N))
+    merges = []
+
+    # Initial modularity
+    partition = [[label_for_node[x] for x in c] for c in communities.values()]
+    q_cnm = modularity(G, partition)
+
+
+
+# Notes:
+# 1. Due to the computational power limit and restraint of logging in through ssh,
+#    all the above computations are only partially done. Please run the whole script
+#    to get all output files that contain the final features as a panda dataframe
+# 2. Networkx's percolation_centrality package has some fallacy, and I might need
+#    some time to fix it
+# 3. Networkx doesn't have function to calculate markov centrality, and I am confused
+#    by the difference between markov centrality, random walk betweenness, and pagerank.
+#    If neccessary, I will try to implement the calculation of random walk betweennes
+#
