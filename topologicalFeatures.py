@@ -6,6 +6,8 @@ import collections
 import xlsxwriter
 import subprocess as sp # for clear console: tmp = sp.call('clear',shell=True)
 import csv
+import pandas as pd
+
 
 # ==============================================================================
 #
@@ -123,7 +125,7 @@ f.close()
 #
 # ==============================================================================
 
-f= open("feature3456.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+f= open("Feature3456.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
 fieldnames = ['Gene_ID', 'DegreeCentrality','ClosenessCentrality','BetweennessCentrality','EigenvectoreCentrality','PageRank']
 f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
@@ -280,7 +282,7 @@ class articulationGraph:
     #The function to do DFS traversal. It uses recursive APUtil()
     def AP(self):
 
-        f= open("articulationPoints.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+        f= open("ArticulationPoints.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
         fieldnames = ['Gene_ID', 'isArticulationPoint']
         f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
@@ -358,6 +360,24 @@ for i in Gc.nodes():
     a += [temp]
     f_writer.writerow({'Gene_ID': i, 'isArticulationPoint': temp})
 
+# ==============================================================================
+#
+# merge all files
+#
+# ==============================================================================
+AvgSP = pd.read_csv("AvgSP.csv")
+LocalCC = pd.read_csv("LocalCC.csv")
+Feature_3456 = pd.read_csv("Feature3456.csv")
+ConnectivitySignificance = pd.read_csv("ConnectivitySignificance.csv")
+ArticulationPoints = pd.read_csv("ArticulationPoints.csv")
+Modularity = pd.read_csv("Modularity.csv")
+
+topoFeatures = AvgSP.merge(LocalCC, on='Gene_ID')
+topoFeatures = topoFeatures.merge(Feature_3456, on='Gene_ID')
+topoFeatures = topoFeatures.merge(ConnectivitySignificance, on='Gene_ID')
+topoFeatures = topoFeatures.merge(ArticulationPoints, on='Gene_ID')
+topoFeatures = topoFeatures.merge(Modularity, on='Gene_ID')
+
 # Notes:
 # 1. Due to the computational power limit and restraint of logging in through ssh,
 #    all the above computations are only partially done. Please run the whole script
@@ -367,8 +387,9 @@ for i in Gc.nodes():
 # 3. Networkx doesn't have function to calculate markov centrality, and I am confused
 #    by the difference between markov centrality, random walk betweenness, and pagerank.
 #    If neccessary, I will try to implement the calculation of random walk betweennes
-# 4. I haven't finish the implementation of converting modularity_matrix to a series,
-#    and haven't finishe the implementation of finding articulation protein.
+# 4. There are some remaining problem in calculating connectivity significance, including
+#    getting result of "nan" and runtime error (and I have already excluded the case that
+#    denominator is zero)
 # Questions:
 # 1. Shall we convert all proteins represented in Uniprot and GO term form
 #    into geneID representation?
