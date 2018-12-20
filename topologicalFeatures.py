@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import collections
 import xlsxwriter
 import subprocess as sp # for clear console: tmp = sp.call('clear',shell=True)
-
+import csv
 
 # ==============================================================================
 #
@@ -50,13 +50,18 @@ for i in range(len(diseases)):
 #
 # ==============================================================================
 
-f= open("AvgSP.txt","w+")
-f.write("Gene_ID      Average Shortest Path to all Disease genes\n")
+
+
+f = open('AvgSP.csv', mode='w')
+fieldnames = ['Gene_ID', 'Average Shortest Path to all Disease genes']
+f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+
 for i in Gc.nodes:
     a = 0
     for j in range(len(diseases)):
         a += len(nx.shortest_path(Gc,source=str(i),target=str(diseases[j])))
-    f.write(str(a/float(len(diseases)))+"\n")
+    f_writer.writerow({'Gene_ID': i, 'Average Shortest Path to all Disease genes': a/float(len(diseases))})
+
 f.close()
 
 
@@ -69,9 +74,10 @@ f.close()
 # ==============================================================================
 
 neighbors_of_diseases = []
-f= open("LocalCC.txt","w+")
-f.write("Only the first level neighbors of disease nodes are shown here\n")
-f.write("Gene_ID      Local Clustering Coefficient\n")
+
+f= open("LocalCC.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+fieldnames = ['Gene_ID', 'Local Clustering Coefficient']
+f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
 for i in range(len(diseases)):
     neighbors_of_diseases += [n for n in Gc.neighbors(diseases[i])]
@@ -91,7 +97,7 @@ for i in range(len(neighbors_of_diseases)):
         localCC = float(numerator/denominator)
     else:
         localCC = 0 # lowest clustering coefficient
-    f.write(str(neighbors_of_diseases[i])+ "   "+str(localCC)+"\n")
+    f_writer.writerow({'Gene_ID': neighbors_of_diseases[i], 'Local Clustering Coefficient': localCC})
 f.close()
 
 
@@ -117,68 +123,48 @@ f.close()
 #
 # ==============================================================================
 
-import xlsxwriter
-def output(Gc):
-    workbook = xlsxwriter.Workbook('feature3456.xlsx')
-    worksheet = workbook.add_worksheet()
+f= open("feature3456.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+fieldnames = ['Gene_ID', 'DegreeCentrality','ClosenessCentrality','BetweennessCentrality','EigenvectoreCentrality','PageRank']
+f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
-    row = 0
-    col = 0
+s1 = list(Gc)
 
-    worksheet.write(row, col,'GeneID')
-    worksheet.write(row, col+1,'DegreeCentrality')
-    worksheet.write(row, col+2,'ClosenessCentrality')
-    worksheet.write(row, col+3,'BetweennessCentrality')
-    worksheet.write(row, col+4,'EigenvectoreCentrality')
-    worksheet.write(row, col+5,'PercolationCentrality')
-    worksheet.write(row, col+5,'PercolationCentrality')
+s2 = []
+dic2 = nx.degree_centrality(Gc)
+for key,value in dic2.items():
+    s2 += [value]
 
-    row += 1
+s3 = []
+dic3 = nx.closeness_centrality(Gc)
+for key,value in dic3.items():
+    s3 += [value]
 
-    s1 = list(Gc)
+s4 = []
+dic4 = nx.betweeness_centrality(Gc)
+for key,value in dic4.items():
+    s4 += [value]
 
-    s2 = []
-    dic2 = nx.degree_centrality(Gc)
-    for key,value in dic2.items():
-        s2 += [value]
+s5 = []
+dic5 = nx.eigenvector_centrality(Gc)
+for key,value in dic5.items():
+    s5 += [value]
 
-    s3 = []
-    dic3 = nx.closeness_centrality(Gc)
-    for key,value in dic3.items():
-        s3 += [value]
+s6 = []
+dic6 = nx.percolation_centrality(Gc)
+for key,value in dic6.items():
+    s6 += [value]
 
-    s4 = []
-    dic4 = nx.betweeness_centrality(Gc)
-    for key,value in dic4.items():
-        s4 += [value]
+s7 = []
+dic7 = nx.pagerank(Gc)
+for key,value in dic7.items():
+    s7 += [value]
 
-    s5 = []
-    dic5 = nx.eigenvector_centrality(Gc)
-    for key,value in dic5.items():
-        s5 += [value]
+for i in len(s1):
+    f_writer.writerow({'Gene_ID': s1[i], 'DegreeCentrality': s2[i], 'ClosenessCentrality': s3[i],
+                        'BetweennessCentrality': s4[i], 'EigenvectoreCentrality': s5[i],
+                        'PercolationCentrality': s6[i], 'PageRank': s7[i]})
 
-    s6 = []
-    dic6 = nx.percolation_centrality(Gc)
-    for key,value in dic6.items():
-        s6 += [value]
-
-    s7 = []
-    dic7 = nx.pagerank(Gc)
-    for key,value in dic7.items():
-        s7 += [value]
-
-    for i in len(s1):
-        worksheet.write(row, col,s1[i])
-        worksheet.write(row, col+1,s2[i])
-        worksheet.write(row, col+2,s3[i])
-        worksheet.write(row, col+3,s4[i])
-        worksheet.write(row, col+4,s5[i])
-        worksheet.write(row, col+5,s6[i])
-        worksheet.write(row, col+6,s7[i])
-        row += 1
-
-    workbook.close()
-output(Gc)
+f.close()
 
 
 # ==============================================================================
@@ -189,8 +175,10 @@ output(Gc)
 
 from scipy.special import comb
 
-f= open("ConnectivitySignificance.txt","w+")
-f.write("GeneID      ConnectivitySignificance\n")
+f= open("ConnectivitySignificance.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+fieldnames = ['Gene_ID', 'ConnectivitySignificance']
+f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+
 alpha = 2
 for node in Gc.nodes():
     neighbors = set(Gc.neighbors(node))
@@ -215,7 +203,7 @@ for node in Gc.nodes():
         pvalue = -1                                 # set those invalid number to nan, meaning those nodes doesn't have connection with disease node
     else:
         pvalue = (n1*n2)/d
-    f.write(str(node)+"    "+str(pvalue)+"\n")
+    f_writer.writerow({'Gene_ID': node, 'ConnectivitySignificance': pvalue})
 
 # Remaining problem:
 # There are results "nan" and "runtime error" problem unsolved
@@ -232,6 +220,20 @@ class articulationGraph:
     def __init__(self,networkxGraph):
         self.graph =  networkxGraph
         self.Time = 0
+
+
+    def largestIndex(self):
+
+        temp = nx.to_dict_of_lists(Gc)
+
+        largest = float("-inf")
+        for key,value in temp.items():
+            keyInt = int(key)
+            if (keyInt > largest):
+                largest = keyInt
+
+        return largest
+
 
     def APUtil(self,u, visited, ap, parent, low, disc):
 
@@ -257,12 +259,18 @@ class articulationGraph:
                 # u is an articulation point in following cases
                 # (1) u is root of DFS tree and has two or more chilren.
                 if parent[int(u)] == -1 and children > 1:
-                    ap[int(u)] = True
+                    ap[int(u)] = 1
 
                 #(2) If u is not root and low value of one of its child is more
                 # than discovery value of u.
-                if parent[int(u)] != -1 and low[int(v)] >= disc[int(u)]:
-                    ap[int(u)] = True
+                elif parent[int(u)] != -1 and low[int(v)] >= disc[int(u)]:
+                    ap[int(u)] = 1
+
+                # mark those non-articulation points
+                else:
+                    ap[int(u)] = 0
+
+                f_writer.writerow({'Gene_ID': v, 'isArticulationPoint': ap[int(u)]})
 
                 # Update low value of u for parent function calls
             elif int(v) != parent[int(u)]:
@@ -272,11 +280,17 @@ class articulationGraph:
     #The function to do DFS traversal. It uses recursive APUtil()
     def AP(self):
 
-        visited = [False] * (len(self.graph.nodes))
-        disc = [float("Inf")] * (len(self.graph.nodes))
-        low = [float("Inf")] * (len(self.graph.nodes))
-        parent = [-1] * (len(self.graph.nodes))
-        ap = [False] * (len(self.graph.nodes)) #To store articulation points
+        f= open("articulationPoints.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+        fieldnames = ['Gene_ID', 'isArticulationPoint']
+        f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+        largestIndex = largestIndex()
+        visited = [False] * (largestIndex)
+        disc = [float("Inf")] * (largestIndex)
+        low = [float("Inf")] * (largestIndex)
+        parent = [-1] * (largestIndex)
+        ap = [-1] * (largestIndex)           # To store articulation points, 1 represents True, 0 represents False
+                                             # -1 represents those indices that don't have a node corresponding to it
         counter = 0
         # Call the recursive helper function
         # to find articulation points
@@ -286,10 +300,8 @@ class articulationGraph:
                 self.APUtil(i, visited, ap, parent, low, disc)
             counter += 1
 
-        for index, value in enumerate (ap):
-            if value == True:
-                print(index)
-
+articulation = articulationGraph(Gc)
+articulation.AP()
 
 # ==============================================================================
 #
@@ -320,9 +332,31 @@ class articulationGraph:
 # print(modularity(Gc, partition))
 
 # Local modularity
-f = open("Modularity.txt",'w+')
-f.write("GeneID     Modularity")
+f= open("Modularity.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+fieldnames = ['Gene_ID', 'Modularity']
+f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+
 B = nx.modularity_matrix(Gc)
+
+a = []                                    # store average modularity of a node to all disease nodes
+counter1 = 0                              # specify matrix B row
+
+for i in Gc.nodes():
+    temp = 0
+    counter2 = 0                          # specify matrix B column
+    counter3 = 0
+
+    for j in Gc.nodes():
+        if((j != i) and (j in diseases)): # exclude itself, and only include the modularity with disease nodes
+            temp += B[counter1,counter2]
+            counter3 += 1
+        counter2 += 1
+
+    counter1 += 1
+
+    temp = float(temp/counter3)
+    a += [temp]
+    f_writer.writerow({'Gene_ID': i, 'isArticulationPoint': temp})
 
 # Notes:
 # 1. Due to the computational power limit and restraint of logging in through ssh,
