@@ -282,7 +282,7 @@ Specifically for protein-protein network, or generally for a biological network 
 
       key in `:wq` to save the changes
 
-      Open the SSH access in MAC OS(local): `systemsetup -f -setremotelogin on`
+      Open the SSH access in MAC OS(local): `systemsetup -f -setremotelogin o
 
       Transfering files from remote server to local desktop: `scp -r gene-network.png MCL\ Inflation.png limengyang@172.22.188.255:/Users/limengyang/Module-Detection/
 `
