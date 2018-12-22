@@ -72,31 +72,39 @@ f.close()
 #
 # ==============================================================================
 
-neighbors_of_diseases = []
-
 f= open("LocalCC.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
 fieldnames = ['Gene_ID', 'Local Clustering Coefficient']
 f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
-for i in range(len(disease_genes)):
-    neighbors_of_diseases += [n for n in Gc.neighbors(disease_genes[i])]
+neighbors_of_diseases = {}
+for i in disease_genes:
+    temp = {i: [n for n in Gc.neighbors(i)]}
+    neighbors_of_diseases.update(temp)
+#
+# neighbors = []
+# for i in disease_genes:
+#     neighbors += [n for n in Gc.neighbors(i)]
+#
+# uniqueNeighbors = set(neighbors)
+# not_connect_to_diseases = all_genes_in_network - uniqueNeighborsneighbors
 
-for i in range(len(neighbors_of_diseases)):
-    k = Gc.degree(neighbors_of_diseases[i])
-    neighbors = [n for n in Gc.neighbors(neighbors_of_diseases[i])]
+for key,value in neighbors_of_diseases.items():
+    k = Gc.degree(key)
     N = 0
-    for j in range(len(neighbors)):
-        if (j+1) < len(neighbors):
-            for k in range(j+1,len(neighbors)):
-                if(Gc.has_edge(str(j),str(k))):
-                    N = N+1
+    for j in range(len(value)):
+        if (j+1) < len(value):
+            for k in range(j+1, len(value)):
+                if(Gc.has_edge(value[j],value[k])):
+                    N += 1
     denominator = k*(k-1)
     numerator = 2*N
     if (denominator != 0):
         localCC = float(numerator/denominator)
     else:
-        localCC = 0 # lowest clustering coefficient
-    f_writer.writerow({'Gene_ID': neighbors_of_diseases[i], 'Local Clustering Coefficient': localCC})
+        localCC = 0
+    f_writer.writerow({'Gene_ID': key, 'Local Clustering Coefficient': localCC})
+
+
 f.close()
 
 
@@ -121,14 +129,9 @@ f.close()
 # rationale: the notion of how central a node is in a networkx relative to a particular node
 #
 # ==============================================================================
-f = open("test.csv",mode = 'w')
-f.write("lalala")
-f.close()
-f = open("test.csv", mode = 'w')
-f.write("lueluelue")
-f.close()
-f= open("Feature3456.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
-fieldnames = ['Gene_ID', 'DegreeCentrality','ClosenessCentrality','BetweennessCentrality','EigenvectoreCentrality','PageRank']
+
+f = open("Feature34.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+fieldnames = ['Gene_ID', 'DegreeCentrality','ClosenessCentrality']
 f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
 s1 = list(Gc)
@@ -143,36 +146,54 @@ dic3 = nx.closeness_centrality(Gc)
 for key,value in dic3.items():
     s3 += [value]
 
+for i in range(len(s1)):
+    f_writer.writerow({'Gene_ID': s1[i], 'DegreeCentrality': s2[i], 'ClosenessCentrality': s3[i]})
+
+f.close()
+
+# ==============================================================================
+
+f = open("Feature5.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+fieldnames = ['Gene_ID', 'BetweennessCentrality','EigenvectoreCentrality','PageRank']
+f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+s1 = list(Gc)
+
 s4 = []
 dic4 = nx.betweenness_centrality(Gc)
 for key,value in dic4.items():
     s4 += [value]
+
+for i in range(len(s1)):
+    f_writer.writerow({'Gene_ID': s1[i],'BetweennessCentrality': s4[i]})
+
+f.close()
+
+# ==============================================================================
+
+f = open("Feature68.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+fieldnames = ['Gene_ID', 'EigenvectoreCentrality','PageRank']
+f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+s1 = list(Gc)
 
 s5 = []
 dic5 = nx.eigenvector_centrality(Gc)
 for key,value in dic5.items():
     s5 += [value]
 
-s6 = []
-dic6 = nx.percolation_centrality(Gc)
-for key,value in dic6.items():
-    s6 += [value]
+# s6 = []
+# dic6 = nx.percolation_centrality(Gc)
+# for key,value in dic6.items():
+#     s6 += [value]
 
 s7 = []
 dic7 = nx.pagerank(Gc)
 for key,value in dic7.items():
     s7 += [value]
 
-f= open("Feature57.csv",mode='w')
-fieldnames = ['Gene_ID', 'EigenvectoreCentrality','PageRank']
-f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 for i in range(len(s1)):
     f_writer.writerow({'Gene_ID': s1[i], 'EigenvectoreCentrality': s5[i],'PageRank': s7[i]})
-
-for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'DegreeCentrality': s2[i], 'ClosenessCentrality': s3[i],
-                        'BetweennessCentrality': s4[i], 'EigenvectoreCentrality': s5[i],
-                        'PercolationCentrality': s6[i], 'PageRank': s7[i]})
 
 f.close()
 
@@ -269,7 +290,6 @@ class articulationGraph:
                 low[int(u)] = min(low[int(u)], disc[int(v)])
     #The function to do DFS traversal. It uses recursive APUtil()
     def AP(self):
-
         f = open("ArticulationPoints.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
         fieldnames = ['Gene_ID', 'isArticulationPoint']
         f_writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -343,8 +363,10 @@ for i in Gc.nodes():
     counter1 += 1
     temp = float(temp/counter3)
     a += [temp]
+    # print(i+"  "+str(temp))
     f_writer.writerow({'Gene_ID': i, 'Modularity': temp})
 
+f.close()
 
 # ==============================================================================
 #
@@ -352,84 +374,30 @@ for i in Gc.nodes():
 #
 # ==============================================================================
 
-with open('AvgSP.csv', 'r+') as f:
-    fieldnames = ['Gene_ID', 'Average Shortest Path to all Disease genes']
-    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-    content = f.read()
-    f.seek(0, 0)
-    f_writer.writerow({'Gene_ID': 'Gene_ID', 'Average Shortest Path to all Disease genes': 'Average Shortest Path to all Disease genes'})
-
-with open('LocalCC.csv', 'r+') as f:
-    fieldnames = ['Gene_ID', 'Local Clustering Coefficient']
-    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-    content = f.read()
-    f.seek(0, 0)
-    f_writer.writerow({'Gene_ID': 'Gene_ID', 'Local Clustering Coefficient': 'Local Clustering Coefficient'})
-
-with open('Feature34.csv', 'r+') as f:
-    fieldnames = ['Gene_ID', 'DegreeCentrality','ClosenessCentrality']
-    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-    content = f.read()
-    f.seek(0, 0)
-    f_writer.writerow({'Gene_ID': 'Gene_ID', 'DegreeCentrality': 'DegreeCentrality', 'ClosenessCentrality': 'ClosenessCentrality'})
-
-# with open('Feature34.csv', 'r+') as f:
-#     fieldnames = ['Gene_ID', 'DegreeCentrality','ClosenessCentrality', 'C1','C2','C3']
+# with open('AvgSP.csv', 'r+') as f:
+#     fieldnames = ['Gene_ID', 'Average Shortest Path to all Disease genes']
 #     f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 #     content = f.read()
 #     f.seek(0, 0)
-#     f_writer.writerow({'Gene_ID': 'Gene_ID', 'DegreeCentrality': 'DegreeCentrality', 'ClosenessCentrality': 'ClosenessCentrality','C1':'C1','C2':'C2','C3':'C3'})
-# Feature_34.drop(['C1','C2','C3'],axis = 1, inplace=True)
+#     f_writer.writerow({'Gene_ID': 'Gene_ID', 'Average Shortest Path to all Disease genes': 'Average Shortest Path to all Disease genes'})
 
-with open('Feature5.csv', 'r+') as f:
-    fieldnames = ['Gene_ID', 'BetweennessCentrality']
-    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-    content = f.read()
-    f.seek(0, 0)
-    f_writer.writerow({'Gene_ID': 'Gene_ID', 'BetweennessCentrality':'BetweennessCentrality'})
+AvgSP = pd.read_csv("AvgSP.csv",index_col=0, names = ['Gene_ID','Average Shortest Path to all Disease genes'])
+LocalCC = pd.read_csv("LocalCC.csv", index_col=0, names = ['Gene_ID','Local Clustering Coefficient'])
+Feature_34 = pd.read_csv("Feature34.csv", index_col=0, names = ['Gene_ID', 'DegreeCentrality','ClosenessCentrality'])
+Feature_5 = pd.read_csv("Feature5.csv", index_col=0, names = ['Gene_ID', 'BetweennessCentrality','EigenvectoreCentrality','PageRank']) # need to drop
+Feature_5.drop(['EigenvectoreCentrality','PageRank'], axis = 1, inplace = True)
+Feature_68 = pd.read_csv("Feature68.csv", index_col=0, names = ['Gene_ID','EigenvectoreCentrality','PageRank'])
+ConnectivitySignificance = pd.read_csv("ConnectivitySignificance.csv", index_col=0, names = ['Gene_ID','ConnectivitySignificance'])
+ArticulationPoints = pd.read_csv("ArticulationPoints.csv", index_col=0, names = ['Gene_ID', 'isArticulationPoint'])
+Modularity = pd.read_csv("Modularity.csv", index_col=0, names = ['Gene_ID', 'Modularity'])
 
-with open('Feature68.csv', 'r+') as f:
-    fieldnames = ['Gene_ID', 'EigenvectoreCentrality','PageRank']
-    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-    content = f.read()
-    f.seek(0, 0)
-    f_writer.writerow({'Gene_ID': 'Gene_ID', 'EigenvectoreCentrality': 'EigenvectoreCentrality','PageRank': 'PageRank'})
-
-with open('ConnectivitySignificance.csv', 'r+') as f:
-    fieldnames = ['Gene_ID', 'ConnectivitySignificance']
-    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-    content = f.read()
-    f.seek(0, 0)
-    f_writer.writerow({'Gene_ID': 'Gene_ID', 'ConnectivitySignificance': 'ConnectivitySignificance'})
-
-with open('ArticulationPoints.csv', 'r+') as f:
-    fieldnames = ['Gene_ID', 'isArticulationPoint']
-    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-    content = f.read()
-    f.seek(0, 0)
-    f_writer.writerow({'Gene_ID': 'Gene_ID', 'isArticulationPoint': 'isArticulationPoint'})
-
-with open('Modularity.csv', 'r+') as f:
-    fieldnames = ['Gene_ID', 'Modularity']
-    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-    content = f.read()
-    f.seek(0, 0)
-    f_writer.writerow({'Gene_ID': 'Gene_ID', 'Modularity': 'Modularity'})
-
-AvgSP = pd.read_csv("AvgSP.csv",index_col=0)
-LocalCC = pd.read_csv("LocalCC.csv", index_col=0)
-Feature_34 = pd.read_csv("Feature34.csv", index_col=0)
-Feature_5 = pd.read_csv("Feature5.csv", index_col=0)
-Feature_68 = pd.read_csv("Feature68.csv", index_col=0)
-ConnectivitySignificance = pd.read_csv("ConnectivitySignificance.csv", index_col=0)
-ArticulationPoints = pd.read_csv("ArticulationPoints.csv", index_col=0)
-Modularity = pd.read_csv("Modularity.csv", index_col=0)
-
-topoFeatures = AvgSP.merge(LocalCC, on='Gene_ID')
-topoFeatures = topoFeatures.merge(Feature_3456, on='Gene_ID')
-topoFeatures = topoFeatures.merge(ConnectivitySignificance, on='Gene_ID')
-topoFeatures = topoFeatures.merge(ArticulationPoints, on='Gene_ID')
-topoFeatures = topoFeatures.merge(Modularity, on='Gene_ID')
+topoFeatures = AvgSP.join(LocalCC)
+topoFeatures = topoFeatures.join(Feature_34)
+topoFeatures = topoFeatures.join(Feature_5)
+topoFeatures = topoFeatures.join(Feature_68)
+topoFeatures = topoFeatures.join(ConnectivitySignificance)
+topoFeatures = topoFeatures.join(ArticulationPoints)
+topoFeatures = topoFeatures.join(Modularity)
 topoFeatures.to_csv("allTopoFeatures.csv",index='Gene_ID',sep=',')
 
 # Notes:
