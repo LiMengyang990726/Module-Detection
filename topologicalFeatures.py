@@ -202,6 +202,9 @@ f.close()
 #
 # connectivity significance
 #
+# My implementation is according to the definition, while by refering to the DIAMOnD algorithm
+# The correct way of computing it should be changed into the follows
+#
 # ==============================================================================
 
 from scipy.special import comb
@@ -400,6 +403,8 @@ topoFeatures = topoFeatures.join(ArticulationPoints)
 topoFeatures = topoFeatures.join(Modularity)
 topoFeatures.to_csv("allTopoFeatures.csv",index='Gene_ID',sep=',')
 
+# ArticulationPoints data is skewed
+
 # Notes:
 # 1. Due to the computational power limit and restraint of logging in through ssh,
 #    all the above computations are only partially done. Please run the whole script
@@ -419,3 +424,4 @@ topoFeatures.to_csv("allTopoFeatures.csv",index='Gene_ID',sep=',')
 #    while it doesn't have topological properties
 #    An inspiration: can figure out those potential disease genes and then observe if an
 #    individual's gene bar contains that specific gene
+LocalCC_norm,DegreeCen_norm,CloseCen_norm,BetweenCen_norm,EigenCen_norm,PageRank_norm,Modu_norm
