@@ -117,3 +117,12 @@ for i in range(70):
 # Method 2
 ##################################
 # Using Support Vector machine
+from sklearn.svm import SVC
+from sklearn.model_selection import train_test_split
+
+train_df, val_df = train_test_split(topoFeatures_norm, test_size=0.1, random_state=2018)
+
+svclassifier = SVC(kernel='linear')
+svclassifier.fit(train_df)
+
+y_pred = svclassifier.predict(X_test)

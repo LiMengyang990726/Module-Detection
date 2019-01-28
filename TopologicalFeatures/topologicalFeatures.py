@@ -8,7 +8,6 @@ import subprocess as sp # for clear console: tmp = sp.call('clear',shell=True)
 import csv
 import pandas as pd
 
-
 # ==============================================================================
 #
 # Read input
@@ -130,10 +129,6 @@ f.close()
 #
 # ==============================================================================
 
-f = open("Feature34.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
-fieldnames = ['Gene_ID', 'DegreeCentrality','ClosenessCentrality']
-f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-
 s1 = list(Gc)
 
 s2 = []
@@ -141,47 +136,57 @@ dic2 = nx.degree_centrality(Gc)
 for key,value in dic2.items():
     s2 += [value]
 
+f = open("DegreeCentrality.csv",mode = 'w')
+fieldnames = ['Gene_ID','DegreeCentrality']
+f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+for i in range(len(s1)):
+    f_writer.writerow({'Gene_ID': s1[i], 'DegreeCentrality': s2[i]})
+
+f.close()
+
+
 s3 = []
 dic3 = nx.closeness_centrality(Gc)
 for key,value in dic3.items():
     s3 += [value]
 
+f = open("ClosenessCentrality.csv",mode = 'w')
+fieldnames = ['Gene_ID','ClosenessCentrality']
+f_writer = csv.DictWriter(f,fieldnames=fieldnames)
 for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'DegreeCentrality': s2[i], 'ClosenessCentrality': s3[i]})
+    f_writer.writerow({'Gene_ID': s1[i], 'ClosenessCentrality': s3[i]})
 
 f.close()
 
-# ==============================================================================
-
-f = open("Feature5.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
-fieldnames = ['Gene_ID', 'BetweennessCentrality','EigenvectoreCentrality','PageRank']
-f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-
-s1 = list(Gc)
 
 s4 = []
 dic4 = nx.betweenness_centrality(Gc)
 for key,value in dic4.items():
     s4 += [value]
 
+f = open("BetweennessCentrality.csv",mode = 'w')
+fieldnames = ['Gene_ID','BetweennessCentrality']
+f_writer = csv.DictWriter(f,fieldnames=fieldnames)
 for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i],'BetweennessCentrality': s4[i]})
+    f_writer.writerow({'Gene_ID': s1[i], 'BetweennessCentrality': s4[i]})
 
 f.close()
 
-# ==============================================================================
-
-f = open("Feature68.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
-fieldnames = ['Gene_ID', 'EigenvectoreCentrality','PageRank']
-f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-
-s1 = list(Gc)
 
 s5 = []
 dic5 = nx.eigenvector_centrality(Gc)
 for key,value in dic5.items():
     s5 += [value]
 
+f = open("EigenvectorCentrality.csv",mode = 'w')
+fieldnames = ['Gene_ID','EigenvectorCentrality']
+f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+for i in range(len(s1)):
+    f_writer.writerow({'Gene_ID': s1[i], 'EigenvectorCentrality': s5[i]})
+
+f.close()
+
+### doesn't work(method doesn't exist)
 # s6 = []
 # dic6 = nx.percolation_centrality(Gc)
 # for key,value in dic6.items():
@@ -192,11 +197,112 @@ dic7 = nx.pagerank(Gc)
 for key,value in dic7.items():
     s7 += [value]
 
+f = open("PageRank.csv",mode = 'w')
+fieldnames = ['Gene_ID','PageRank']
+f_writer = csv.DictWriter(f,fieldnames=fieldnames)
 for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'EigenvectoreCentrality': s5[i],'PageRank': s7[i]})
+    f_writer.writerow({'Gene_ID': s1[i], 'PageRank': s7[i]})
 
 f.close()
 
+
+s8 = []
+dic8 = nx.information_centrality(Gc)
+for key,value in dic8.items():
+    s8 += [value]
+
+f = open("InformationCentrality.csv",mode = 'w')
+fieldnames = ['Gene_ID','InformationCentrality']
+f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+for i in range(len(s1)):
+    f_writer.writerow({'Gene_ID': s1[i], 'InformationCentrality': s8[i]})
+
+f.close()
+
+### doesn't work(method doesn't exist)
+# s9 = []
+# dic9 = nx.second_order_centrality(Gc)
+# for key,value in dic9.items():
+#     s9 += [value]
+# 
+# f = open("SecondOrderCentrality.csv",mode = 'w')
+# fieldnames = ['Gene_ID','SecondOrderCentrality']
+# f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+# for i in range(len(s1)):
+#     f_writer.writerow({'Gene_ID': s1[i], 'SecondOrderCentrality': s9[i]})
+#
+# f.close()
+
+
+### onlt work for directed graph
+# s10 = []
+# dic10 = nx.in_degree_centrality(Gc)
+# for key,value in dic10.items():
+#     s10 += [value]
+#
+# f = open("InDegreeCentrality.csv",mode = 'w')
+# fieldnames = ['Gene_ID','InDegreeCentrality']
+# f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+# for i in range(len(s1)):
+#     f_writer.writerow({'Gene_ID': s1[i], 'InDegreeCentrality': s10[i]})
+#
+# f.close()
+#
+# s11 = []
+# dic11 = nx.out_degree_centrality(Gc)
+# for key,value in dic11.items():
+#     s11 += [value]
+#
+# f = open("OutDegreeCentrality.csv",mode = 'w')
+# fieldnames = ['Gene_ID','OutDegreeCentrality']
+# f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+# for i in range(len(s1)):
+#     f_writer.writerow({'Gene_ID': s1[i], 'OutDegreeCentrality': s11[i]})
+#
+# f.close()
+
+
+### fails to converge
+# s12 = []
+# dic12 = nx.katz_centrality(Gc)
+# for key,value in dic12.items():
+#     s12 += [value]
+#
+# f = open("KatzCentrality.csv",mode = 'w')
+# fieldnames = ['Gene_ID','KatzCentrality']
+# f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+# for i in range(len(s1)):
+#     f_writer.writerow({'Gene_ID': s1[i], 'KatzCentrality': s12[i]})
+#
+# f.close()
+
+
+s13 = []
+dic13 = nx.communicability_betweenness_centrality(Gc)
+for key,value in dic13.items():
+    s13 += [value]
+
+f = open("CommunicabilityBetweennessCentrality.csv",mode = 'w')
+fieldnames = ['Gene_ID','CommunicabilityBetweennessCentrality']
+f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+for i in range(len(s1)):
+    f_writer.writerow({'Gene_ID': s1[i], 'CommunicabilityBetweennessCentrality': s13[i]})
+
+f.close()
+
+
+s14 = []
+dic14 = nx.harmonic_centrality(Gc)
+for key,value in dic14.items():
+    s14 += [value]
+
+f = open("HarmonicCentrality.csv",mode = 'w')
+fieldnames = ['Gene_ID','HarmonicCentrality']
+f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+for i in range(len(s1)):
+    f_writer.writerow({'Gene_ID': s1[i], 'HarmonicCentrality': s14[i]})
+
+f.close()
 
 # ==============================================================================
 #
@@ -385,21 +491,52 @@ f.close()
 #     f_writer.writerow({'Gene_ID': 'Gene_ID', 'Average Shortest Path to all Disease genes': 'Average Shortest Path to all Disease genes'})
 
 AvgSP = pd.read_csv("AvgSP.csv",index_col=0, names = ['Gene_ID','Average Shortest Path to all Disease genes'])
+
 LocalCC = pd.read_csv("LocalCC.csv", index_col=0, names = ['Gene_ID','Local Clustering Coefficient'])
-Feature_34 = pd.read_csv("Feature34.csv", index_col=0, names = ['Gene_ID', 'DegreeCentrality','ClosenessCentrality'])
-Feature_5 = pd.read_csv("Feature5.csv", index_col=0, names = ['Gene_ID', 'BetweennessCentrality','EigenvectoreCentrality','PageRank']) # need to drop
-Feature_5.drop(['EigenvectoreCentrality','PageRank'], axis = 1, inplace = True)
-Feature_68 = pd.read_csv("Feature68.csv", index_col=0, names = ['Gene_ID','EigenvectoreCentrality','PageRank'])
-ConnectivitySignificance = pd.read_csv("ConnectivitySignificance.csv", index_col=0, names = ['Gene_ID','ConnectivitySignificance'])
-ArticulationPoints = pd.read_csv("ArticulationPoints.csv", index_col=0, names = ['Gene_ID', 'isArticulationPoint'])
+
+DegreeCentrality = pd.read_csv("DegreeCentrality.csv", index_col=0, names = ['Gene_ID','DegreeCentrality'])
+
+ClosenessCentrality = pd.read_csv("ClosenessCentrality.csv", index_col=0, names = ['Gene_ID','ClosenessCentrality'])
+
+BetweennessCentrality = pd.read_csv("BetweennessCentrality.csv", index_col=0, names = ['Gene_ID','BetweennessCentrality'])
+
+EigenvectoreCentrality = pd.read_csv("EigenvectoreCentrality.csv", index_col=0, names = ['Gene_ID','EigenvectoreCentrality'])
+
+PageRank = pd.read_csv("PageRank.csv", index_col=0, names = ['Gene_ID','PageRank'])
+
+InformationCentrality = pd.read_csv("InformationCentrality.csv", index_col=0, names = ['Gene_ID','InformationCentrality'])
+
+SecondOrderCentrality = pd.read_csv("SecondOrderCentrality.csv", index_col=0, names = ['Gene_ID','SecondOrderCentrality'])
+
+InDegreeCentrality = pd.read_csv("InDegreeCentrality.csv", index_col=0, names = ['Gene_ID','InDegreeCentrality'])
+
+OutDegreeCentrality = pd.read_csv("OutDegreeCentrality.csv", index_col=0, names = ['Gene_ID','OutDegreeCentrality'])
+
+KatzCentrality = pd.read_csv("KatzCentrality.csv", index_col=0, names = ['Gene_ID','KatzCentrality'])
+
+CommunicabilityBetweennessCentrality = pd.read_csv("CommunicabilityBetweennessCentrality.csv", index_col=0, names = ['Gene_ID','CommunicabilityBetweennessCentrality'])
+
+HarmonicCentrality = pd.read_csv("HarmonicCentrality.csv", index_col=0, names = ['Gene_ID','HarmonicCentrality'])
+
+# ConnectivitySignificance = pd.read_csv("ConnectivitySignificance.csv", index_col=0, names = ['Gene_ID','ConnectivitySignificance'])
+
+# ArticulationPoints = pd.read_csv("ArticulationPoints.csv", index_col=0, names = ['Gene_ID', 'isArticulationPoint'])
+
 Modularity = pd.read_csv("Modularity.csv", index_col=0, names = ['Gene_ID', 'Modularity'])
 
 topoFeatures = AvgSP.join(LocalCC)
-topoFeatures = topoFeatures.join(Feature_34)
-topoFeatures = topoFeatures.join(Feature_5)
-topoFeatures = topoFeatures.join(Feature_68)
-topoFeatures = topoFeatures.join(ConnectivitySignificance)
-topoFeatures = topoFeatures.join(ArticulationPoints)
+topoFeatures = topoFeatures.join(DegreeCentrality)
+topoFeatures = topoFeatures.join(ClosenessCentrality)
+topoFeatures = topoFeatures.join(BetweennessCentrality)
+topoFeatures = topoFeatures.join(EigenvectoreCentrality)
+topoFeatures = topoFeatures.join(PageRank)
+topoFeatures = topoFeatures.join(InformationCentrality)
+topoFeatures = topoFeatures.join(SecondOrderCentrality)
+topoFeatures = topoFeatures.join(InDegreeCentrality)
+topoFeatures = topoFeatures.join(OutDegreeCentrality)
+topoFeatures = topoFeatures.join(KatzCentrality)
+topoFeatures = topoFeatures.join(CommunicabilityBetweennessCentrality)
+topoFeatures = topoFeatures.join(HarmonicCentrality)
 topoFeatures = topoFeatures.join(Modularity)
 topoFeatures.to_csv("allTopoFeatures.csv",index='Gene_ID',sep=',')
 
@@ -424,4 +561,5 @@ topoFeatures.to_csv("allTopoFeatures.csv",index='Gene_ID',sep=',')
 #    while it doesn't have topological properties
 #    An inspiration: can figure out those potential disease genes and then observe if an
 #    individual's gene bar contains that specific gene
-LocalCC_norm,DegreeCen_norm,CloseCen_norm,BetweenCen_norm,EigenCen_norm,PageRank_norm,Modu_norm
+
+# LocalCC_norm,DegreeCen_norm,CloseCen_norm,BetweenCen_norm,EigenCen_norm,PageRank_norm,Modu_norm
