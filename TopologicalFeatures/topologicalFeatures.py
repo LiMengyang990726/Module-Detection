@@ -36,13 +36,54 @@ def readInput():
     return Gc, disease_dic,diseases
 
 Gc,disease_dic,diseases=readInput()
-
 all_genes_in_network = set(Gc.nodes())
 disease_genes = set(diseases) & all_genes_in_network
 disease_genes = list(disease_genes)
 
-# ==============================================================================
-#
+def readInput2():
+    G = nx.read_edgelist("./data/ppi_edgelist.csv")
+    Gc = max(nx.connected_component_subgraphs(G), key=len)
+
+    disgenes = []
+    with open('./data/disgenes_uniprot.csv', 'r') as f:
+        for line in f.readlines():
+            test = line
+            disgenes.append(test)
+    for i in range(len(disgenes)):
+        temp = disgenes[i]
+        print(temp)
+        disgenes[i] = temp[:6]
+        print(temp[:6])
+
+    endgenes = []
+    with open('./data/endgenes_uniprot.csv', 'r') as f:
+        for line in f.readlines():
+            test = line
+            endgenes.append(test)
+    for i in range(len(endgenes)):
+        temp = endgenes[i]
+        print(temp)
+        endgenes[i] = temp[:6]
+        print(temp[:6])
+
+    ndnegenes = []
+    with open('./data/ndnegenes_uniprot.csv', 'r') as f:
+        for line in f.readlines():
+            test = line
+            ndnegenes.append(test)
+    for i in range(len(ndnegenes)):
+        temp = ndnegenes[i]
+        print(temp)
+        ndnegenes[i] = temp[:6]
+        print(temp[:6])
+
+    return disgenes,endgenes,ndnegenes,Gc
+
+disease_genes,endgenes,ndnegenes,Gc = readInput2()
+
+
+f.close()
+# ===============================================================
 # F1 average shortest path length:
 # rationale: Longer the shortest path distance from the seed node, less relevant
 #
@@ -224,7 +265,7 @@ f.close()
 # dic9 = nx.second_order_centrality(Gc)
 # for key,value in dic9.items():
 #     s9 += [value]
-# 
+#
 # f = open("SecondOrderCentrality.csv",mode = 'w')
 # fieldnames = ['Gene_ID','SecondOrderCentrality']
 # f_writer = csv.DictWriter(f,fieldnames=fieldnames)
@@ -348,78 +389,79 @@ f.close()
 # ==============================================================================
 #
 # articulation protein
+# Discarded: as most of the results are articulation point
 #
 # ==============================================================================
 
-import sys
-
-sys.setrecursionlimit(1000000000)
-
-class articulationGraph:
-    def __init__(self,networkxGraph):
-        self.graph =  networkxGraph
-        self.Time = 0
-    def largestIndex(self):
-        temp = nx.to_dict_of_lists(Gc)
-        largest = float("-inf")
-        for key,value in temp.items():
-            keyInt = int(key)
-            if (keyInt > largest):
-                largest = keyInt
-        return largest
-    def APUtil(self,u, visited, ap, parent, low, disc, f_writer):
-        children = 0
-        visited[int(u)] = True
-        self.Time += 1
-        # recursive all neighbors of this node
-        for v in self.graph.neighbors(str(u)):
-            # If v is not visited yet, then make it a child of u
-            # in DFS tree and recur for it
-            if visited[int(v)] == False:
-                parent[int(v)] = int(u)
-                children += 1
-                self.APUtil(v, visited, ap, parent, low, disc, f_writer)
-                # Check if the subtree rooted with v has a connection to
-                # one of the ancestors of u
-                low[int(u)] = min(low[int(u)], low[int(v)])
-                # u is an articulation point in following cases
-                # (1) u is root of DFS tree and has two or more chilren.
-                if parent[int(u)] == -1 and children > 1:
-                    ap[int(u)] = 1
-                #(2) If u is not root and low value of one of its child is more
-                # than discovery value of u.
-                elif parent[int(u)] != -1 and low[int(v)] >= disc[int(u)]:
-                    ap[int(u)] = 1
-                # mark those non-articulation points
-                else:
-                    ap[int(u)] = 0
-                f_writer.writerow({'Gene_ID': v, 'isArticulationPoint': ap[int(u)]})
-                # Update low value of u for parent function calls
-            elif int(v) != parent[int(u)]:
-                low[int(u)] = min(low[int(u)], disc[int(v)])
-    #The function to do DFS traversal. It uses recursive APUtil()
-    def AP(self):
-        f = open("ArticulationPoints.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
-        fieldnames = ['Gene_ID', 'isArticulationPoint']
-        f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-        # largestIndex = largestIndex()
-        visited = [False] * (100653324)
-        disc = [float("Inf")] * (100653324)
-        low = [float("Inf")] * (100653324)
-        parent = [-1] * (100653324)
-        ap = [-1] * (100653324)           # To store articulation points, 1 represents True, 0 represents False
-                                             # -1 represents those indices that don't have a node corresponding to it
-        counter = 0
-        # Call the recursive helper function
-        # to find articulation points
-        # in DFS tree rooted with vertex 'i'
-        for i in self.graph.nodes:
-            if visited[counter] == False:
-                self.APUtil(i, visited, ap, parent, low, disc, f_writer)
-            counter += 1
-
-articulation = articulationGraph(Gc)
-articulation.AP()
+# import sys
+#
+# sys.setrecursionlimit(1000000000)
+#
+# class articulationGraph:
+#     def __init__(self,networkxGraph):
+#         self.graph =  networkxGraph
+#         self.Time = 0
+#     def largestIndex(self):
+#         temp = nx.to_dict_of_lists(Gc)
+#         largest = float("-inf")
+#         for key,value in temp.items():
+#             keyInt = int(key)
+#             if (keyInt > largest):
+#                 largest = keyInt
+#         return largest
+#     def APUtil(self,u, visited, ap, parent, low, disc, f_writer):
+#         children = 0
+#         visited[int(u)] = True
+#         self.Time += 1
+#         # recursive all neighbors of this node
+#         for v in self.graph.neighbors(str(u)):
+#             # If v is not visited yet, then make it a child of u
+#             # in DFS tree and recur for it
+#             if visited[int(v)] == False:
+#                 parent[int(v)] = int(u)
+#                 children += 1
+#                 self.APUtil(v, visited, ap, parent, low, disc, f_writer)
+#                 # Check if the subtree rooted with v has a connection to
+#                 # one of the ancestors of u
+#                 low[int(u)] = min(low[int(u)], low[int(v)])
+#                 # u is an articulation point in following cases
+#                 # (1) u is root of DFS tree and has two or more chilren.
+#                 if parent[int(u)] == -1 and children > 1:
+#                     ap[int(u)] = 1
+#                 #(2) If u is not root and low value of one of its child is more
+#                 # than discovery value of u.
+#                 elif parent[int(u)] != -1 and low[int(v)] >= disc[int(u)]:
+#                     ap[int(u)] = 1
+#                 # mark those non-articulation points
+#                 else:
+#                     ap[int(u)] = 0
+#                 f_writer.writerow({'Gene_ID': v, 'isArticulationPoint': ap[int(u)]})
+#                 # Update low value of u for parent function calls
+#             elif int(v) != parent[int(u)]:
+#                 low[int(u)] = min(low[int(u)], disc[int(v)])
+#     #The function to do DFS traversal. It uses recursive APUtil()
+#     def AP(self):
+#         f = open("ArticulationPoints.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
+#         fieldnames = ['Gene_ID', 'isArticulationPoint']
+#         f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+#         # largestIndex = largestIndex()
+#         visited = [False] * (100653324)
+#         disc = [float("Inf")] * (100653324)
+#         low = [float("Inf")] * (100653324)
+#         parent = [-1] * (100653324)
+#         ap = [-1] * (100653324)           # To store articulation points, 1 represents True, 0 represents False
+#                                              # -1 represents those indices that don't have a node corresponding to it
+#         counter = 0
+#         # Call the recursive helper function
+#         # to find articulation points
+#         # in DFS tree rooted with vertex 'i'
+#         for i in self.graph.nodes:
+#             if visited[counter] == False:
+#                 self.APUtil(i, visited, ap, parent, low, disc, f_writer)
+#             counter += 1
+#
+# articulation = articulationGraph(Gc)
+# articulation.AP()
 # strange result: there is only one non-articular point
 
 # ==============================================================================
