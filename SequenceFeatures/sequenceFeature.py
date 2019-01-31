@@ -80,13 +80,13 @@ def getDis(v1,v2):
 #
 ##########################################################################################
 #INPUT FILES
-seq_file="./SequenceFeatures/endgenes_sequence.txt"
+seq_file="./SequenceFeatures/DataSet2Features/disgenes_sequence.txt"
 
 #read ids and sequences in a dictionary
 seq_data=np.genfromtxt(seq_file, dtype=str, delimiter='\t')
 
 import csv
-f = open('SequenceFeaturesEnd.csv', mode='w')
+f = open('SequenceFeaturesDis.csv', mode='w')
 fieldnames = ['Protein_ID', 'FrequencyA','FrequencyB',
                 'FrequencyC','FrequencyD','FrequencyE',
                 'FrequencyF','FrequencyG','FrequencyH',

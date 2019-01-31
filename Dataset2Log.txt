@@ -1,0 +1,48 @@
+Log for DataSet2
+
+1. 
+Feature Name: localCC
+Error Message: 
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.5/dist-packages/networkx/classes/graph.py", line 1128, in neighbors
+    return iter(self._adj[n])
+KeyError: 'Q9H221'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+  File "/usr/local/lib/python3.5/dist-packages/networkx/classes/graph.py", line 1130, in neighbors
+    raise NetworkXError("The node %s is not in the graph." % (n,))
+networkx.exception.NetworkXError: The node Q9H221 is not in the graph.
+Possible Solution: try except
+
+
+2. 
+Feature Name: Information centrality
+Error Message:
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<decorator-gen-60>", line 2, in current_flow_closeness_centrality
+  File "/usr/local/lib/python3.5/dist-packages/networkx/utils/decorators.py", line 73, in _not_implemented_for
+    return not_implement_for_func(*args, **kwargs)
+  File "/usr/local/lib/python3.5/dist-packages/networkx/algorithms/centrality/current_flow_closeness.py", line 76, in current_flow_closeness_centrality
+    raise nx.NetworkXError("Graph not connected.")
+networkx.exception.NetworkXError: Graph not connected.
+
+>>>There are 111 connected components here in the Graph.
+
+3. 
+Feature Name: Communicability Betweenness Centrality
+Error Message:
+/usr/local/lib/python3.5/dist-packages/networkx/algorithms/centrality/subgraph_alg.py:246: RuntimeWarning: invalid value encountered in true_divide
+  B = (expA - scipy.linalg.expm(A.A)) / expA
+
+
+4. 
+Feature Name: Hydropathy
+Error Message: 'U'
+
+5. 
+Feature Name: Instability
+Error Message: 'U'

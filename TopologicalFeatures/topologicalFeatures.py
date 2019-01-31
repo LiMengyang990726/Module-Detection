@@ -42,8 +42,7 @@ disease_genes = list(disease_genes)
 
 def readInput2():
     G = nx.read_edgelist("./data/ppi_edgelist.csv")
-    Gc = max(nx.connected_component_subgraphs(G), key=len)
-
+    # Gc = max(nx.connected_component_subgraphs(G), key=len)
     disgenes = []
     with open('./data/disgenes_uniprot.csv', 'r') as f:
         for line in f.readlines():
@@ -54,7 +53,6 @@ def readInput2():
         print(temp)
         disgenes[i] = temp[:6]
         print(temp[:6])
-
     endgenes = []
     with open('./data/endgenes_uniprot.csv', 'r') as f:
         for line in f.readlines():
@@ -65,7 +63,6 @@ def readInput2():
         print(temp)
         endgenes[i] = temp[:6]
         print(temp[:6])
-
     ndnegenes = []
     with open('./data/ndnegenes_uniprot.csv', 'r') as f:
         for line in f.readlines():
@@ -76,13 +73,12 @@ def readInput2():
         print(temp)
         ndnegenes[i] = temp[:6]
         print(temp[:6])
-
-    return disgenes,endgenes,ndnegenes,Gc
+    return disgenes,endgenes,ndnegenes,G
 
 disease_genes,endgenes,ndnegenes,Gc = readInput2()
 
 
-f.close()
+
 # ===============================================================
 # F1 average shortest path length:
 # rationale: Longer the shortest path distance from the seed node, less relevant
@@ -98,7 +94,10 @@ f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 for i in Gc.nodes:
     a = 0
     for j in range(len(disease_genes)):
-        a += len(nx.shortest_path(Gc,source=str(i),target=str(disease_genes[j])))
+        try:
+            a += len(nx.shortest_path(Gc,source=str(i),target=str(disease_genes[j])))
+        except:
+            a += 0
     f_writer.writerow({'Gene_ID': i, 'Average Shortest Path to all Disease genes': a/float(len(disease_genes))})
 
 f.close()
@@ -118,8 +117,11 @@ f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
 neighbors_of_diseases = {}
 for i in disease_genes:
-    temp = {i: [n for n in Gc.neighbors(i)]}
-    neighbors_of_diseases.update(temp)
+    try:
+        temp = {i: [n for n in Gc.neighbors(i)]}
+        neighbors_of_diseases.update(temp)
+    except:
+        f_writer.writerow({'Gene_ID':i, 'Local Clustering Coefficient':0})
 #
 # neighbors = []
 # for i in disease_genes:
@@ -248,7 +250,7 @@ f.close()
 
 
 s8 = []
-dic8 = nx.information_centrality(Gc)
+dic8 = nx.information_centrality(Gc) # can only solve for connected part, choose the throw this
 for key,value in dic8.items():
     s8 += [value]
 
@@ -319,7 +321,7 @@ f.close()
 
 
 s13 = []
-dic13 = nx.communicability_betweenness_centrality(Gc)
+dic13 = nx.communicability_betweenness_centrality(Gc) # Run time warning for some cases
 for key,value in dic13.items():
     s13 += [value]
 
@@ -532,6 +534,14 @@ f.close()
 #     f.seek(0, 0)
 #     f_writer.writerow({'Gene_ID': 'Gene_ID', 'Average Shortest Path to all Disease genes': 'Average Shortest Path to all Disease genes'})
 
+all_genes = disease_genes + endgenes + ndnegenes
+f= open("ProteinID.csv",mode='w')
+fieldnames = ['Protein_ID']
+f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+for i in range(len(all_genes)):
+    f_writer.writerow({'Protein_ID':all_genes[i]})
+f.close()
+
 AvgSP = pd.read_csv("AvgSP.csv",index_col=0, names = ['Gene_ID','Average Shortest Path to all Disease genes'])
 
 LocalCC = pd.read_csv("LocalCC.csv", index_col=0, names = ['Gene_ID','Local Clustering Coefficient'])
@@ -542,7 +552,7 @@ ClosenessCentrality = pd.read_csv("ClosenessCentrality.csv", index_col=0, names 
 
 BetweennessCentrality = pd.read_csv("BetweennessCentrality.csv", index_col=0, names = ['Gene_ID','BetweennessCentrality'])
 
-EigenvectoreCentrality = pd.read_csv("EigenvectoreCentrality.csv", index_col=0, names = ['Gene_ID','EigenvectoreCentrality'])
+EigenvectorCentrality = pd.read_csv("EigenvectorCentrality.csv", index_col=0, names = ['Gene_ID','EigenvectorCentrality'])
 
 PageRank = pd.read_csv("PageRank.csv", index_col=0, names = ['Gene_ID','PageRank'])
 
@@ -583,7 +593,6 @@ topoFeatures = topoFeatures.join(Modularity)
 topoFeatures.to_csv("allTopoFeatures.csv",index='Gene_ID',sep=',')
 
 # ArticulationPoints data is skewed
-
 # Notes:
 # 1. Due to the computational power limit and restraint of logging in through ssh,
 #    all the above computations are only partially done. Please run the whole script
