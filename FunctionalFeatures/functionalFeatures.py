@@ -40,7 +40,8 @@ frames = [dis,end,ndne]
 result = pd.concat(frames)
 result.shape
 
-result_without_null = result.fillna(0)
+result_without_null = result.dropna()
+result_without_null.shape
 
 from sklearn import preprocessing
 result_without_null['BP'] = preprocessing.scale(result_without_null['BP'])
