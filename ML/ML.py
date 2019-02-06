@@ -126,3 +126,29 @@ svclassifier = SVC(kernel='linear')
 svclassifier.fit(train_df)
 
 y_pred = svclassifier.predict(X_test)
+
+import matplotlib.pyplot as plt
+nested_scores = [0.75187379, 0.74978296, 0.75187125, 0.7511745 , 0.75204764,
+       0.75187258, 0.75065464, 0.75187343, 0.75187161, 0.75204716,
+       0.75100453, 0.75013212, 0.75186967, 0.75152633, 0.75187379,
+       0.75082534, 0.75187306, 0.75047873, 0.75222065, 0.75100271,
+       0.75187125, 0.75204316, 0.74943331, 0.75187367, 0.75187343,
+       0.75065525, 0.75065501, 0.75012945, 0.75134932, 0.75169848]
+non_nested_scores = [0.75187184, 0.75169772, 0.75204597, 0.75204597, 0.75204597,
+       0.75187184, 0.75134947, 0.75187184, 0.75187184, 0.75204597,
+       0.75204597, 0.75187184, 0.75222009, 0.75152359, 0.75204597,
+       0.75187184, 0.75204597, 0.75204597, 0.75187184, 0.75187184,
+       0.75187184, 0.75204597, 0.75152359, 0.75187184, 0.75187184,
+       0.75204597, 0.75187184, 0.75152359, 0.75204597, 0.75204597]
+
+plt.figure()
+plt.subplot(211)
+non_nested_scores_line, = plt.plot(non_nested_scores, color='r')
+nested_line, = plt.plot(nested_scores, color='b')
+plt.ylabel("score", fontsize="14")
+plt.legend([non_nested_scores_line, nested_line],
+           ["Non-Nested CV", "Nested CV"],
+           bbox_to_anchor=(0, .4, .5, 0))
+plt.title("Non-Nested and Nested Cross Validation on Iris Dataset",
+          x=.5, y=1.1, fontsize="15")
+plt.show()
