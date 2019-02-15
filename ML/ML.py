@@ -367,3 +367,54 @@ plt.show()
 ##################################
 # Method 3: Random Forest
 ##################################
+import pandas as pd
+import csv
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+%matplotlib inline
+from copy import deepcopy
+import numpy as np
+from sklearn.cluster import KMeans
+import networkx as nx
+import operator
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import make_classification
+
+######### Get Input
+data = pd.read_csv('cleanFeatures.csv')
+data.head()
+data.drop(['Unnamed: 0'], axis=1,inplace = True)
+
+######### Train test split
+from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
+X = data.drop(['Target','ProteinID'],axis=1)
+y = data['Target']
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.1, random_state=2018)
+
+######### Create model
+X_train, y_train = make_classification(n_samples=1000, n_features=37,
+                           n_informative=2, n_redundant=0,
+                           random_state=0, shuffle=False)
+clf = RandomForestClassifier(n_estimators=100, max_depth=2,
+                             random_state=0)
+clf.fit(X_train, y_train)
+
+######### Evaluate Result
+predictions = clf.predict(X_test)
+
+TP = 0
+FP = 0
+FN = 0
+actual = y_test.tolist()
+for i in range(len(predictions)):
+    if(predictions[i] == actual[i]):
+        TP += 1
+    if((predictions[i] == 0) and (actual[i] == 1)):
+        FP += 1
+    if((predictions[i] == 1) and (actual[i] == 0)):
+        FN += 1
+
+F1 = (2*TP)/(2*TP+FP+FN)                # F1:0.6612339930151339
+TN = len(predictions) - TP - FP - FN    # ACC: 0.49391304347826087
+ACC = (TP+TN) / len(predictions)
