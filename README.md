@@ -299,3 +299,51 @@ Specifically for protein-protein network, or generally for a biological network 
     `gene-disease0` contains the seed nodes of 70 diseases after small modification to feed the gene-visualization.py file
 
     `gene-disease` contains the seed nodes of 70 diseases (original)
+
+## Recommended Structure
+-- Module-detection
+  |
+  |
+  --data
+    |
+    |
+    --dataset
+      |
+      |
+      --alldatas (example format is shown in the dataset folder)
+  |
+  |
+  --FunctioinalFeatures
+    |
+    |
+    --DataSetFeatures
+      |
+      |
+      --result during execution will be stored here
+    |
+    |
+    --functionalFeatures.py(all you need to do is to change corresponding paths)
+  |
+  |
+  --SequenceFeatures
+    |
+    |
+    --DataSetFeatures
+      |
+      |
+      --result during execution will be stored here
+    |
+    |
+    --sequenceFeatures.py(all you need to do is to change corresponding paths)
+  |
+  |
+  --TopologicalFeatures
+    |
+    |
+    --DataSetFeatures
+      |
+      |
+      --result during execution will be stored here
+    |
+    |
+    --topologicalFeatures.py(all you need to do is to change corresponding paths)

@@ -7,6 +7,8 @@ import xlsxwriter
 import subprocess as sp # for clear console: tmp = sp.call('clear',shell=True)
 import csv
 import pandas as pd
+from scipy.special import comb
+import os
 
 # ==============================================================================
 #
@@ -14,10 +16,11 @@ import pandas as pd
 #
 # ==============================================================================
 
-def readInput():
-    G = nx.read_edgelist("./gene-network.tsv")
+# For reading dataset1 type: with edgelist, gene-disease
+def readInput1(edgelist,gene-disease):
+    G = nx.read_edgelist(edgelist)
     Gc = max(nx.connected_component_subgraphs(G), key=len)
-    disease_file  = open("gene-disease0.TSV", 'r')
+    disease_file  = open(gene-disease, 'r')
     diseases = []
     disease_dic = {}
     componentDic = {}
@@ -35,14 +38,10 @@ def readInput():
             disease_dic.update({disease_key: disease_list})
     return Gc, disease_dic,diseases
 
-Gc,disease_dic,diseases=readInput()
-all_genes_in_network = set(Gc.nodes())
-disease_genes = set(diseases) & all_genes_in_network
-disease_genes = list(disease_genes)
 
-def readInput2():
+# For reading dataset2 type: with edgelist, disgenes_uniprot,endgenes_uniprot,ndnegenes_uniprot
+def readInput2(edgelist, disgenes_uniprot,endgenes_uniprot,ndnegenes_uniprot):
     G = nx.read_edgelist("./data/ppi_edgelist.csv")
-    # Gc = max(nx.connected_component_subgraphs(G), key=len)
     disgenes = []
     with open('./data/disgenes_uniprot.csv', 'r') as f:
         for line in f.readlines():
@@ -75,8 +74,6 @@ def readInput2():
         print(temp[:6])
     return disgenes,endgenes,ndnegenes,G
 
-disease_genes,endgenes,ndnegenes,Gc = readInput2()
-
 
 
 # ===============================================================
@@ -85,22 +82,22 @@ disease_genes,endgenes,ndnegenes,Gc = readInput2()
 #
 # ==============================================================================
 
+def AvgSP(Gc,disease_genes,path):
+    f = open(os.path.join(path,'AvgSP.csv'), mode='w')
+    fieldnames = ['Gene_ID', 'Average Shortest Path to all Disease genes']
+    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
+    for i in Gc.nodes:
+        a = 0
+        for j in range(len(disease_genes)):
+            try:
+                a += len(nx.shortest_path(Gc,source=str(i),target=str(disease_genes[j])))
+            except:
+                a += 0
+        f_writer.writerow({'Gene_ID': i, 'Average Shortest Path to all Disease genes': a/float(len(disease_genes))})
 
-f = open('AvgSP.csv', mode='w')
-fieldnames = ['Gene_ID', 'Average Shortest Path to all Disease genes']
-f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+    f.close()
 
-for i in Gc.nodes:
-    a = 0
-    for j in range(len(disease_genes)):
-        try:
-            a += len(nx.shortest_path(Gc,source=str(i),target=str(disease_genes[j])))
-        except:
-            a += 0
-    f_writer.writerow({'Gene_ID': i, 'Average Shortest Path to all Disease genes': a/float(len(disease_genes))})
-
-f.close()
 
 
 # ==============================================================================
@@ -111,241 +108,173 @@ f.close()
 #
 # ==============================================================================
 
-f= open("LocalCC.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
-fieldnames = ['Gene_ID', 'Local Clustering Coefficient']
-f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+def LocalCC(Gc,disease_genes,path):
+    f= open(os.path.join(path,"LocalCC.csv"),mode='w') # Only the first level neighbors of disease nodes are shown here
+    fieldnames = ['Gene_ID', 'Local Clustering Coefficient']
+    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
-neighbors_of_diseases = {}
-for i in disease_genes:
-    try:
-        temp = {i: [n for n in Gc.neighbors(i)]}
-        neighbors_of_diseases.update(temp)
-    except:
-        f_writer.writerow({'Gene_ID':i, 'Local Clustering Coefficient':0})
-#
-# neighbors = []
-# for i in disease_genes:
-#     neighbors += [n for n in Gc.neighbors(i)]
-#
-# uniqueNeighbors = set(neighbors)
-# not_connect_to_diseases = all_genes_in_network - uniqueNeighborsneighbors
+    neighbors_of_diseases = {}
+    for i in disease_genes:
+        try:
+            temp = {i: [n for n in Gc.neighbors(i)]}
+            neighbors_of_diseases.update(temp)
+        except:
+            f_writer.writerow({'Gene_ID':i, 'Local Clustering Coefficient':0})
 
-for key,value in neighbors_of_diseases.items():
-    k = Gc.degree(key)
-    N = 0
-    for j in range(len(value)):
-        if (j+1) < len(value):
-            for k in range(j+1, len(value)):
-                if(Gc.has_edge(value[j],value[k])):
-                    N += 1
-    denominator = k*(k-1)
-    numerator = 2*N
-    if (denominator != 0):
-        localCC = float(numerator/denominator)
-    else:
-        localCC = 0
-    f_writer.writerow({'Gene_ID': key, 'Local Clustering Coefficient': localCC})
+    for key,value in neighbors_of_diseases.items():
+        k = Gc.degree(key)
+        N = 0
+        for j in range(len(value)):
+            if (j+1) < len(value):
+                for k in range(j+1, len(value)):
+                    if(Gc.has_edge(value[j],value[k])):
+                        N += 1
+        denominator = k*(k-1)
+        numerator = 2*N
+        if (denominator != 0):
+            localCC = float(numerator/denominator)
+        else:
+            localCC = 0
+        f_writer.writerow({'Gene_ID': key, 'Local Clustering Coefficient': localCC})
 
 
-f.close()
+    f.close()
+
+
 
 
 # ==============================================================================
 #
-# F3 degree centrality
+# F2 degree centrality
 # rationale: Higher, more likely to be involved in a more important functional module
 
-# F4 closeness centrality
+# F3 closeness centrality
 # rationale: Higher, more functionally important as needs to be communicated quickly.
 
-# F5 betweeness centrality
+# F4 betweeness centrality
 # rationale: An important node will lie on a higher proportion of the paths.
 
-# F6 eigenvector centrality
+# F5 eigenvector centrality
 # rationale: the influence of a node in a network
 
-# F7 Percolation centrality
-# rationale: importance of a node in purely topological terms, despite the network dynamic
+# (F6 Percolation centrality (NOT WORKING!)
+# rationale: importance of a node in purely topological terms, despite the network dynamic)
 
-# F8 pagerank
+# F6 pagerank
 # rationale: the notion of how central a node is in a networkx relative to a particular node
+
+# (F7 information centrality (FAILED))
+
+# (F8 second order centrality (METHOD DOES NOT EXIST))
+
+# (F9 in degree centrality (ONLY FOR DIRECTED GRAPH))
+
+# (F10 out degree centrality (ONLY FOR DIRECTED GRAPH))
+
+# (F11 katz centrality (FAILS TO CONVERGE))
+
+# (F12 communicability betweenness centrality (FAILED))
+
+# F13 harmonic centrality
 #
 # ==============================================================================
 
-s1 = list(Gc)
+def DegreeCentrality(Gc,path):
+    s1 = list(Gc)
 
-s2 = []
-dic2 = nx.degree_centrality(Gc)
-for key,value in dic2.items():
-    s2 += [value]
+    s2 = []
+    dic2 = nx.degree_centrality(Gc)
+    for key,value in dic2.items():
+        s2 += [value]
 
-f = open("DegreeCentrality.csv",mode = 'w')
-fieldnames = ['Gene_ID','DegreeCentrality']
-f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'DegreeCentrality': s2[i]})
+    f = open(os.path.join(path,"DegreeCentrality.csv"),mode = 'w')
+    fieldnames = ['Gene_ID','DegreeCentrality']
+    f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+    for i in range(len(s1)):
+        f_writer.writerow({'Gene_ID': s1[i], 'DegreeCentrality': s2[i]})
 
-f.close()
+    f.close()
 
+def ClosenessCentrality(Gc,path):
+    s1 = list(Gc)
 
-s3 = []
-dic3 = nx.closeness_centrality(Gc)
-for key,value in dic3.items():
-    s3 += [value]
+    s3 = []
+    dic3 = nx.closeness_centrality(Gc)
+    for key,value in dic3.items():
+        s3 += [value]
 
-f = open("ClosenessCentrality.csv",mode = 'w')
-fieldnames = ['Gene_ID','ClosenessCentrality']
-f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'ClosenessCentrality': s3[i]})
+    f = open(os.path.join(path,"ClosenessCentrality.csv"),mode = 'w')
+    fieldnames = ['Gene_ID','ClosenessCentrality']
+    f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+    for i in range(len(s1)):
+        f_writer.writerow({'Gene_ID': s1[i], 'ClosenessCentrality': s3[i]})
 
-f.close()
+    f.close()
 
+def BetweennessCentrality(Gc,path):
+    s1 = list(Gc)
 
-s4 = []
-dic4 = nx.betweenness_centrality(Gc)
-for key,value in dic4.items():
-    s4 += [value]
+    s4 = []
+    dic4 = nx.betweenness_centrality(Gc)
+    for key,value in dic4.items():
+        s4 += [value]
 
-f = open("BetweennessCentrality.csv",mode = 'w')
-fieldnames = ['Gene_ID','BetweennessCentrality']
-f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'BetweennessCentrality': s4[i]})
+    f = open(os.path.join(path,"BetweennessCentrality.csv"),mode = 'w')
+    fieldnames = ['Gene_ID','BetweennessCentrality']
+    f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+    for i in range(len(s1)):
+        f_writer.writerow({'Gene_ID': s1[i], 'BetweennessCentrality': s4[i]})
 
-f.close()
+    f.close()
 
+def EigenvectorCentrality(Gc,path):
+    s1 = list(Gc)
 
-s5 = []
-dic5 = nx.eigenvector_centrality(Gc)
-for key,value in dic5.items():
-    s5 += [value]
+    s5 = []
+    dic5 = nx.eigenvector_centrality(Gc)
+    for key,value in dic5.items():
+        s5 += [value]
 
-f = open("EigenvectorCentrality.csv",mode = 'w')
-fieldnames = ['Gene_ID','EigenvectorCentrality']
-f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'EigenvectorCentrality': s5[i]})
+    f = open(os.path.join(path,"EigenvectorCentrality.csv"),mode = 'w')
+    fieldnames = ['Gene_ID','EigenvectorCentrality']
+    f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+    for i in range(len(s1)):
+        f_writer.writerow({'Gene_ID': s1[i], 'EigenvectorCentrality': s5[i]})
 
-f.close()
+    f.close()
 
-### doesn't work(method doesn't exist)
-# s6 = []
-# dic6 = nx.percolation_centrality(Gc)
-# for key,value in dic6.items():
-#     s6 += [value]
+def PageRank(Gc,path):
+    s1 = list(Gc)
 
-s7 = []
-dic7 = nx.pagerank(Gc)
-for key,value in dic7.items():
-    s7 += [value]
+    s6 = []
+    dic6 = nx.pagerank(Gc)
+    for key,value in dic6.items():
+        s6 += [value]
 
-f = open("PageRank.csv",mode = 'w')
-fieldnames = ['Gene_ID','PageRank']
-f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'PageRank': s7[i]})
+    f = open(os.path.join(path,"PageRank.csv"),mode = 'w')
+    fieldnames = ['Gene_ID','PageRank']
+    f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+    for i in range(len(s1)):
+        f_writer.writerow({'Gene_ID': s1[i], 'PageRank': s6[i]})
 
-f.close()
+    f.close()
 
+def HarmonicCentrality(Gc,path):
+    s1 = list(Gc)
 
-s8 = []
-dic8 = nx.information_centrality(Gc) # can only solve for connected part, choose the throw this
-for key,value in dic8.items():
-    s8 += [value]
+    s13 = []
+    dic13 = nx.harmonic_centrality(Gc)
+    for key,value in dic13.items():
+        s13 += [value]
 
-f = open("InformationCentrality.csv",mode = 'w')
-fieldnames = ['Gene_ID','InformationCentrality']
-f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'InformationCentrality': s8[i]})
+    f = open(os.path.join(path,"HarmonicCentrality.cs"),mode = 'w')
+    fieldnames = ['Gene_ID','HarmonicCentrality']
+    f_writer = csv.DictWriter(f,fieldnames=fieldnames)
+    for i in range(len(s1)):
+        f_writer.writerow({'Gene_ID': s1[i], 'HarmonicCentrality': s13[i]})
 
-f.close()
+    f.close()
 
-### doesn't work(method doesn't exist)
-# s9 = []
-# dic9 = nx.second_order_centrality(Gc)
-# for key,value in dic9.items():
-#     s9 += [value]
-#
-# f = open("SecondOrderCentrality.csv",mode = 'w')
-# fieldnames = ['Gene_ID','SecondOrderCentrality']
-# f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-# for i in range(len(s1)):
-#     f_writer.writerow({'Gene_ID': s1[i], 'SecondOrderCentrality': s9[i]})
-#
-# f.close()
-
-
-### onlt work for directed graph
-# s10 = []
-# dic10 = nx.in_degree_centrality(Gc)
-# for key,value in dic10.items():
-#     s10 += [value]
-#
-# f = open("InDegreeCentrality.csv",mode = 'w')
-# fieldnames = ['Gene_ID','InDegreeCentrality']
-# f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-# for i in range(len(s1)):
-#     f_writer.writerow({'Gene_ID': s1[i], 'InDegreeCentrality': s10[i]})
-#
-# f.close()
-#
-# s11 = []
-# dic11 = nx.out_degree_centrality(Gc)
-# for key,value in dic11.items():
-#     s11 += [value]
-#
-# f = open("OutDegreeCentrality.csv",mode = 'w')
-# fieldnames = ['Gene_ID','OutDegreeCentrality']
-# f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-# for i in range(len(s1)):
-#     f_writer.writerow({'Gene_ID': s1[i], 'OutDegreeCentrality': s11[i]})
-#
-# f.close()
-
-
-### fails to converge
-# s12 = []
-# dic12 = nx.katz_centrality(Gc)
-# for key,value in dic12.items():
-#     s12 += [value]
-#
-# f = open("KatzCentrality.csv",mode = 'w')
-# fieldnames = ['Gene_ID','KatzCentrality']
-# f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-# for i in range(len(s1)):
-#     f_writer.writerow({'Gene_ID': s1[i], 'KatzCentrality': s12[i]})
-#
-# f.close()
-
-
-s13 = []
-dic13 = nx.communicability_betweenness_centrality(Gc) # Run time warning for some cases
-for key,value in dic13.items():
-    s13 += [value]
-
-f = open("CommunicabilityBetweennessCentrality.csv",mode = 'w')
-fieldnames = ['Gene_ID','CommunicabilityBetweennessCentrality']
-f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'CommunicabilityBetweennessCentrality': s13[i]})
-
-f.close()
-
-
-s14 = []
-dic14 = nx.harmonic_centrality(Gc)
-for key,value in dic14.items():
-    s14 += [value]
-
-f = open("HarmonicCentrality.csv",mode = 'w')
-fieldnames = ['Gene_ID','HarmonicCentrality']
-f_writer = csv.DictWriter(f,fieldnames=fieldnames)
-for i in range(len(s1)):
-    f_writer.writerow({'Gene_ID': s1[i], 'HarmonicCentrality': s14[i]})
-
-f.close()
 
 # ==============================================================================
 #
@@ -354,38 +283,41 @@ f.close()
 # My implementation is according to the definition, while by refering to the DIAMOnD algorithm
 # The correct way of computing it should be changed into the follows
 #
-# ==============================================================================
-
-from scipy.special import comb
-
-f= open("ConnectivitySignificance.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
-fieldnames = ['Gene_ID', 'ConnectivitySignificance']
-f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-
-alpha = 2
-for node in Gc.nodes():
-    neighbors = set(Gc.neighbors(node))
-    N = len(Gc.nodes())
-    k = Gc.degree(node)
-    ks = 0
-    for neighbor in neighbors:
-        if neighbor in disease_genes:
-            ks += 1
-    ks0 = ks + (alpha-1)*ks
-    s = len(disease_genes)
-    s0 = s + (alpha-1)*s
-    n1 = comb(s0,ks0)                               # numerator 1
-    n2 = comb((N-s),(k-ks))                         # numerator 2
-    d = comb((N+(alpha-1)*ks),(k+(alpha-1)*ks))     # denominator
-    if (d == 0):
-        pvalue = -1                                 # set those invalid number to nan, meaning those nodes doesn't have connection with disease node
-    else:
-        pvalue = (n1*n2)/d
-    f_writer.writerow({'Gene_ID': node, 'ConnectivitySignificance': pvalue})
-
-f.close()
 # Remaining problem:
 # There are results "nan" and "runtime error" problem unsolved
+#
+# ==============================================================================
+
+
+def ConnectivitySignificance(Gc,disease_genes,path):
+
+    f= open(os.path.join(path,"ConnectivitySignificance.csv"),mode='w') # Only the first level neighbors of disease nodes are shown here
+    fieldnames = ['Gene_ID', 'ConnectivitySignificance']
+    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+
+    alpha = 2
+    for node in Gc.nodes():
+        neighbors = set(Gc.neighbors(node))
+        N = len(Gc.nodes())
+        k = Gc.degree(node)
+        ks = 0
+        for neighbor in neighbors:
+            if neighbor in disease_genes:
+                ks += 1
+        ks0 = ks + (alpha-1)*ks
+        s = len(disease_genes)
+        s0 = s + (alpha-1)*s
+        n1 = comb(s0,ks0)                               # numerator 1
+        n2 = comb((N-s),(k-ks))                         # numerator 2
+        d = comb((N+(alpha-1)*ks),(k+(alpha-1)*ks))     # denominator
+        if (d == 0):
+            pvalue = -1                                 # set those invalid number to nan, meaning those nodes doesn't have connection with disease node
+        else:
+            pvalue = (n1*n2)/d
+        f_writer.writerow({'Gene_ID': node, 'ConnectivitySignificance': pvalue})
+
+    f.close()
+
 
 
 # ==============================================================================
@@ -471,146 +403,113 @@ f.close()
 # modularity
 #
 # ==============================================================================
+def Modularity(Gc,path):
 
-# # Global modularity
-# from networkx.algorithms.community.quality import modularity
-#
-# N = len(Gc.nodes())
-# m = sum([d.get('weight', 1) for u, v, d in Gc.edges(data=True)])
-# q0 = 1.0 / (2.0*m)
-#
-# # Map node labels to contiguous integers
-# label_for_node = dict((i, v) for i, v in enumerate(Gc.nodes()))
-# node_for_label = dict((label_for_node[i], i) for i in range(N))
-#
-# # Calculate degrees
-# k_for_label = Gc.degree(Gc.nodes())
-# k = [k_for_label[label_for_node[i]] for i in range(N)]
-#
-# # Initialize community
-# communities = dict((i, frozenset([i])) for i in range(N))
-#
-# # Initial modularity
-# partition = [[label_for_node[x] for x in c] for c in communities.values()]
-# print(modularity(Gc, partition))
+    f= open(os.path.join(path,"Modularity.csv"),mode='w') # Only the first level neighbors of disease nodes are shown here
+    fieldnames = ['Gene_ID', 'Modularity']
+    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
-# Local modularity
-f= open("Modularity.csv",mode='w') # Only the first level neighbors of disease nodes are shown here
-fieldnames = ['Gene_ID', 'Modularity']
-f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+    B = nx.modularity_matrix(Gc)
 
-B = nx.modularity_matrix(Gc)
+    a = []                                    # store average modularity of a node to all disease nodes
+    counter1 = 0                              # specify matrix B row
 
-a = []                                    # store average modularity of a node to all disease nodes
-counter1 = 0                              # specify matrix B row
+    for i in Gc.nodes():
+        temp = 0
+        counter2 = 0                          # specify matrix B column
+        counter3 = 0
+        for j in Gc.nodes():
+            if((j != i) and (j in disease_genes)): # exclude itself, and only include the modularity with disease nodes
+                temp += B[counter1,counter2]
+                counter3 += 1
+            counter2 += 1
+        counter1 += 1
+        temp = float(temp/counter3)
+        a += [temp]
+        # print(i+"  "+str(temp))
+        f_writer.writerow({'Gene_ID': i, 'Modularity': temp})
 
-for i in Gc.nodes():
-    temp = 0
-    counter2 = 0                          # specify matrix B column
-    counter3 = 0
-    for j in Gc.nodes():
-        if((j != i) and (j in disease_genes)): # exclude itself, and only include the modularity with disease nodes
-            temp += B[counter1,counter2]
-            counter3 += 1
-        counter2 += 1
-    counter1 += 1
-    temp = float(temp/counter3)
-    a += [temp]
-    # print(i+"  "+str(temp))
-    f_writer.writerow({'Gene_ID': i, 'Modularity': temp})
+    f.close()
 
-f.close()
+
 
 # ==============================================================================
 #
 # merge all files
 #
 # ==============================================================================
+if __name__ == "__main__":
 
-# with open('AvgSP.csv', 'r+') as f:
-#     fieldnames = ['Gene_ID', 'Average Shortest Path to all Disease genes']
-#     f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-#     content = f.read()
-#     f.seek(0, 0)
-#     f_writer.writerow({'Gene_ID': 'Gene_ID', 'Average Shortest Path to all Disease genes': 'Average Shortest Path to all Disease genes'})
+    # All you need to modify is this path and the input path
+    path = "/Users/limengyang/Workspaces/Module-Detection/TopologicalFeatures/DataSet2Features/"
+    # Prepare the output directory
+    if not os.path.exists(path):
+        os.makedirs(path)
 
-all_genes = disease_genes + endgenes + ndnegenes
-f= open("ProteinID.csv",mode='w')
-fieldnames = ['Protein_ID']
-f_writer = csv.DictWriter(f, fieldnames=fieldnames)
-for i in range(len(all_genes)):
-    f_writer.writerow({'Protein_ID':all_genes[i]})
-f.close()
+    # Input path: NEED TO BE ABSOLUTE TYPE
+    inputPath = "/Users/limengyang/Workspaces/Module-Detection/data/dataset2/"
+    # Dataset1 Type:
+    # Gc,disease_dic,diseases = readInput1("/Users/limengyang/Workspaces/Module-Detection/data/dataset1/gene-network.tsv",
+    #                                     "/Users/limengyang/Workspaces/Module-Detection/data/dataset1/gene-disease0")
+    # all_genes_in_network = set(Gc.nodes())
+    # disease_genes = set(diseases) & all_genes_in_network
+    # disease_genes = list(disease_genes)
 
-AvgSP = pd.read_csv("AvgSP.csv",index_col=0, names = ['Gene_ID','Average Shortest Path to all Disease genes'])
+    # Dataset2 Type:
+    disease_genes,endgenes,ndnegenes,Gc = readInput2(os.path.join(path,"ppi_edgelist.csv"),
+                                                    os.path.join(path,"disgenes_uniprot.csv"),
+                                                    os.path.join(path,"endgenes_uniprot.csv"),
+                                                    os.path.join(path,"ndnegenes_uniprot.csv"))
 
-LocalCC = pd.read_csv("LocalCC.csv", index_col=0, names = ['Gene_ID','Local Clustering Coefficient'])
+    # Get topological features
+    AvgSP(Gc,disease_genes,path)
+    LocalCC(Gc,disease_genes,path)
+    DegreeCentrality(Gc,path)
+    ClosenessCentrality(Gc,path)
+    BetweennessCentrality(Gc,path)
+    EigenvectorCentrality(Gc,path)
+    PageRank(Gc,path)
+    HarmonicCentrality(Gc,path)
+    Modularity(Gc,path)
+    # ConnectivitySignificance(Gc,disease_genes,path)
 
-DegreeCentrality = pd.read_csv("DegreeCentrality.csv", index_col=0, names = ['Gene_ID','DegreeCentrality'])
+    # Write down all ProteinID
+    all_genes = disease_genes + endgenes + ndnegenes
+    f= open(os.path.join(path,"ProteinID.csv"),mode='w')
+    fieldnames = ['ProteinID']
+    f_writer = csv.DictWriter(f, fieldnames=fieldnames)
+    for i in range(len(all_genes)):
+        f_writer.writerow({'ProteinID':all_genes[i]})
+    f.close()
 
-ClosenessCentrality = pd.read_csv("ClosenessCentrality.csv", index_col=0, names = ['Gene_ID','ClosenessCentrality'])
+    a = pd.read_csv(os.path.join(path,"AvgSP.csv"),names = ['ProteinID','Average Shortest Path to all Disease genes'])
+    b = pd.read_csv(os.path.join(path,"BetweennessCentrality.csv"), names = ['ProteinID','BetweennessCentrality'])
+    c = pd.read_csv(os.path.join(path,"ClosenessCentrality.csv"),names = ['ProteinID','ClosenessCentrality'])
+    d = pd.read_csv(os.path.join(path,"DegreeCentrality.csv"),names = ['ProteinID','DegreeCentrality'])
+    e = pd.read_csv(os.path.join(path,"EigenvectorCentrality.csv"),names = ['ProteinID','EigenvectorCentrality'])
+    h = pd.read_csv(os.path.join(path,"HarmonicCentrality.csv"),names = ['ProteinID','HarmonicCentrality'])
+    l = pd.read_csv(os.path.join(path,"LocalCC.csv"),names = ['ProteinID','Local Clustering Coefficient'])
+    m = pd.read_csv(os.path.join(path,"Modularity.csv"),names = ['ProteinID','Modularity'])
+    pa = pd.read_csv(os.path.join(path,"PageRank.csv"),names = ['ProteinID','PageRank'])
+    pr = pd.read_csv(os.path.join(path,"ProteinID.csv"),names = ['ProteinID'])
 
-BetweennessCentrality = pd.read_csv("BetweennessCentrality.csv", index_col=0, names = ['Gene_ID','BetweennessCentrality'])
+    pra = pd.merge(pr,a,on='ProteinID',how='left')
+    prab = pd.merge(pra,b,on='ProteinID',how='left')
+    prabc = pd.merge(prab,c,on='ProteinID',how='left')
+    prabcd = pd.merge(prabc,d,on='ProteinID',how='left')
+    prabcde = pd.merge(prabcd,e,on='ProteinID',how='left')
+    prabcdeh = pd.merge(prabcde,h,on='ProteinID',how='left')
+    prabcdehl = pd.merge(prabcdeh,l,on='ProteinID',how='left')
+    prabcdehlm = pd.merge(prabcdehl,m,on='ProteinID',how='left')
+    prabcdehlmpr = pd.merge(prabcdehlm,pa,on='ProteinID',how='left')
 
-EigenvectorCentrality = pd.read_csv("EigenvectorCentrality.csv", index_col=0, names = ['Gene_ID','EigenvectorCentrality'])
-
-PageRank = pd.read_csv("PageRank.csv", index_col=0, names = ['Gene_ID','PageRank'])
-
-InformationCentrality = pd.read_csv("InformationCentrality.csv", index_col=0, names = ['Gene_ID','InformationCentrality'])
-
-SecondOrderCentrality = pd.read_csv("SecondOrderCentrality.csv", index_col=0, names = ['Gene_ID','SecondOrderCentrality'])
-
-InDegreeCentrality = pd.read_csv("InDegreeCentrality.csv", index_col=0, names = ['Gene_ID','InDegreeCentrality'])
-
-OutDegreeCentrality = pd.read_csv("OutDegreeCentrality.csv", index_col=0, names = ['Gene_ID','OutDegreeCentrality'])
-
-KatzCentrality = pd.read_csv("KatzCentrality.csv", index_col=0, names = ['Gene_ID','KatzCentrality'])
-
-CommunicabilityBetweennessCentrality = pd.read_csv("CommunicabilityBetweennessCentrality.csv", index_col=0, names = ['Gene_ID','CommunicabilityBetweennessCentrality'])
-
-HarmonicCentrality = pd.read_csv("HarmonicCentrality.csv", index_col=0, names = ['Gene_ID','HarmonicCentrality'])
-
-# ConnectivitySignificance = pd.read_csv("ConnectivitySignificance.csv", index_col=0, names = ['Gene_ID','ConnectivitySignificance'])
-
-# ArticulationPoints = pd.read_csv("ArticulationPoints.csv", index_col=0, names = ['Gene_ID', 'isArticulationPoint'])
-
-Modularity = pd.read_csv("Modularity.csv", index_col=0, names = ['Gene_ID', 'Modularity'])
-
-topoFeatures = AvgSP.join(LocalCC)
-topoFeatures = topoFeatures.join(DegreeCentrality)
-topoFeatures = topoFeatures.join(ClosenessCentrality)
-topoFeatures = topoFeatures.join(BetweennessCentrality)
-topoFeatures = topoFeatures.join(EigenvectoreCentrality)
-topoFeatures = topoFeatures.join(PageRank)
-topoFeatures = topoFeatures.join(InformationCentrality)
-topoFeatures = topoFeatures.join(SecondOrderCentrality)
-topoFeatures = topoFeatures.join(InDegreeCentrality)
-topoFeatures = topoFeatures.join(OutDegreeCentrality)
-topoFeatures = topoFeatures.join(KatzCentrality)
-topoFeatures = topoFeatures.join(CommunicabilityBetweennessCentrality)
-topoFeatures = topoFeatures.join(HarmonicCentrality)
-topoFeatures = topoFeatures.join(Modularity)
-topoFeatures.to_csv("allTopoFeatures.csv",index='Gene_ID',sep=',')
-
+    # Write to Output
+    prabcdehlmpr.to_csv("allTopoFeatures.csv",index='ProteinID',sep=',')
+    prabcdehlmpr.head()
 # ArticulationPoints data is skewed
 # Notes:
-# 1. Due to the computational power limit and restraint of logging in through ssh,
-#    all the above computations are only partially done. Please run the whole script
-#    to get all output files.
-# 2. Networkx's percolation_centrality package has some fallacy, and I might need
-#    some time to fix it.
-# 3. Networkx doesn't have function to calculate markov centrality, and I am confused
-#    by the difference between markov centrality, random walk betweenness, and pagerank.
-#    If neccessary, I will try to implement the calculation of random walk betweennes
-# 4. There are some remaining problem in calculating connectivity significance, including
+# 1. This main part requires sufficiently long time to run.
+# 2. ArticulationPoints data is skewed
+# 3. There are some remaining problem in calculating connectivity significance, including
 #    getting result of "nan" and runtime error (and I have already excluded the case that
 #    denominator is zero)
-# Questions:
-# 1. Shall we convert all proteins represented in Uniprot and GO term form
-#    into geneID representation?
-# 2. If we are going to use geneID representation, geneID is generic to an individual
-#    while it doesn't have topological properties
-#    An inspiration: can figure out those potential disease genes and then observe if an
-#    individual's gene bar contains that specific gene
-
-# LocalCC_norm,DegreeCen_norm,CloseCen_norm,BetweenCen_norm,EigenCen_norm,PageRank_norm,Modu_norm

@@ -8,116 +8,28 @@ import numpy as np
 from sklearn.cluster import KMeans
 import networkx as nx
 import operator
+import os
+from sklearn.model_selection import train_test_split
 
 ##################################
-# Data preprocessing
+# Data preparation
 ##################################
 
 ######### Read input files
-data = pd.read_csv('../allFeatures.csv')
-data.drop(['Unnamed: 0','Unnamed: 0_x','Unnamed: 0_y','FrequencyB','FrequencyJ','FrequencyO','FrequencyU','FrequencyX','FrequencyZ','Hydropathy','Instability'],axis=1,inplace=True)
-
-######### Change the format of SS fraction
-tup_all = data['SSfraction']
-Helix = []
-Turn = []
-Sheet = []
-
-for i in range(len(tup_all)):
-    tup = list(tup_all[i])
-    tup = tup[1:len(tup)-1]
-
-    counter = 0
-    start = [0] * 3
-    end = [0] *3
-
-    helix_each = []
-    turn_each = []
-    sheet_each = []
-
-    for i in range(len(tup)):
-        if(tup[i] == ','):
-            start[counter+1] = i
-            end[counter] = (i-1)
-            counter += 1
-
-    helix_each = tup[0:end[0]+1]
-    helix_float = "".join(helix_each)
-    helix_float = float(helix_float)
-    Helix.append(helix_float)
-
-    turn_each = tup[start[1]+2:end[1]+1]
-    turn_float = "".join(turn_each)
-    turn_float = float(turn_float)
-    Turn.append(turn_float)
-
-    sheet_each = tup[start[2]+2:]
-    sheet_float = "".join(turn_each)
-    sheet_float = float(sheet_float)
-    Sheet.append(sheet_float)
-
-data['SSfractionHelix'] = Helix
-data['SSfractionTurn'] = Turn
-data['SSfractionSheet'] = Sheet
-data.drop('SSfraction',axis=1,inplace=True)
-
-######### Drop those with null values as inserting zeros will change the network property
-data_without_null = data.dropna()
-data = data_without_null
+absolutePath = "/Users/limengyang/Workspaces/Module-Detection/"
+data = pd.read_csv(os.path.join(absolutePath,"cleanFeatures.csv"))
 data.head()
+data.drop(['Unnamed: 0'], axis=1,inplace = True)
+data.columns
 
-######### Data normalization
-from sklearn import preprocessing
-data['FrequencyA'] = preprocessing.scale(data['FrequencyA'])
-data['FrequencyC'] = preprocessing.scale(data['FrequencyC'])
-data['FrequencyD'] = preprocessing.scale(data['FrequencyD'])
-data['FrequencyE'] = preprocessing.scale(data['FrequencyE'])
-data['FrequencyF'] = preprocessing.scale(data['FrequencyF'])
-data['FrequencyG'] = preprocessing.scale(data['FrequencyG'])
-data['FrequencyH'] = preprocessing.scale(data['FrequencyH'])
-data['FrequencyI'] = preprocessing.scale(data['FrequencyI'])
-data['FrequencyK'] = preprocessing.scale(data['FrequencyK'])
-data['FrequencyL'] = preprocessing.scale(data['FrequencyL'])
-data['FrequencyM'] = preprocessing.scale(data['FrequencyM'])
-data['FrequencyN'] = preprocessing.scale(data['FrequencyN'])
-data['FrequencyP'] = preprocessing.scale(data['FrequencyP'])
-data['FrequencyQ'] = preprocessing.scale(data['FrequencyQ'])
-data['FrequencyR'] = preprocessing.scale(data['FrequencyR'])
-data['FrequencyS'] = preprocessing.scale(data['FrequencyS'])
-data['FrequencyT'] = preprocessing.scale(data['FrequencyT'])
-data['FrequencyV'] = preprocessing.scale(data['FrequencyV'])
-data['FrequencyW'] = preprocessing.scale(data['FrequencyW'])
-data['FrequencyY'] = preprocessing.scale(data['FrequencyY'])
-data['Aromaticity'] = preprocessing.scale(data['Aromaticity'])
-data['Isoelectric'] = preprocessing.scale(data['Isoelectric'])
-# data['Target'] = preprocessing.scale(data['Target'])
-data['Average Shortest Path to all Disease genes'] = preprocessing.scale(data['Average Shortest Path to all Disease genes'])
-data['BetweennessCentrality'] = preprocessing.scale(data['BetweennessCentrality'])
-data['ClosenessCentrality'] = preprocessing.scale(data['ClosenessCentrality'])
-data['DegreeCentrality'] = preprocessing.scale(data['DegreeCentrality'])
-data['EigenvectorCentrality'] = preprocessing.scale(data['EigenvectorCentrality'])
-data['HarmonicCentrality'] = preprocessing.scale(data['HarmonicCentrality'])
-data['Local Clustering Coefficient'] = preprocessing.scale(data['Local Clustering Coefficient'])
-data['Modularity'] = preprocessing.scale(data['Modularity'])
-data['PageRank'] = preprocessing.scale(data['PageRank'])
-data['SSfractionHelix'] = preprocessing.scale(data['SSfractionHelix'])
-data['SSfractionTurn'] = preprocessing.scale(data['SSfractionTurn'])
-data['SSfractionSheet'] = preprocessing.scale(data['SSfractionSheet'])
-
-######### Combine the functional features
-func = pd.read_csv("../allFunctioinalFeatures.csv")
-func.drop('Unnamed: 0',axis=1,inplace=True)
-result = pd.merge(data,func,on='ProteinID')
-result.to_csv("cleanFeatures.csv",index='ProteinID',sep=',')
+######### Split train test set
+X = data.drop(['Target','ProteinID'],axis=1)
+y = data['Target']
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.1, random_state=2018)
 
 ##################################
 # Method 1: PCA + K-Means
 ##################################
-
-######### Read Input
-data = pd.read_csv('cleanFeatures.csv')
-data.head()
-data.drop(['Unnamed: 0'], axis=1,inplace = True)
 
 ######### PCA
 from sklearn.decomposition import PCA
@@ -141,11 +53,6 @@ f2 = principalDf['principal component 2'].values
 X = np.array(list(zip(f1, f2)))
 plt.scatter(f1, f2, c='black', s=7)
 
-######### Split train test set
-X = data.drop(['Target','ProteinID'],axis=1)
-y = data['Target']
-X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.1, random_state=2018)
-
 ######### Kmeans Clustering
 from sklearn.cluster import KMeans
 
@@ -155,9 +62,10 @@ km = kmeans.fit(X_train)
 labels = kmeans.predict(X)
 centroids = kmeans.cluster_centers_
 
+
 cluster_map = pd.DataFrame()
 cluster_map['data_index'] = data['ProteinID']
-cluster_map['cluster'] = km.labels_
+cluster_map['cluster'] = labels
 
 cluster0 = cluster_map[cluster_map.cluster == 0]
 cluster0_ID = list(cluster0['data_index'])
@@ -183,6 +91,23 @@ F1 = (2*TP)/(2*TP+FP+FN)
 TN = len(data) - TP - FP - FN
 ACC = (TP+TN) / len(data)
 print("When cluster 0 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
+# When cluster 0 is considered as target, f1 score is 0.2923387096774194, accuracy score is 0.633292704161588  ---> This one gives the highest accuracy score
+######### Calculate the f1 and accuracy score when cluster 0 is considered as non-target
+TP = 0
+FP = 0
+FN = 0
+for index, row in data.iterrows():
+    if((row['Target']==1) and (row['ProteinID'] not in cluster0_ID)):
+        TP += 1
+    if((row['Target']==0) and (row['ProteinID'] not in cluster0_ID)):
+        FP += 1
+    if((row['Target']==1) and (row['ProteinID'] in cluster0_ID)):
+        FN += 1
+F1 = (2*TP)/(2*TP+FP+FN)
+TN = len(data) - TP - FP - FN
+ACC = (TP+TN) / len(data)
+print("When cluster 0 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
+# When cluster 0 is considered as target, f1 score is 0.35434049352032665, accuracy score is 0.366707295838412
 
 ######### Calculate the f1 and accuracy score when cluster 1 is considered as target
 TP = 0
@@ -199,6 +124,23 @@ F1 = (2*TP)/(2*TP+FP+FN)
 TN = len(data) - TP - FP - FN
 ACC = (TP+TN) / len(data)
 print("When cluster 1 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
+# When cluster 1 is considered as target, f1 score is 0.3528834355828221, accuracy score is 0.5408323176040397
+######### Calculate the f1 and accuracy score when cluster 1 is considered as non-target
+TP = 0
+FP = 0
+FN = 0
+for index, row in data.iterrows():
+    if((row['Target']==1) and (row['ProteinID'] not in cluster1_ID)):
+        TP += 1
+    if((row['Target']==0) and (row['ProteinID'] not in cluster1_ID)):
+        FP += 1
+    if((row['Target']==1) and (row['ProteinID'] in cluster1_ID)):
+        FN += 1
+F1 = (2*TP)/(2*TP+FP+FN)
+TN = len(data) - TP - FP - FN
+ACC = (TP+TN) / len(data)
+print("When cluster 1 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
+# When cluster 1 is considered as target, f1 score is 0.3149536832818703, accuracy score is 0.4591676823959603
 
 ######### Calculate the f1 and accuracy score when cluster 2 is considered as target
 TP = 0
@@ -215,6 +157,23 @@ F1 = (2*TP)/(2*TP+FP+FN)
 TN = len(data) - TP - FP - FN
 ACC = (TP+TN) / len(data)
 print("When cluster 2 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
+# When cluster 2 is considered as target, f1 score is 0.18655967903711135, accuracy score is 0.5763538220442278
+######### Calculate the f1 and accuracy score when cluster 2 is considered as non-target
+TP = 0
+FP = 0
+FN = 0
+for index, row in data.iterrows():
+    if((row['Target']==1) and (row['ProteinID'] not in cluster2_ID)):
+        TP += 1
+    if((row['Target']==0) and (row['ProteinID'] not in cluster2_ID)):
+        FP += 1
+    if((row['Target']==1) and (row['ProteinID'] in cluster2_ID)):
+        FN += 1
+F1 = (2*TP)/(2*TP+FP+FN)
+TN = len(data) - TP - FP - FN
+ACC = (TP+TN) / len(data)
+print("When cluster 2 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
+# When cluster 2 is considered as target, f1 score is 0.41082235671057316, accuracy score is 0.42364617795577225  ---> This one gives the highest f1 score
 
 ######### Visualize the results (Here we have many redundant codes)
 # reduced_data = PCA(n_components=2).fit_transform(data)
@@ -263,13 +222,25 @@ print("When cluster 2 is considered as target, f1 score is " + str(F1) + ", accu
 ##################################
 
 ######### Using Support Vector machine
-from sklearn.datasets import load_iris
 from matplotlib import pyplot as plt
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV, cross_val_score, KFold
 import numpy as np
 
+######### Get Input
+data = pd.read_csv("/Users/limengyang/Workspaces/Module-Detection/ML/cleanFeatures.csv")
+data.drop(['Unnamed: 0'], axis=1,inplace = True)
+data.set_index('ProteinID')
+X = data.drop(['Target'],axis = 1)
+y = data['target']
+
+######### Split train test set
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.1, random_state=2019)
+
 ######### Solve the error of "Continuous 0"
+from sklearn import preprocessing
+from sklearn import utils
 lab_enc = preprocessing.LabelEncoder()
 y_encoded_train = lab_enc.fit_transform(y_train)
 print(y_encoded_train)
@@ -286,7 +257,7 @@ print(utils.multiclass.type_of_target(y_encoded_test))
 # Prepare parameters
 NUM_TRIALS = 30
 
-svm = SVC(kernel="rbf")
+svm = SVC(kernel="rbf") # try linear kernal as well
 
 p_grid = {"C": [1, 10, 100],
           "gamma": [.01, .1]}
@@ -304,8 +275,8 @@ nested_scores = np.zeros(NUM_TRIALS)
 ######### Loop for each trial
 for i in range(NUM_TRIALS):
     #
-    inner_cv = KFold(n_splits=4, shuffle=True, random_state=i)
-    outer_cv = KFold(n_splits=4, shuffle=True, random_state=i)
+    inner_cv = KFold(n_splits=10, shuffle=True, random_state=i) # try 10 fold
+    outer_cv = KFold(n_splits=10, shuffle=True, random_state=i)
     #
     clf = GridSearchCV(estimator=svm, param_grid=p_grid, cv=inner_cv)
     clf.fit(X_train, y_train)
