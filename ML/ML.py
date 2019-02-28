@@ -10,170 +10,272 @@ import networkx as nx
 import operator
 import os
 from sklearn.model_selection import train_test_split
+from matplotlib import pyplot as plt
 
 ##################################
 # Data preparation
 ##################################
 
 ######### Read input files
-absolutePath = "/Users/limengyang/Workspaces/Module-Detection/"
-data = pd.read_csv(os.path.join(absolutePath,"cleanFeatures.csv"))
-data.head()
-data.drop(['Unnamed: 0'], axis=1,inplace = True)
-data.columns
+def readInput(path):
+    absolutePath = path
+    data = pd.read_csv(os.path.join(absolutePath,"cleanFeatures.csv"))
+    data.drop(['Unnamed: 0'], axis=1,inplace = True)
+    return data
+
 
 ######### Split train test set
-X = data.drop(['Target','ProteinID'],axis=1)
-y = data['Target']
-X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.1, random_state=2018)
+def split(data):
+    X = data.drop(['Target'],axis=1)
+    y = data['Target']
+    X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.1, random_state=2019)
+    return (X_train, X_test, y_train, y_test)
 
 ##################################
 # Method 1: PCA + K-Means
 ##################################
 
 ######### PCA
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
+def PCA(X_noID):
+    from sklearn.decomposition import PCA
+    import matplotlib.pyplot as plt
 
-pca = PCA(n_components=2)
-principalComponents = pca.fit_transform(data_noID)
-principalDf = pd.DataFrame(data = principalComponents
-             , columns = ['principal component 1', 'principal component 2'])
+    pca = PCA(n_components=2)
+    principalComponents = pca.fit_transform(X_noID)
+    principalDf = pd.DataFrame(data = principalComponents
+                 , columns = ['principal component 1', 'principal component 2'])
 
-######### PCA Visualization
-%matplotlib inline
-from copy import deepcopy
-import numpy as np
-import pandas as pd
-from matplotlib import pyplot as plt
-plt.rcParams['figure.figsize'] = (16, 9)
-plt.style.use('ggplot')
-f1 = principalDf['principal component 1'].values
-f2 = principalDf['principal component 2'].values
-X = np.array(list(zip(f1, f2)))
-plt.scatter(f1, f2, c='black', s=7)
+    ######### PCA Visualization
+    plt.rcParams['figure.figsize'] = (16, 9)
+    plt.style.use('ggplot')
+    f1 = principalDf['principal component 1'].values
+    f2 = principalDf['principal component 2'].values
+    plt.scatter(f1, f2, c='black', s=7)
+    plt.show()
+
+    ######### PCA Data split
+    XPCA = np.array(list(zip(f1, f2)))
+    return XPCA
+
 
 ######### Kmeans Clustering
-from sklearn.cluster import KMeans
+def Kmeans(X_train_PCA, X_test_PCA, X_train, X_test, y_train, y_test):
+    from sklearn.cluster import KMeans
 
-n_clusters = 3
-kmeans = KMeans(n_clusters)
-km = kmeans.fit(X_train)
-labels = kmeans.predict(X)
-centroids = kmeans.cluster_centers_
+    n_clusters = 3
+    kmeans = KMeans(n_clusters,random_state = 2019)
+    km = kmeans.fit(X_train_PCA)          # train on the training set only
+    labels = kmeans.predict(X_test_PCA)   # should predict on the test set
+    centroids = kmeans.cluster_centers_
 
+    # Write output summary
+    text_file = open("Output.txt", "w")
 
-cluster_map = pd.DataFrame()
-cluster_map['data_index'] = data['ProteinID']
-cluster_map['cluster'] = labels
+    #############################################
+    # Assume Cluster 0 is disease cluster
+    #############################################
+    ######### Assume positive is disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] == 0) and (y_test[i] == 1)):    # Label is in cluster 0 (assume the disease cluster), test is 1 (disease cluster)
+            TP += 1
+        if((labels[i] == 0) and (y_test[i] == 0)):    # Label is in cluster 0 (assume the disease cluster), test is 0 (not in disease cluster)
+            FP += 1
+        if((labels[i] != 0) and (y_test[i] == 1)):    # Label is not in cluster 0 (assume the disease cluster), test is 1 (disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 0 is considered as target, disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
+    ######### Assume positive is non-disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] != 0) and (y_test[i] == 0)):    # Label is not in cluster 0 (assume the disease cluster), test is 0 (non disease cluster)
+            TP += 1
+        if((labels[i] != 0) and (y_test[i] == 1)):    # Label is not in cluster 0 (assume the disease cluster), test is 1 (disease cluster)
+            FP += 1
+        if((labels[i] == 0) and (y_test[i] == 0)):    # Label is in cluster 0 (assume the disease cluster), test is 0 (non disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 0 is considered as target, non-disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
 
-cluster0 = cluster_map[cluster_map.cluster == 0]
-cluster0_ID = list(cluster0['data_index'])
+    #############################################
+    # Assume Cluster 0 is non disease cluster
+    #############################################
+    ######### Assume positive is disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] != 0) and (y_test[i] == 1)):    # Label is not in cluster 0 (disease cluster), test is 1 (disease cluster)
+            TP += 1
+        if((labels[i] != 0) and (y_test[i] == 0)):    # Label is not in cluster 0 (disease cluster), test is 0 (not in disease cluster)
+            FP += 1
+        if((labels[i] == 0) and (y_test[i] == 1)):    # Label is in cluster 0 (non disease cluster), test is 1 (disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 0 is considered as non target, disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
+    ######### Assume positive is non-disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] == 0) and (y_test[i] == 0)):    # Label is in cluster 0 (non disease cluster), test is 0 (non disease cluster)
+            TP += 1
+        if((labels[i] == 0) and (y_test[i] == 1)):    # Label is in cluster 0 (non disease cluster), test is 1 (disease cluster)
+            FP += 1
+        if((labels[i] != 0) and (y_test[i] == 0)):    # Label is not in cluster 0 (disease cluster), test is 0 (non disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 0 is considered as non target, non-disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
 
-cluster1 = cluster_map[cluster_map.cluster == 1]
-cluster1_ID = list(cluster1['data_index'])
+    #############################################
+    # Assume Cluster 1 is disease cluster
+    #############################################
+    ######### Assume positive is disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] == 1) and (y_test[i] == 1)):    # Label is in cluster 1 (assume the disease cluster), test is 1 (disease cluster)
+            TP += 1
+        if((labels[i] == 1) and (y_test[i] == 0)):    # Label is in cluster 1 (assume the disease cluster), test is 0 (not in disease cluster)
+            FP += 1
+        if((labels[i] != 1) and (y_test[i] == 1)):    # Label is not in cluster 1 (assume the disease cluster), test is 1 (disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 1 is considered as target, disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
+    ######### Assume positive is non-disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] != 1) and (y_test[i] == 0)):    # Label is not in cluster 1 (assume the disease cluster), test is 0 (non disease cluster)
+            TP += 1
+        if((labels[i] != 1) and (y_test[i] == 1)):    # Label is not in cluster 1 (assume the disease cluster), test is 1 (disease cluster)
+            FP += 1
+        if((labels[i] == 1) and (y_test[i] == 0)):    # Label is in cluster 1 (assume the disease cluster), test is 0 (non disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 1 is considered as target, non-disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
 
-cluster2 = cluster_map[cluster_map.cluster == 2]
-cluster2_ID = list(cluster2['data_index'])
+    #############################################
+    # Assume Cluster 1 is non disease cluster
+    #############################################
+    ######### Assume positive is disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] != 1) and (y_test[i] == 1)):    # Label is not in cluster 1 (disease cluster), test is 1 (disease cluster)
+            TP += 1
+        if((labels[i] != 1) and (y_test[i] == 0)):    # Label is not in cluster 1 (disease cluster), test is 0 (not in disease cluster)
+            FP += 1
+        if((labels[i] == 1) and (y_test[i] == 1)):    # Label is in cluster 1 (non disease cluster), test is 1 (disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 1 is considered as non target, disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
+    ######### Assume positive is non-disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] == 1) and (y_test[i] == 0)):    # Label is in cluster 1 (non disease cluster), test is 0 (non disease cluster)
+            TP += 1
+        if((labels[i] == 1) and (y_test[i] == 1)):    # Label is in cluster 1 (non disease cluster), test is 1 (disease cluster)
+            FP += 1
+        if((labels[i] != 1) and (y_test[i] == 0)):    # Label is not in cluster 1 (disease cluster), test is 0 (non disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 1 is considered as non target, non-disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
 
-######### Calculate the f1 and accuracy score when cluster 0 is considered as target
-TP = 0
-FP = 0
-FN = 0
-for index, row in data.iterrows():
-    if((row['Target']==1) and (row['ProteinID'] in cluster0_ID)):
-        TP += 1
-    if((row['Target']==0) and (row['ProteinID'] in cluster0_ID)):
-        FP += 1
-    if((row['Target']==1) and (row['ProteinID'] not in cluster0_ID)):
-        FN += 1
-F1 = (2*TP)/(2*TP+FP+FN)
-TN = len(data) - TP - FP - FN
-ACC = (TP+TN) / len(data)
-print("When cluster 0 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
-# When cluster 0 is considered as target, f1 score is 0.2923387096774194, accuracy score is 0.633292704161588  ---> This one gives the highest accuracy score
-######### Calculate the f1 and accuracy score when cluster 0 is considered as non-target
-TP = 0
-FP = 0
-FN = 0
-for index, row in data.iterrows():
-    if((row['Target']==1) and (row['ProteinID'] not in cluster0_ID)):
-        TP += 1
-    if((row['Target']==0) and (row['ProteinID'] not in cluster0_ID)):
-        FP += 1
-    if((row['Target']==1) and (row['ProteinID'] in cluster0_ID)):
-        FN += 1
-F1 = (2*TP)/(2*TP+FP+FN)
-TN = len(data) - TP - FP - FN
-ACC = (TP+TN) / len(data)
-print("When cluster 0 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
-# When cluster 0 is considered as target, f1 score is 0.35434049352032665, accuracy score is 0.366707295838412
+    #############################################
+    # Assume Cluster 2 is disease cluster
+    #############################################
+    ######### Assume positive is disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] == 2) and (y_test[i] == 1)):    # Label is in cluster 2 (assume the disease cluster), test is 1 (disease cluster)
+            TP += 1
+        if((labels[i] == 2) and (y_test[i] == 0)):    # Label is in cluster 2 (assume the disease cluster), test is 0 (not in disease cluster)
+            FP += 1
+        if((labels[i] != 2) and (y_test[i] == 1)):    # Label is not in cluster 2 (assume the disease cluster), test is 1 (disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 2 is considered as target, disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
+    ######### Assume positive is non-disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] != 2) and (y_test[i] == 0)):    # Label is not in cluster 2 (assume the disease cluster), test is 0 (non disease cluster)
+            TP += 1
+        if((labels[i] != 2) and (y_test[i] == 1)):    # Label is not in cluster 2 (assume the disease cluster), test is 1 (disease cluster)
+            FP += 1
+        if((labels[i] == 2) and (y_test[i] == 0)):    # Label is in cluster 2 (assume the disease cluster), test is 0 (non disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 2 is considered as target, non-disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
 
-######### Calculate the f1 and accuracy score when cluster 1 is considered as target
-TP = 0
-FP = 0
-FN = 0
-for index, row in data.iterrows():
-    if((row['Target']==1) and (row['ProteinID'] in cluster1_ID)):
-        TP += 1
-    if((row['Target']==0) and (row['ProteinID'] in cluster1_ID)):
-        FP += 1
-    if((row['Target']==1) and (row['ProteinID'] not in cluster1_ID)):
-        FN += 1
-F1 = (2*TP)/(2*TP+FP+FN)
-TN = len(data) - TP - FP - FN
-ACC = (TP+TN) / len(data)
-print("When cluster 1 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
-# When cluster 1 is considered as target, f1 score is 0.3528834355828221, accuracy score is 0.5408323176040397
-######### Calculate the f1 and accuracy score when cluster 1 is considered as non-target
-TP = 0
-FP = 0
-FN = 0
-for index, row in data.iterrows():
-    if((row['Target']==1) and (row['ProteinID'] not in cluster1_ID)):
-        TP += 1
-    if((row['Target']==0) and (row['ProteinID'] not in cluster1_ID)):
-        FP += 1
-    if((row['Target']==1) and (row['ProteinID'] in cluster1_ID)):
-        FN += 1
-F1 = (2*TP)/(2*TP+FP+FN)
-TN = len(data) - TP - FP - FN
-ACC = (TP+TN) / len(data)
-print("When cluster 1 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
-# When cluster 1 is considered as target, f1 score is 0.3149536832818703, accuracy score is 0.4591676823959603
+    #############################################
+    # Assume Cluster 2 is non disease cluster
+    #############################################
+    ######### Assume positive is disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] != 2) and (y_test[i] == 1)):    # Label is not in cluster 2 (disease cluster), test is 1 (disease cluster)
+            TP += 1
+        if((labels[i] != 2) and (y_test[i] == 0)):    # Label is not in cluster 2 (disease cluster), test is 0 (not in disease cluster)
+            FP += 1
+        if((labels[i] == 2) and (y_test[i] == 1)):    # Label is in cluster 2 (non disease cluster), test is 1 (disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 2 is considered as non target, disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
+    ######### Assume positive is non-disease
+    TP = 0
+    FP = 0
+    FN = 0
+    for i in range(len(labels)):
+        if((labels[i] == 2) and (y_test[i] == 0)):    # Label is in cluster 2 (non disease cluster), test is 0 (non disease cluster)
+            TP += 1
+        if((labels[i] == 2) and (y_test[i] == 1)):    # Label is in cluster 2 (non disease cluster), test is 1 (disease cluster)
+            FP += 1
+        if((labels[i] != 2) and (y_test[i] == 0)):    # Label is not in cluster 2 (disease cluster), test is 0 (non disease cluster)
+            FN += 1
+    F1 = (2*TP)/(2*TP+FP+FN)
+    TN = len(data) - TP - FP - FN
+    ACC = (TP+TN) / len(data)
+    text_file.write("When cluster 2 is considered as non target, non-disease is considered as positive, f1 score is " + str(F1) + ", accuracy score is " + str(ACC) + "\n")
 
-######### Calculate the f1 and accuracy score when cluster 2 is considered as target
-TP = 0
-FP = 0
-FN = 0
-for index, row in data.iterrows():
-    if((row['Target']==1) and (row['ProteinID'] in cluster2_ID)):
-        TP += 1
-    if((row['Target']==0) and (row['ProteinID'] in cluster2_ID)):
-        FP += 1
-    if((row['Target']==1) and (row['ProteinID'] not in cluster2_ID)):
-        FN += 1
-F1 = (2*TP)/(2*TP+FP+FN)
-TN = len(data) - TP - FP - FN
-ACC = (TP+TN) / len(data)
-print("When cluster 2 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
-# When cluster 2 is considered as target, f1 score is 0.18655967903711135, accuracy score is 0.5763538220442278
-######### Calculate the f1 and accuracy score when cluster 2 is considered as non-target
-TP = 0
-FP = 0
-FN = 0
-for index, row in data.iterrows():
-    if((row['Target']==1) and (row['ProteinID'] not in cluster2_ID)):
-        TP += 1
-    if((row['Target']==0) and (row['ProteinID'] not in cluster2_ID)):
-        FP += 1
-    if((row['Target']==1) and (row['ProteinID'] in cluster2_ID)):
-        FN += 1
-F1 = (2*TP)/(2*TP+FP+FN)
-TN = len(data) - TP - FP - FN
-ACC = (TP+TN) / len(data)
-print("When cluster 2 is considered as target, f1 score is " + str(F1) + ", accuracy score is " + str(ACC))
-# When cluster 2 is considered as target, f1 score is 0.41082235671057316, accuracy score is 0.42364617795577225  ---> This one gives the highest f1 score
+    text_file.close()
 
 ######### Visualize the results (Here we have many redundant codes)
 # reduced_data = PCA(n_components=2).fit_transform(data)
@@ -215,6 +317,21 @@ print("When cluster 2 is considered as target, f1 score is " + str(F1) + ", accu
 # plt.xticks(())
 # plt.yticks(())
 # plt.show()
+
+##################################
+# Main to run ALL
+##################################
+
+if __name__ == "__main__":
+    # path = "/home2/lime0400/Module-Detection/"
+    path = "/Users/limengyang/Workspaces/Module-Detection/"
+    data = readInput(path)
+
+    # PCA
+    X_train, X_test, y_train, y_test = split(data)
+    X_train_PCA = PCA(X_train.drop(['ProteinID'],axis = 1))
+    X_test_PCA = PCA(X_test.drop(['ProteinID'],axis = 1))
+    Kmeans(X_train_PCA, X_test_PCA, X_train, X_test, y_train.tolist(),y_test.tolist())
 
 
 ##################################
