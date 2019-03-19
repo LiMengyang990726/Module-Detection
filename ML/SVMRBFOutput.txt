@@ -1,0 +1,45 @@
+Iter 0,F1 non-nested score on the GridSearchCV 0.24352122145980704
+Iter 0,F1 nested cross validation score on the GridSearchCV 0.24351790805726684
+Iter 0,F1 non-nested score on the test set (disease is positive) [0.19 0.   0.   0.   0.  ]
+Iter 0,F1 non-nested score on the test set (non disease is positive) [0.82947368 0.         0.         0.         0.        ]
+Iter 0,ACC non-nested score on the GridSearchCV 0.7554179566563467
+Iter 0,ACC nested cross validation score on the GridSearchCV 0.704530568605459
+Iter 0,ACC non-nested score on the test set (disease is positive) 0.9751001218875153
+Iter 0,ACC non-nested score on the test set (non disease is positive) 0.9751001218875153
+
+Iter 1,F1 non-nested score on the GridSearchCV 0.2377271868842736
+Iter 1,F1 nested cross validation score on the GridSearchCV 0.23772643803751622
+Iter 1,F1 non-nested score on the test set (disease is positive) [0.19 0.19 0.   0.   0.  ]
+Iter 1,F1 non-nested score on the test set (non disease is positive) [0.82947368 0.82947368 0.         0.         0.        ]
+Iter 1,ACC non-nested score on the GridSearchCV 0.7538699690402477
+Iter 1,ACC nested cross validation score on the GridSearchCV 0.7033640351944814
+Iter 1,ACC non-nested score on the test set (disease is positive) 0.9751001218875153
+Iter 1,ACC non-nested score on the test set (non disease is positive) 0.9751001218875153
+
+Iter 2,F1 non-nested score on the GridSearchCV 0.2354142369296683
+Iter 2,F1 nested cross validation score on the GridSearchCV 0.23541526634258733
+Iter 2,F1 non-nested score on the test set (disease is positive) [0.19 0.19 0.19 0.   0.  ]
+Iter 2,F1 non-nested score on the test set (non disease is positive) [0.82947368 0.82947368 0.82947368 0.         0.        ]
+Iter 2,ACC non-nested score on the GridSearchCV 0.7532894736842105
+Iter 2,ACC nested cross validation score on the GridSearchCV 0.6973680909109634
+Iter 2,ACC non-nested score on the test set (disease is positive) 0.9751001218875153
+Iter 2,ACC non-nested score on the test set (non disease is positive) 0.9751001218875153
+
+Iter 3,F1 non-nested score on the GridSearchCV 0.2362227841043594
+Iter 3,F1 nested cross validation score on the GridSearchCV 0.23622192010723006
+Iter 3,F1 non-nested score on the test set (disease is positive) [0.19 0.19 0.19 0.19 0.  ]
+Iter 3,F1 non-nested score on the test set (non disease is positive) [0.82947368 0.82947368 0.82947368 0.82947368 0.        ]
+Iter 3,ACC non-nested score on the GridSearchCV 0.7538699690402477
+Iter 3,ACC nested cross validation score on the GridSearchCV 0.7004686730542016
+Iter 3,ACC non-nested score on the test set (disease is positive) 0.9751001218875153
+Iter 3,ACC non-nested score on the test set (non disease is positive) 0.9751001218875153
+
+Iter 4,F1 non-nested score on the GridSearchCV 0.24413643349447556
+Iter 4,F1 nested cross validation score on the GridSearchCV 0.24413769652299372
+Iter 4,F1 non-nested score on the test set (disease is positive) [0.19 0.19 0.19 0.19 0.19]
+Iter 4,F1 non-nested score on the test set (non disease is positive) [0.82947368 0.82947368 0.82947368 0.82947368 0.82947368]
+Iter 4,ACC non-nested score on the GridSearchCV 0.7536764705882353
+Iter 4,ACC nested cross validation score on the GridSearchCV 0.704721932513327
+Iter 4,ACC non-nested score on the test set (disease is positive) 0.9751001218875153
+Iter 4,ACC non-nested score on the test set (non disease is positive) 0.9751001218875153
+

@@ -1,0 +1,4 @@
+The best f1 score for randomizedsearchcv is 0.3473583287988038
+The best acc score for randomizedsearchcv is 0.7977611940298508
+F1 score for the test set at the best parameter is 0.39451114922813035
+Acc score for the test set at the best parameter is 0.7939640162507254

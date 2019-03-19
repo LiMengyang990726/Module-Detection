@@ -1,0 +1,6 @@
+When cluster 0 is considered as target, f1 score is 0.375, accuracy score is 0.5414973882762624
+When cluster 0 is considered as non target, f1 score is 0.3174835405998537, accuracy score is 0.4585026117237377
+When cluster 1 is considered as target, f1 score is 0.18444444444444444, accuracy score is 0.5739988392338944
+When cluster 1 is considered as non target, f1 score is 0.42865395725014444, accuracy score is 0.4260011607661056
+When cluster 2 is considered as target, f1 score is 0.2909880564603692, accuracy score is 0.6210098665118978
+When cluster 2 is considered as non target, f1 score is 0.3742690058479532, accuracy score is 0.3789901334881021
