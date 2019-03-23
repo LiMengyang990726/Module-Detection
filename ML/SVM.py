@@ -2,7 +2,6 @@ import pandas as pd
 import csv
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
-%matplotlib inline
 from copy import deepcopy
 import numpy as np
 from sklearn.cluster import KMeans
@@ -20,6 +19,8 @@ from sklearn.datasets import make_classification
 from sklearn.metrics import f1_score
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import RandomizedSearchCV
+import pickle
+import ConfusionMatrix
 
 ##################################
 # Method 2: Support Vector machine with nested and non-nested cross validation
@@ -65,11 +66,11 @@ def SVMKernelLinear(X_train_SVM, X_test_SVM, y_encoded_train, y_encoded_test):
     clf_acc.fit(X_train_SVM, y_encoded_train)
     #
     ######### Record parameters for the best score
-    params = clf_f1.best_params_                    # {'C': 100, 'gamma': 0.01}
+    params = clf_f1.best_params_
     f1_gamma_parameter = params.get('gamma')
     f1_C_parameter = params.get('C')
     #
-    params = clf_acc.best_params_                   # {'C': 1, 'gamma': 0.1}
+    params = clf_acc.best_params_
     acc_gamma_parameter = params.get('gamma')
     acc_C_parameter = params.get('C')
     #
@@ -100,13 +101,18 @@ def SVMKernelLinear(X_train_SVM, X_test_SVM, y_encoded_train, y_encoded_test):
     text_file.close()
 
 ######### RBF Kernel
-def SVMKernelRBF(X_train_SVM, X_test_SVM, y_encoded_train, y_encoded_test):
-    ######### Prepare output
-    text_file = open("SVMRBF.txt", "w")
+def SVMKernelRBF(X_train_SVM, y_encoded_train,number):
     #
     #########  Prepare parameters
     NUM_TRIALS = 5
-    p_grid = {"C": [1, 10, 100], "gamma": [0.001,.01, .1]}
+    #
+    C_range = range(16)
+    C = np.power(2,C_range).tolist()
+    #
+    gamma_range = range(16)
+    zeros = np.zeros(16)
+    gamma = np.power(2,zeros-gamma_range).tolist()
+    p_grid = {"C": C, "gamma": gamma}
     svm = SVC(kernel='rbf')
     #
     ######### Score record
@@ -116,71 +122,40 @@ def SVMKernelRBF(X_train_SVM, X_test_SVM, y_encoded_train, y_encoded_test):
     ######### Find the best parameters from the non-nested cross validation
     inner_cv = KFold(n_splits=5, shuffle=True)
     #
-    clf_f1 = GridSearchCV(estimator=svm, param_grid=p_grid, cv=inner_cv,scoring='f1')
-    clf_f1.fit(X_train_SVM, y_encoded_train)
-    clf_acc = GridSearchCV(estimator=svm, param_grid=p_grid, cv=inner_cv,scoring='accuracy')
-    clf_acc.fit(X_train_SVM, y_encoded_train)
+    clf = GridSearchCV(estimator=svm, param_grid=p_grid, cv=inner_cv)
+    clf.fit(X_train_SVM, y_encoded_train)
     #
     ######### Record parameters for the best score
-    params = clf_f1.best_params_                    # {'C': 100, 'gamma': 0.01}
-    f1_gamma_parameter = params.get('gamma')
-    f1_C_parameter = params.get('C')
+    params = clf.best_params_                    # {'C': 100, 'gamma': 0.01}
+    gamma_parameter = params.get('gamma')
+    C_parameter = params.get('C')
     #
-    params = clf_acc.best_params_                   # {'C': 1, 'gamma': 0.1}
-    acc_gamma_parameter = params.get('gamma')
-    acc_C_parameter = params.get('C')
+    ######### Train on the best parameters
+    svm = SVC(C=C_parameter,kernel='rbf',gamma=gamma_parameter)
+    svm.fit(X_train_SVM,y_encoded_train)
     #
-    text_file.write("f1 model parameter is C: "+str(f1_C_parameter)+", gamma: "+str(f1_gamma_parameter)+"\n")
-    text_file.write("acc model parameter is C: "+str(acc_C_parameter)+", gamma: "+str(acc_gamma_parameter)+"\n")
-    ######### Loop for each trial
-    for c in range(NUM_TRIALS):
-        #
-        outer_cv = KFold(n_splits=5, shuffle=True, random_state=c)
-        #
-        ######### F1 Measurement
-        svm_f1 = SVC(C=f1_C_parameter,kernel='rbf',gamma=f1_gamma_parameter)
-        svm_f1.fit(X_train_SVM,y_encoded_train)
-        nested_scores_f1 = cross_val_score(svm_f1, X=X_train_SVM, y=y_encoded_train, cv=outer_cv,scoring='f1')
-        nested_f1[c] = nested_scores_f1.mean()
-        text_file.write("Iter " + str(c) + ",F1 nested cross validation score on the cross validation set " + str(nested_f1[c]) + "\n")
-        text_file.write(evaluateF1Test(svm_f1,X_test_SVM,y_encoded_test))
-        #
-        ######### F1 Measurement
-        svm_acc = SVC(C=f1_C_parameter,kernel='rbf',gamma=f1_gamma_parameter)
-        svm_acc.fit(X_train_SVM,y_encoded_train)
-        nested_scores_acc = cross_val_score(svm_acc, X=X_train_SVM, y=y_encoded_train, cv=outer_cv,scoring='accuracy')
-        nested_acc[c] = nested_scores_f1.mean()
-        text_file.write("Iter " + str(c) + ",ACC nested cross validation score on the cross validation set " + str(nested_acc[c]) + "\n")
-        text_file.write(evaluateACCTest(svm_acc,X_test_SVM,y_encoded_test))
-        text_file.write("\n\n")
+    # On the Cross Validaton Set
+    result = cross_val_score(svm,X_train_SVM, y_encoded_train,cv=3)
+    output = pd.DataFrame({'CV1':[],'CV2':[],'CV3':[]})
+    output = output.append({
+            'CV1':result[0],'CV2':result[1],'CV3':result[2]
+    }, ignore_index=True)
+    output.to_csv("SVMRBFCV_"+str(number)+".csv")
     #
-    text_file.close()
+    # Save model
+    pkl_filename = "svm_rbf_model_"+str(number)+".pkl"
+    with open(pkl_filename, 'wb') as file:
+        pickle.dump(svm, file)
 
-def evaluateF1Test(model,X_test_SVM,y_encoded_test):
-    #
-    result = model.predict(X_test_SVM)
-    #
-    TP = 0
-    FP = 0
-    FN = 0
-    TN = 0
-    for i in range(len(result)):
-        if((result[i] == 0) and (y_encoded_test[i] == 1)):    # false negative: predicted negative (non disease is 0), actual positive (disease is 1)
-            FN += 1
-        if((result[i] == 0) and (y_encoded_test[i] == 0)):    # true negative: predicted negative (non disease is 0), actual negative (non disease is 0)
-            TN += 1
-        if((result[i] == 1) and (y_encoded_test[i] == 1)):    # true positive: predicted positive (disease is 1), actual positive (disease is 1)
-            TP += 1
-        if((result[i] == 1) and (y_encoded_test[i] == 0)):    # false positive: predicted positive (disease is 1), actual negative (non disease is 0)
-            FP += 1
-    #
-    F1 = (2*TP)/(2*TP+FP+FN)
-    #
-    return ("On the test set, f1 score is "+str(F1)+"\n" )
 
-def evaluateACCTest(model,X_test_SVM,y_encoded_test):
+def evaluation(X_test_SVM,y_test,number):
+    # Load Model
+    pkl_filename = "svm_rbf_model_"+str(number)+".pkl"
+    with open(pkl_filename, 'rb') as file:
+        svm = pickle.load(file)
     #
-    result = model.predict(X_test_SVM)
+    # Make Prediction
+    result = svm.predict(X_test_SVM)
     #
     TP = 0
     FP = 0
@@ -196,6 +171,13 @@ def evaluateACCTest(model,X_test_SVM,y_encoded_test):
         if((result[i] == 1) and (y_test[i] == 0)):    # false positive: predicted positive (disease is 1), actual negative (non disease is 0)
             FP += 1
     #
-    ACC = (TP+TN) / len(y_test)
-    #
-    return ("On the test set, ACC score is "+str(ACC)+"\n" )
+    output = pd.DataFrame({'Cond':[],
+                  'TP': [],'FN': [],'FP': [],'TN':[],
+                  'Accuracy':[],'Precision':[],'Recall':[],'F1 score':[]})
+    result = ConfusionMatrix.confusionMatrix(TP,FN,FP,TN)
+    cond = "data set "+str(number)
+    output = output.append({'Cond':cond,
+                  'TP': TP,'FN': FN,'FP': FP,'TN':TN,
+                  'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
+                  ignore_index=True)
+    output.to_csv("SVMRBFOutput_"+str(number)+".csv")

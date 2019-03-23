@@ -2,7 +2,6 @@ import pandas as pd
 import csv
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
-%matplotlib inline
 from copy import deepcopy
 import numpy as np
 from sklearn.cluster import KMeans
@@ -20,13 +19,13 @@ from sklearn.datasets import make_classification
 from sklearn.metrics import f1_score
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import RandomizedSearchCV
+import pickle
+import ConfusionMatrix
 
 ##################################
 # Method 3: Random Forest
 ##################################
-def RandomForest(X_train_RF,X_test_RF, y_train, y_test):
-    ######## Prepare output
-    text_file = open("RandomForestOutput.txt", "w")
+def randomForest(X_train_RF,y_train, number):
     #
     ######### Create model
     rf = RandomForestClassifier()
@@ -45,73 +44,69 @@ def RandomForest(X_train_RF,X_test_RF, y_train, y_test):
                'min_samples_split': min_samples_split,
                'min_samples_leaf': min_samples_leaf,
                'bootstrap': bootstrap}
-    rf_random_f1 = RandomizedSearchCV(estimator = rf, param_distributions = random_grid,
-                            scoring = "f1", n_iter = 100, cv = 3, verbose=2,
+    rf_random = RandomizedSearchCV(estimator = rf, param_distributions = random_grid,
+                            n_iter = 100, cv = 3, verbose=2,
                             random_state=42, n_jobs = -1)
-    rf_random_acc = RandomizedSearchCV(estimator = rf, param_distributions = random_grid,
-                            scoring = "accuracy", n_iter = 100, cv = 3, verbose=2,
-                            random_state=42, n_jobs = -1)
-    rf_random_f1.fit(X_train_RF, y_train)
-    rf_random_acc.fit(X_train_RF, y_train)
+    rf_random.fit(X_train_RF, y_train)
+    rf_random.fit(X_train_RF, y_train)
     #
-    ######### Evaluate Result
-    text_file.write("The best f1 score for randomizedsearchcv is " + str(rf_random_f1.best_score_) + "\n")
-    text_file.write("The best acc score for randomizedsearchcv is " + str(rf_random_acc.best_score_) + "\n")
+    ######### Record the best parameters
     #
-    f1_params = rf_random_f1.best_params_
-    acc_params = rf_random_acc.best_params_
+    params = rf_random.best_params_
     #
     ######### Make Predictions
-    rf_f1 = RandomForestClassifier(n_estimators = f1_params['n_estimators'],
-                                    max_features = f1_params['max_features'],
-                                    max_depth = f1_params['max_depth'],
-                                    min_samples_split = f1_params['min_samples_split'],
-                                    min_samples_leaf = f1_params['min_samples_leaf'],
-                                    bootstrap = f1_params['bootstrap'])
-    rf_f1.fit(X_train_RF, y_train)
-    predictions = rf_f1.predict(X_test_RF)
-    actual = y_test.tolist()
+    rf_good = RandomForestClassifier(n_estimators = params['n_estimators'],
+                                    max_features = params['max_features'],
+                                    max_depth = params['max_depth'],
+                                    min_samples_split = params['min_samples_split'],
+                                    min_samples_leaf = params['min_samples_leaf'],
+                                    bootstrap = params['bootstrap'])
+    rf_good.fit(X_train_RF, y_train)
+    #
+    # On the Cross Validaton Set
+    result = cross_val_score(rf_good, X_train_RF, y_train,cv=3)
+    output = pd.DataFrame({'CV1':[],'CV2':[],'CV3':[]})
+    output = output.append({
+            'CV1':result[0],'CV2':result[1],'CV3':result[2]
+    }, ignore_index=True)
+    output.to_csv("RandomForest_"+str(number)+".csv")
+    #
+    # Save model
+    pkl_filename = "random_forest_model_"+str(number)+".pkl"
+    with open(pkl_filename, 'wb') as file:
+        pickle.dump(rf_good, file)
+
+def evaluation(X_test_SVM,y_test,number):
+    # Load Model
+    pkl_filename = "random_forest_model_"+str(number)+".pkl"
+    with open(pkl_filename, 'rb') as file:
+        rf = pickle.load(file)
+    #
+    # Make Prediction
+    result = rf.predict(X_test_SVM)
+    y_test = y_test.tolist()
+    #
     TP = 0
     FP = 0
     FN = 0
     TN = 0
-    for i in range(len(predictions)):
-        if((predictions[i] == 0) and (actual[i] == 1)):    # false negative: predicted negative (non disease is 0), actual positive (disease is 1)
+    for i in range(len(result)):
+        if((result[i] == 0) and (y_test[i] == 1)):    # false negative: predicted negative (non disease is 0), actual positive (disease is 1)
             FN += 1
-        if((predictions[i] == 0) and (actual[i] == 0)):    # true negative: predicted negative (non disease is 0), actual negative (non disease is 0)
+        if((result[i] == 0) and (y_test[i] == 0)):    # true negative: predicted negative (non disease is 0), actual negative (non disease is 0)
             TN += 1
-        if((predictions[i] == 1) and (actual[i] == 1)):    # true positive: predicted positive (disease is 1), actual positive (disease is 1)
+        if((result[i] == 1) and (y_test[i] == 1)):    # true positive: predicted positive (disease is 1), actual positive (disease is 1)
             TP += 1
-        if((predictions[i] == 1) and (actual[i] == 0)):    # false positive: predicted positive (disease is 1), actual negative (non disease is 0)
+        if((result[i] == 1) and (y_test[i] == 0)):    # false positive: predicted positive (disease is 1), actual negative (non disease is 0)
             FP += 1
-
     #
-    F1 = (2*TP)/(2*TP+FP+FN)
-    text_file.write("F1 score for the test set at the best parameter is " + str(F1) + "\n") #0.8878143133462283
-    #
-    rf_acc = RandomForestClassifier(n_estimators = acc_params['n_estimators'],
-                                    max_features = acc_params['max_features'],
-                                    max_depth = acc_params['max_depth'],
-                                    min_samples_split = acc_params['min_samples_split'],
-                                    min_samples_leaf = acc_params['min_samples_leaf'],
-                                    bootstrap = acc_params['bootstrap'])
-    rf_acc.fit(X_train_RF, y_train)
-    predictions = rf_acc.predict(X_test_RF)
-    actual = y_test.tolist()
-    TP = 0
-    FP = 0
-    FN = 0
-    TN = 0
-    for i in range(len(predictions)):
-        if((predictions[i] == 0) and (actual[i] == 1)):    # false negative: predicted negative (non disease is 0), actual positive (disease is 1)
-            FN += 1
-        if((predictions[i] == 0) and (actual[i] == 0)):    # true negative: predicted negative (non disease is 0), actual negative (non disease is 0)
-            TN += 1
-        if((predictions[i] == 1) and (actual[i] == 1)):    # true positive: predicted positive (disease is 1), actual positive (disease is 1)
-            TP += 1
-        if((predictions[i] == 1) and (actual[i] == 0)):    # false positive: predicted positive (disease is 1), actual negative (non disease is 0)
-            FP += 1
-
-    #
-    ACC = (TP+TN) / len(predictions)
-    text_file.write("Acc score for the test set at the best parameter is " + str(ACC) + "\n")
+    output = pd.DataFrame({'Cond':[],
+                  'TP': [],'FN': [],'FP': [],'TN':[],
+                  'Accuracy':[],'Precision':[],'Recall':[],'F1 score':[]})
+    result = ConfusionMatrix.confusionMatrix(TP,FN,FP,TN)
+    cond = "data set "+str(number)
+    output = output.append({'Cond':cond,
+                  'TP': TP,'FN': FN,'FP': FP,'TN':TN,
+                  'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
+                  ignore_index=True)
+    output.to_csv("RandomForestOutput_"+str(number)+".csv")
