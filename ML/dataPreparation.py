@@ -59,6 +59,9 @@ def balance(data):
     data3 = pd.concat([data3_nondis,data_dis])
     #
     data1.reset_index(inplace=True)
+    data1.drop(['index'],axis = 1, inplace = True)
     data2.reset_index(inplace=True)
+    data2.drop(['index'],axis = 1, inplace = True)
     data3.reset_index(inplace=True)
+    data3.drop(['index'],axis=1, inplace = True)
     return (data1, data2, data3)

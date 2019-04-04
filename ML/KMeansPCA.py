@@ -52,28 +52,18 @@ def performPCA(X_noID):
 
 
 ######### Kmeans Clustering
-def Kmeans(X_train_PCA,number):
+def Kmeans(X_PCA,y,number):
 
     n_clusters = 3
     kmeans = KMeans(n_clusters,random_state = 2019)
-    kmeans.fit(X_train_PCA)          # train on the training set only
+    kmeans.fit(X_PCA)          # train on the training set only
 
-    pkl_filename = "kmeans_model_"+str(number)+".pkl"
-    with open(pkl_filename, 'wb') as file:
-        pickle.dump(kmeans, file)
-
-
-
-######### Do Evaluation
-def evaluation(X_test_PCA,y_test,number):
-    # Load Model
-    pkl_filename = "kmeans_model_"+str(number)+".pkl"
-    with open(pkl_filename, 'rb') as file:
-        kmeans = pickle.load(file)
-
-    # Calculate manually the f1 and accuracy score
-    labels = kmeans.predict(X_test_PCA)   # should predict on the test set
-
+    ############################################################################
+    #
+    # Evaluation
+    #
+    ############################################################################
+    labels = kmeans.predict(X_PCA)
     # Prepare output
     output = pd.DataFrame({'Cond':[],
                   'TP': [],'FN': [],'FP': [],'TN':[],
@@ -87,17 +77,17 @@ def evaluation(X_test_PCA,y_test,number):
     FN = 0
     TN = 0
     for i in range(len(labels)):
-        if((labels[i] != 0) and (y_test[i] == 1)):    # false negative: predicted negative (label is not 0), actual positive (disease is 1)
+        if((labels[i] != 0) and (y[i] == 1)):    # false negative: predicted negative (label is not 0), actual positive (disease is 1)
             FN += 1
-        if((labels[i] != 0) and (y_test[i] == 0)):    # true negative: predicted negative (label is not 0), actual negative (non disease is 0)
+        if((labels[i] != 0) and (y[i] == 0)):    # true negative: predicted negative (label is not 0), actual negative (non disease is 0)
             TN += 1
-        if((labels[i] == 0) and (y_test[i] == 1)):    # true positive: predicted positive (label is 0), actual positive (disease 1)
+        if((labels[i] == 0) and (y[i] == 1)):    # true positive: predicted positive (label is 0), actual positive (disease 1)
             TP += 1
-        if((labels[i] == 0) and (y_test[i] == 0)):    # false positive: predicted positive (label is 0), actual negative (non disease is 0)
+        if((labels[i] == 0) and (y[i] == 0)):    # false positive: predicted positive (label is 0), actual negative (non disease is 0)
             FP += 1
 
     result = ConfusionMatrix.confusionMatrix(TP,FN,FP,TN)
-    output = output.append({'Cond':'cluster 0 is considered as target',
+    output = output.append({'Cond':'cluster 0 is considered as disease',
                   'TP': TP,'FN': FN,'FP': FP,'TN':TN,
                   'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
                   ignore_index=True)
@@ -111,17 +101,17 @@ def evaluation(X_test_PCA,y_test,number):
     FN = 0
     TN = 0
     for i in range(len(labels)):
-        if((labels[i] == 0) and (y_test[i] == 1)):    # false negative: predicted negative (label is 0), actual positive (disease is 1)
+        if((labels[i] == 0) and (y[i] == 1)):    # false negative: predicted negative (label is 0), actual positive (disease is 1)
             FN += 1
-        if((labels[i] == 0) and (y_test[i] == 0)):    # true negative: predicted negative (label is 0), actual negative (non disease is 0)
+        if((labels[i] == 0) and (y[i] == 0)):    # true negative: predicted negative (label is 0), actual negative (non disease is 0)
             TN += 1
-        if((labels[i] != 0) and (y_test[i] == 1)):    # true positive: predicted positive (label is not 0), actual positive (disease 1)
+        if((labels[i] != 0) and (y[i] == 1)):    # true positive: predicted positive (label is not 0), actual positive (disease 1)
             TP += 1
-        if((labels[i] != 0) and (y_test[i] == 0)):    # false positive: predicted positive (label is not 0), actual negative (non disease is 0)
+        if((labels[i] != 0) and (y[i] == 0)):    # false positive: predicted positive (label is not 0), actual negative (non disease is 0)
             FP += 1
 
     result = ConfusionMatrix.confusionMatrix(TP,FN,FP,TN)
-    output = output.append({'Cond':'cluster 0 is considered as non target',
+    output = output.append({'Cond':'cluster 0 is considered as non disease',
                   'TP': TP,'FN': FN,'FP': FP,'TN':TN,
                   'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
                   ignore_index=True)
@@ -135,17 +125,17 @@ def evaluation(X_test_PCA,y_test,number):
     FN = 0
     TN = 0
     for i in range(len(labels)):
-        if((labels[i] != 1) and (y_test[i] == 1)):    # false negative: predicted negative (label is not 1), actual positive (disease is 1)
+        if((labels[i] != 1) and (y[i] == 1)):    # false negative: predicted negative (label is not 1), actual positive (disease is 1)
             FN += 1
-        if((labels[i] != 1) and (y_test[i] == 0)):    # true negative: predicted negative (label is not 1), actual negative (non disease is 0)
+        if((labels[i] != 1) and (y[i] == 0)):    # true negative: predicted negative (label is not 1), actual negative (non disease is 0)
             TN += 1
-        if((labels[i] == 1) and (y_test[i] == 1)):    # true positive: predicted positive (label is 1), actual positive (disease 1)
+        if((labels[i] == 1) and (y[i] == 1)):    # true positive: predicted positive (label is 1), actual positive (disease 1)
             TP += 1
-        if((labels[i] == 1) and (y_test[i] == 0)):    # false positive: predicted positive (label is 1), actual negative (non disease is 0)
+        if((labels[i] == 1) and (y[i] == 0)):    # false positive: predicted positive (label is 1), actual negative (non disease is 0)
             FP += 1
 
     result = ConfusionMatrix.confusionMatrix(TP,FN,FP,TN)
-    output = output.append({'Cond':'cluster 1 is considered as target',
+    output = output.append({'Cond':'cluster 1 is considered as disease',
                   'TP': TP,'FN': FN,'FP': FP,'TN':TN,
                   'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
                   ignore_index=True)
@@ -159,17 +149,17 @@ def evaluation(X_test_PCA,y_test,number):
     FN = 0
     TN = 0
     for i in range(len(labels)):
-        if((labels[i] == 1) and (y_test[i] == 1)):    # false negative: predicted negative (label is 1), actual positive (disease is 1)
+        if((labels[i] == 1) and (y[i] == 1)):    # false negative: predicted negative (label is 1), actual positive (disease is 1)
             FN += 1
-        if((labels[i] == 1) and (y_test[i] == 0)):    # true negative: predicted negative (label is 1), actual negative (non disease is 0)
+        if((labels[i] == 1) and (y[i] == 0)):    # true negative: predicted negative (label is 1), actual negative (non disease is 0)
             TN += 1
-        if((labels[i] != 1) and (y_test[i] == 1)):    # true positive: predicted positive (label is not 1), actual positive (disease 1)
+        if((labels[i] != 1) and (y[i] == 1)):    # true positive: predicted positive (label is not 1), actual positive (disease 1)
             TP += 1
-        if((labels[i] != 1) and (y_test[i] == 0)):    # false positive: predicted positive (label is not 1), actual negative (non disease is 0)
+        if((labels[i] != 1) and (y[i] == 0)):    # false positive: predicted positive (label is not 1), actual negative (non disease is 0)
             FP += 1
 
     result = ConfusionMatrix.confusionMatrix(TP,FN,FP,TN)
-    output = output.append({'Cond':'cluster 1 is considered as non target',
+    output = output.append({'Cond':'cluster 1 is considered as non disease',
                   'TP': TP,'FN': FN,'FP': FP,'TN':TN,
                   'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
                   ignore_index=True)
@@ -183,17 +173,17 @@ def evaluation(X_test_PCA,y_test,number):
     FN = 0
     TN = 0
     for i in range(len(labels)):
-        if((labels[i] != 2) and (y_test[i] == 1)):    # false negative: predicted negative (label is not 2), actual positive (disease is 1)
+        if((labels[i] != 2) and (y[i] == 1)):    # false negative: predicted negative (label is not 2), actual positive (disease is 1)
             FN += 1
-        if((labels[i] != 2) and (y_test[i] == 0)):    # true negative: predicted negative (label is not 2), actual negative (non disease is 0)
+        if((labels[i] != 2) and (y[i] == 0)):    # true negative: predicted negative (label is not 2), actual negative (non disease is 0)
             TN += 1
-        if((labels[i] == 2) and (y_test[i] == 1)):    # true positive: predicted positive (label is 2), actual positive (disease 1)
+        if((labels[i] == 2) and (y[i] == 1)):    # true positive: predicted positive (label is 2), actual positive (disease 1)
             TP += 1
-        if((labels[i] == 2) and (y_test[i] == 0)):    # false positive: predicted positive (label is 2), actual negative (non disease is 0)
+        if((labels[i] == 2) and (y[i] == 0)):    # false positive: predicted positive (label is 2), actual negative (non disease is 0)
             FP += 1
 
     result = ConfusionMatrix.confusionMatrix(TP,FN,FP,TN)
-    output = output.append({'Cond':'cluster 2 is considered as target',
+    output = output.append({'Cond':'cluster 2 is considered as disease',
                   'TP': TP,'FN': FN,'FP': FP,'TN':TN,
                   'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
                   ignore_index=True)
@@ -207,29 +197,30 @@ def evaluation(X_test_PCA,y_test,number):
     FN = 0
     TN = 0
     for i in range(len(labels)):
-        if((labels[i] == 2) and (y_test[i] == 1)):    # false negative: predicted negative (label is 2), actual positive (disease is 1)
+        if((labels[i] == 2) and (y[i] == 1)):    # false negative: predicted negative (label is 2), actual positive (disease is 1)
             FN += 1
-        if((labels[i] == 2) and (y_test[i] == 0)):    # true negative: predicted negative (label is 2), actual negative (non disease is 0)
+        if((labels[i] == 2) and (y[i] == 0)):    # true negative: predicted negative (label is 2), actual negative (non disease is 0)
             TN += 1
-        if((labels[i] != 2) and (y_test[i] == 1)):    # true positive: predicted positive (label is not 2), actual positive (disease 1)
+        if((labels[i] != 2) and (y[i] == 1)):    # true positive: predicted positive (label is not 2), actual positive (disease 1)
             TP += 1
-        if((labels[i] != 2) and (y_test[i] == 0)):    # false positive: predicted positive (label is not 2), actual negative (non disease is 0)
+        if((labels[i] != 2) and (y[i] == 0)):    # false positive: predicted positive (label is not 2), actual negative (non disease is 0)
             FP += 1
 
     result = ConfusionMatrix.confusionMatrix(TP,FN,FP,TN)
-    output = output.append({'Cond':'cluster 2 is considered as non target',
+    output = output.append({'Cond':'cluster 2 is considered as non disease',
                   'TP': TP,'FN': FN,'FP': FP,'TN':TN,
                   'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
                   ignore_index=True)
 
-    # Calculate the f1 and accuracy score (Not working)
-    # f1_scores = cross_val_score(kmeans, X=X_test_PCA, y=y_test, cv=5, scoring='f1')
-    # f1_score = f1_scores.mean()
-    # acc_scores = cross_val_score(kmeans, X=X_test_PCA, y=y_test, cv=5, scoring='accuracy')
-    # acc_score = acc_scores.mean()
-    # text_file.write("Cross validation f1 score is "+str(f1_score))
-    # text_file.write("Cross validation accuracy is "+str(acc_score))
     output.to_csv("KmeansOutput_"+str(number)+".csv")
+    ############################################################################
+    #
+    # Save Model
+    #
+    ############################################################################    pkl_filename = "kmeans_model_"+str(number)+".pkl"
+    pkl_filename = "kmeans_model_"+str(number)+".pkl"
+    with open(pkl_filename, 'wb') as file:
+        pickle.dump(kmeans, file)
 
 
 def visualization(principalComponents):

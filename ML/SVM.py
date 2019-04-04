@@ -124,28 +124,32 @@ def SVMKernelRBF(X_train_SVM, y_encoded_train,number):
     #
     clf = GridSearchCV(estimator=svm, param_grid=p_grid, cv=inner_cv)
     clf.fit(X_train_SVM, y_encoded_train)
-    #
-    ######### Record parameters for the best score
-    params = clf.best_params_                    # {'C': 100, 'gamma': 0.01}
-    gamma_parameter = params.get('gamma')
-    C_parameter = params.get('C')
-    #
-    ######### Train on the best parameters
-    svm = SVC(C=C_parameter,kernel='rbf',gamma=gamma_parameter)
-    svm.fit(X_train_SVM,y_encoded_train)
+    # #
+    # ######### Record parameters for the best score
+    # params = clf.best_params_                    # {'C': 100, 'gamma': 0.01}
+    # gamma_parameter = params.get('gamma')
+    # C_parameter = params.get('C')
+    # #
+    # ######### Train on the best parameters
+    # svm = SVC(C=C_parameter,kernel='rbf',gamma=gamma_parameter)
+    # svm.fit(X_train_SVM,y_encoded_train)
     #
     # On the Cross Validaton Set
-    result = cross_val_score(svm,X_train_SVM, y_encoded_train,cv=3)
-    output = pd.DataFrame({'CV1':[],'CV2':[],'CV3':[]})
+    result = cross_val_score(clf,X_train_SVM, y_encoded_train,cv=10) # cv = 10
+    output = pd.DataFrame({'CV1':[],'CV2':[],'CV3':[],'CV4':[],
+                        'CV5':[],'CV6':[],'CV7':[],
+                        'CV8':[],'CV9':[],'CV10':[],})
     output = output.append({
-            'CV1':result[0],'CV2':result[1],'CV3':result[2]
+            'CV1':result[0],'CV2':result[1],'CV3':result[2], 'CV4':result[3],
+            'CV5':result[4],'CV6':result[5],'CV7':result[6],
+            'CV8':result[7],'CV9':result[8],'CV10':result[9]
     }, ignore_index=True)
     output.to_csv("SVMRBFCV_"+str(number)+".csv")
     #
     # Save model
     pkl_filename = "svm_rbf_model_"+str(number)+".pkl"
     with open(pkl_filename, 'wb') as file:
-        pickle.dump(svm, file)
+        pickle.dump(clf, file)
 
 
 def evaluation(X_test_SVM,y_test,number):
