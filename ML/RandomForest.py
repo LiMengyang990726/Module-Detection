@@ -48,25 +48,29 @@ def randomForest(X_train_RF,y_train, number):
                             n_iter = 100, cv = 3, verbose=2,
                             random_state=42, n_jobs = -1)
     rf_random.fit(X_train_RF, y_train)
-    #
-    ######### Record the best parameters
-    #
-    params = rf_random.best_params_
-    #
-    ######### Make Predictions
-    rf_good = RandomForestClassifier(n_estimators = params['n_estimators'],
-                                    max_features = params['max_features'],
-                                    max_depth = params['max_depth'],
-                                    min_samples_split = params['min_samples_split'],
-                                    min_samples_leaf = params['min_samples_leaf'],
-                                    bootstrap = params['bootstrap'])
-    rf_good.fit(X_train_RF, y_train)
+    # #
+    # ######### Record the best parameters
+    # #
+    # params = rf_random.best_params_
+    # #
+    # ######### Make Predictions
+    # rf_good = RandomForestClassifier(n_estimators = params['n_estimators'],
+    #                                 max_features = params['max_features'],
+    #                                 max_depth = params['max_depth'],
+    #                                 min_samples_split = params['min_samples_split'],
+    #                                 min_samples_leaf = params['min_samples_leaf'],
+    #                                 bootstrap = params['bootstrap'])
+    # rf_good.fit(X_train_RF, y_train)
     #
     # On the Cross Validaton Set
-    result = cross_val_score(rf_good, X_train_RF, y_train,cv=3)
-    output = pd.DataFrame({'CV1':[],'CV2':[],'CV3':[]})
+    result = cross_val_score(rf_random, X_train_RF, y_train,cv=10)
+    output = pd.DataFrame({'CV1':[],'CV2':[],'CV3':[],'CV4':[],
+                        'CV5':[],'CV6':[],'CV7':[],
+                        'CV8':[],'CV9':[],'CV10':[]})
     output = output.append({
-            'CV1':result[0],'CV2':result[1],'CV3':result[2]
+            'CV1':result[0],'CV2':result[1],'CV3':result[2], 'CV4':result[3],
+            'CV5':result[4],'CV6':result[5],'CV7':result[6],
+            'CV8':result[7],'CV9':result[8],'CV10':result[9]
     }, ignore_index=True)
     output.to_csv("RandomForest_"+str(number)+".csv")
     #
@@ -83,7 +87,6 @@ def evaluation(X_test_SVM,y_test,number):
     #
     # Make Prediction
     result = rf.predict(X_test_SVM)
-    y_test = y_test.tolist()
     #
     TP = 0
     FP = 0

@@ -21,32 +21,36 @@ def neuralNetwork(X_train_NN, y_train, number):
 
     clf = GridSearchCV(mlp, parameter_space, cv=3)
     clf.fit(X_train_NN,y_train)
-    #
-    ######### Record the best parameters
-    #
-    params = clf.best_params_
-    #
-    ######### Make Predictions
-    mlp_good = MLPClassifier(max_iter = MAX_ITER,
-                             hidden_layer_sizes = params['hidden_layer_sizes'],
-                            activation = params['activation'],
-                            solver = params['solver'],
-                            alpha = params['alpha'],
-                            learning_rate = params['learning_rate'])
-    mlp_good.fit(X_train_NN, y_train)
-    #
+    # #
+    # ######### Record the best parameters
+    # #
+    # params = clf.best_params_
+    # #
+    # ######### Make Predictions
+    # mlp_good = MLPClassifier(max_iter = MAX_ITER,
+    #                          hidden_layer_sizes = params['hidden_layer_sizes'],
+    #                         activation = params['activation'],
+    #                         solver = params['solver'],
+    #                         alpha = params['alpha'],
+    #                         learning_rate = params['learning_rate'])
+    # mlp_good.fit(X_train_NN, y_train)
+    # #
     # On the Cross Validaton Set
-    result = cross_val_score(mlp_good, X_train_NN, y_train,cv=3)
-    output = pd.DataFrame({'CV1':[],'CV2':[],'CV3':[]})
+    result = cross_val_score(clf, X_train_NN, y_train,cv=10)
+    output = pd.DataFrame({'CV1':[],'CV2':[],'CV3':[],'CV4':[],
+                        'CV5':[],'CV6':[],'CV7':[],
+                        'CV8':[],'CV9':[],'CV10':[]})
     output = output.append({
-            'CV1':result[0],'CV2':result[1],'CV3':result[2]
+            'CV1':result[0],'CV2':result[1],'CV3':result[2], 'CV4':result[3],
+            'CV5':result[4],'CV6':result[5],'CV7':result[6],
+            'CV8':result[7],'CV9':result[8],'CV10':result[9]
     }, ignore_index=True)
     output.to_csv("NeuralNetwork_"+str(number)+".csv")
     #
     # Save model
     pkl_filename = "neural_network_model_"+str(number)+".pkl"
     with open(pkl_filename, 'wb') as file:
-        pickle.dump(mlp_good, file)
+        pickle.dump(clf, file)
 
 def evaluation(X_test_NN,y_test,number):
     # Load Model
@@ -56,7 +60,7 @@ def evaluation(X_test_NN,y_test,number):
     #
     # Make Prediction
     result = mlp.predict(X_test_NN)
-    y_test = y_test.tolist()
+    y_test = y_test
     #
     TP = 0
     FP = 0

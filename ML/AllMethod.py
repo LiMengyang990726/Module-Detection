@@ -37,32 +37,32 @@ X_1_PCA = KMeansPCA.performPCA(pd.concat([X_train_1.drop(['ProteinID'],axis=1),X
 X_2_PCA = KMeansPCA.performPCA(pd.concat([X_train_2.drop(['ProteinID'],axis=1),X_test_2.drop(['ProteinID'],axis=1)]))
 X_3_PCA = KMeansPCA.performPCA(pd.concat([X_train_3.drop(['ProteinID'],axis=1),X_test_3.drop(['ProteinID'],axis=1)]))
 
-KMeansPCA.Kmeans(X_1_PCA,y_test_1,1)
-KMeansPCA.Kmeans(X_2_PCA,y_test_2,2)
-KMeansPCA.Kmeans(X_3_PCA,y_test_3,3)
+y_1_PCA = y_train_1 + y_test_1
+y_2_PCA = y_train_2 + y_test_2
+y_3_PCA = y_train_3 + y_test_3
+KMeansPCA.Kmeans(X_1_PCA,y_1_PCA,1)
+KMeansPCA.Kmeans(X_2_PCA,y_2_PCA,2)
+KMeansPCA.Kmeans(X_3_PCA,y_3_PCA,3)
 # BUG: KMeansPCA.visualization(np.append(X_test_PCA,X_train_PCA))
 
 ############## Support Vectore Machine
 X_train_1_SVM = X_train_1.drop(['ProteinID'],axis = 1).values
 X_test_1_SVM = X_test_1.drop(['ProteinID'],axis = 1).values
-y_train_1_SVM, y_test_1_SVM = SVM.encodeY(y_train_1,y_test_1)
 
 X_train_2_SVM = X_train_2.drop(['ProteinID'],axis = 1).values
 X_test_2_SVM = X_test_2.drop(['ProteinID'],axis = 1).values
-y_train_2_SVM, y_test_2_SVM = SVM.encodeY(y_train_2,y_test_2)
 
 X_train_3_SVM = X_train_3.drop(['ProteinID'],axis = 1).values
 X_test_3_SVM = X_test_3.drop(['ProteinID'],axis = 1).values
-y_train_3_SVM, y_test_3_SVM = SVM.encodeY(y_train_3,y_test_3)
 
-SVM.SVMKernelRBF(X_train_1_SVM, y_train_1_SVM,1)
-SVM.evaluation(X_test_1_SVM,y_test_1_SVM,1)
+SVM.SVMKernelRBF(X_train_1_SVM, y_train_1,1)
+SVM.evaluation(X_test_1_SVM,y_test_1,1)
 
-SVM.SVMKernelRBF(X_train_2_SVM, y_train_2_SVM,2)
-SVM.evaluation(X_test_2_SVM,y_test_2_SVM,2)
+SVM.SVMKernelRBF(X_train_2_SVM, y_train_2,2)
+SVM.evaluation(X_test_2_SVM,y_test_2,2)
 
-SVM.SVMKernelRBF(X_train_3_SVM, y_train_3_SVM,3)
-SVM.evaluation(X_test_3_SVM,y_test_3_SVM,3)
+SVM.SVMKernelRBF(X_train_3_SVM, y_train_3,3)
+SVM.evaluation(X_test_3_SVM,y_test_3,3)
 # HAVEN'T DONE VISUALIZATION
 
 ############## Random Forest

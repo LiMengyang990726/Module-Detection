@@ -138,7 +138,7 @@ def SVMKernelRBF(X_train_SVM, y_encoded_train,number):
     result = cross_val_score(clf,X_train_SVM, y_encoded_train,cv=10) # cv = 10
     output = pd.DataFrame({'CV1':[],'CV2':[],'CV3':[],'CV4':[],
                         'CV5':[],'CV6':[],'CV7':[],
-                        'CV8':[],'CV9':[],'CV10':[],})
+                        'CV8':[],'CV9':[],'CV10':[]})
     output = output.append({
             'CV1':result[0],'CV2':result[1],'CV3':result[2], 'CV4':result[3],
             'CV5':result[4],'CV6':result[5],'CV7':result[6],
