@@ -86,36 +86,3 @@ def evaluation(X_test_NN,y_test,number):
                   'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
                   ignore_index=True)
     output.to_csv("NeuralNetworkOutput_"+str(number)+".csv")
-
-pkl_filename = "neural_network_model_"+str(3)+".pkl"
-with open(pkl_filename, 'rb') as file:
-    mlp = pickle.load(file)
-#
-# Make Prediction
-result = mlp.predict(X_test_3_NN)
-y_test = y_test_3.tolist()
-#
-TP = 0
-FP = 0
-FN = 0
-TN = 0
-for i in range(len(result)):
-    if((result[i] == 0) and (y_test[i] == 1)):    # false negative: predicted negative (non disease is 0), actual positive (disease is 1)
-        FN += 1
-    if((result[i] == 0) and (y_test[i] == 0)):    # true negative: predicted negative (non disease is 0), actual negative (non disease is 0)
-        TN += 1
-    if((result[i] == 1) and (y_test[i] == 1)):    # true positive: predicted positive (disease is 1), actual positive (disease is 1)
-        TP += 1
-    if((result[i] == 1) and (y_test[i] == 0)):    # false positive: predicted positive (disease is 1), actual negative (non disease is 0)
-        FP += 1
-#
-output = pd.DataFrame({'Cond':[],
-              'TP': [],'FN': [],'FP': [],'TN':[],
-              'Accuracy':[],'Precision':[],'Recall':[],'F1 score':[]})
-result = ConfusionMatrix.confusionMatrix(TP,FN,FP,TN)
-cond = "data set "+str(3)
-output = output.append({'Cond':cond,
-              'TP': TP,'FN': FN,'FP': FP,'TN':TN,
-              'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
-              ignore_index=True)
-output.to_csv("NeuralNetworkOutput_"+str(3)+".csv")
