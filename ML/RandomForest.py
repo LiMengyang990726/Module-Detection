@@ -77,7 +77,7 @@ def randomForest(X_train_RF,y_train, number):
     # Save model
     pkl_filename = "random_forest_model_"+str(number)+".pkl"
     with open(pkl_filename, 'wb') as file:
-        pickle.dump(rf_good, file)
+        pickle.dump(rf_random, file)
 
 def evaluation(X_test_SVM,y_test,number):
     # Load Model
