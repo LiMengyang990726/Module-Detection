@@ -1,10 +1,10 @@
-import dataPreparation
-import KMeansPCA
+import ML.dataPreparation as dataPreparation
+import ML.KMeansPCA as KMeansPCA
 import numpy as np
 import pandas as pd
-import SVM
-import RandomForest
-import NeuralNetwork
+import ML.SVM as SVM
+import ML.RandomForest as RandomForest
+import ML.NeuralNetwork as NeuralNetwork
 
 ############## Read Input
 train_1,test_1, train_2,test_2, train_3,test_3 = dataPreparation.output()

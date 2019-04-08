@@ -1,10 +1,6 @@
 import pickle
 import pandas as pd
-from sklearn.cluster import KMeans
-import os
-from sklearn.metrics import jaccard_similarity_score
-from collections import Counter
-import math
+
 
 ###############################################
 # This one gives very low score
