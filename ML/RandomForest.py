@@ -48,10 +48,11 @@ def randomForest(X_train_RF,y_train, number):
                             n_iter = 100, cv = 3, verbose=2,
                             random_state=42, n_jobs = -1)
     rf_random.fit(X_train_RF, y_train)
-    # #
-    # ######### Record the best parameters
-    # #
-    # params = rf_random.best_params_
+    #
+    ######### Record the best parameters
+    #
+    params = rf_random.best_params_
+    print(params)
     # #
     # ######### Make Predictions
     # rf_good = RandomForestClassifier(n_estimators = params['n_estimators'],
