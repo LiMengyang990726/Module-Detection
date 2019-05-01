@@ -68,7 +68,7 @@ disease_2.reset_index(inplace=True)
 
 f = open("dataset_2_feature_indepedent_t_test.txt","w+")
 
-for i in range(2, 37):
+for i in range(2, 38):
     #
     diff = nondisease_2.iloc[:,i] - disease_2.iloc[:,i]
     #
@@ -95,7 +95,7 @@ disease_3.reset_index(inplace=True)
 
 f = open("dataset_3_feature_indepedent_t_test.txt","w+")
 
-for i in range(2, 37):
+for i in range(2, 38):
     #
     diff = nondisease_3.iloc[:,i] - disease_3.iloc[:,i]
     #

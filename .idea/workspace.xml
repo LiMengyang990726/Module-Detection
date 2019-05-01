@@ -2,35 +2,81 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2acd06c2-003e-49b6-98fa-4795d20c70b0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/ML/normal_checking.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/KmeansOutput_1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/KmeansOutput_2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/KmeansOutput_3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/RandomForest.py" beforeDir="false" afterPath="$PROJECT_DIR$/ML/RandomForest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/RandomForestOutput_1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/RandomForestOutput_2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/RandomForestOutput_3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/RandomForest_1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/RandomForest_2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/RandomForest_3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/SVMRBFCV_1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/SVMRBFCV_2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/SVMRBFCV_3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/SVMRBFOutput_1.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/SVMRBFOutput_2.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/SVMRBFOutput_3.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/kmeans_model_1.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/kmeans_model_2.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/kmeans_model_3.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/pvalue.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/random_forest_model_1.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/random_forest_model_2.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/random_forest_model_3.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/svm_rbf_model_1.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/svm_rbf_model_2.pkl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ML/svm_rbf_model_3.pkl" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_feature_indepedent_t_test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_feature_indepedent_t_test.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/Aromaticity Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/Aromaticity Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/Average Shortest Path to all Disease genes Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/Average Shortest Path to all Disease genes Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/BP Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/BP Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/BetweennessCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/BetweennessCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/CC Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/CC Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/ClosenessCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/ClosenessCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/DegreeCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/DegreeCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/EigenvectorCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/EigenvectorCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyA Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyA Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyC Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyC Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyD Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyD Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyE Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyE Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyF Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyF Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyG Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyG Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyH Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyH Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyI Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyI Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyK Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyK Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyL Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyL Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyM Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyM Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyN Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyN Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyP Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyP Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyQ Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyQ Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyR Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyR Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyS Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyS Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyT Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyT Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyV Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyV Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyW Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyW Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyY Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/FrequencyY Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/HarmonicCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/HarmonicCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/Isoelectric Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/Isoelectric Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/MF Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/MF Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/Modularity Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/Modularity Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/PageRank Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/PageRank Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/SSfractionHelix Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/SSfractionHelix Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_2_figure/SSfractionTurn Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_2_figure/SSfractionTurn Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_feature_indepedent_t_test.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_feature_indepedent_t_test.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/Aromaticity Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/Aromaticity Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/Average Shortest Path to all Disease genes Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/Average Shortest Path to all Disease genes Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/BP Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/BP Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/BetweennessCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/BetweennessCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/CC Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/CC Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/ClosenessCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/ClosenessCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/DegreeCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/DegreeCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/EigenvectorCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/EigenvectorCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyA Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyA Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyC Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyC Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyD Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyD Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyE Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyE Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyF Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyF Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyG Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyG Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyH Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyH Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyI Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyI Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyK Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyK Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyL Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyL Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyM Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyM Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyN Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyN Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyP Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyP Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyQ Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyQ Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyR Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyR Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyS Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyS Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyT Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyT Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyV Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyV Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyW Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyW Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyY Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/FrequencyY Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/HarmonicCentrality Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/HarmonicCentrality Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/Isoelectric Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/Isoelectric Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/MF Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/MF Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/Modularity Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/Modularity Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/PageRank Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/PageRank Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/SSfractionHelix Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/SSfractionHelix Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataset_3_figure/SSfractionTurn Correlation.png" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataset_3_figure/SSfractionTurn Correlation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/normal_checking.py" beforeDir="false" afterPath="$PROJECT_DIR$/ML/normal_checking.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Ureca-Report-draft.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Ureca-Report-draft.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/~$eca-Report-draft.docx" beforeDir="false" afterPath="$PROJECT_DIR$/~$eca-Report-draft.docx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,7 +89,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ML/featureSelection.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="66">
+            <state relative-caret-position="15">
               <caret line="3" selection-start-line="3" selection-end-line="3" />
               <folding>
                 <element signature="e#0#44#0" expanded="true" />
@@ -55,8 +101,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ML/normal_checking.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1131">
-              <caret line="132" column="16" selection-start-line="132" selection-start-column="16" selection-end-line="132" selection-end-column="16" />
+            <state relative-caret-position="425">
+              <caret line="95" column="36" selection-start-line="95" selection-start-column="36" selection-end-line="95" selection-end-column="36" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -78,7 +124,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ML/RandomForest.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-88">
+            <state relative-caret-position="120">
               <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="33" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -90,7 +136,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ML/AllMethod.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
+            <state relative-caret-position="375">
               <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="42" />
               <folding>
                 <element signature="e#0#44#0" expanded="true" />
@@ -107,7 +153,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ML/dataPreparation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="495">
+            <state relative-caret-position="435">
               <caret line="33" column="27" selection-start-line="33" selection-start-column="27" selection-end-line="33" selection-end-column="27" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
@@ -119,7 +165,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ML/NeuralNetwork.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="370">
+            <state relative-caret-position="900">
               <caret line="64" column="10" selection-start-line="64" selection-start-column="10" selection-end-line="64" selection-end-column="10" />
               <folding>
                 <element signature="e#97#110#0" expanded="true" />
@@ -244,10 +290,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="867" height="900" extended-state="0" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25177306" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24031007" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -284,45 +330,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ML/ConfusionMatrix.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ML/NeuralNetwork.py">
+    <entry file="file://$PROJECT_DIR$/ML/pvalue.py" />
+    <entry file="file://$PROJECT_DIR$/ML/FeatureSeperation.py" />
+    <entry file="file://$PROJECT_DIR$/ML/featureSelection.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="64" column="10" selection-start-line="64" selection-start-column="10" selection-end-line="64" selection-end-column="10" />
-          <folding>
-            <element signature="e#97#110#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ML/dataPreparation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" column="27" selection-start-line="33" selection-start-column="27" selection-end-line="33" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ML/AllMethod.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="42" />
+        <state relative-caret-position="15">
+          <caret line="3" selection-start-line="3" selection-end-line="3" />
           <folding>
             <element signature="e#0#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ML/RandomForest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-88">
-          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -336,37 +351,53 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ML/pvalue.py">
+    <entry file="file://$PROJECT_DIR$/ML/RandomForest.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="144" column="30" lean-forward="true" selection-start-line="144" selection-start-column="30" selection-end-line="144" selection-end-column="30" />
+        <state relative-caret-position="120">
+          <caret line="30" column="9" selection-start-line="30" selection-start-column="9" selection-end-line="30" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ML/AllMethod.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="31" column="25" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="42" />
           <folding>
             <element signature="e#0#44#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ML/FeatureSeperation.py">
+    <entry file="file://$PROJECT_DIR$/ML/ConfusionMatrix.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ML/dataPreparation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-228">
-          <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="61" />
+        <state relative-caret-position="435">
+          <caret line="33" column="27" selection-start-line="33" selection-start-column="27" selection-end-line="33" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ML/featureSelection.py">
+    <entry file="file://$PROJECT_DIR$/ML/NeuralNetwork.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="3" selection-start-line="3" selection-end-line="3" />
+        <state relative-caret-position="900">
+          <caret line="64" column="10" selection-start-line="64" selection-start-column="10" selection-end-line="64" selection-end-column="10" />
           <folding>
-            <element signature="e#0#44#0" expanded="true" />
+            <element signature="e#97#110#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ML/normal_checking.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1131">
-          <caret line="132" column="16" selection-start-line="132" selection-start-column="16" selection-end-line="132" selection-end-column="16" />
+        <state relative-caret-position="425">
+          <caret line="95" column="36" selection-start-line="95" selection-start-column="36" selection-end-line="95" selection-end-column="36" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
