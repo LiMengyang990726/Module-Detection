@@ -3,7 +3,6 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import collections
-import xlsxwriter
 import subprocess as sp # for clear console: tmp = sp.call('clear',shell=True)
 import csv
 import pandas as pd
@@ -17,26 +16,26 @@ import os
 # ==============================================================================
 
 # For reading dataset1 type: with edgelist, gene-disease
-def readInput1(edgelist,gene-disease):
-    G = nx.read_edgelist(edgelist)
-    Gc = max(nx.connected_component_subgraphs(G), key=len)
-    disease_file  = open(gene-disease, 'r')
-    diseases = []
-    disease_dic = {}
-    componentDic = {}
-    for line in disease_file:
-        li = line.strip()
-        if not li.startswith("#"):
-            li2 = li.split(' ',1)
-            disease_key = li2[0]
-            print ("the key is: "+disease_key)
-            disease_list = [l for l in (li2[1]).split('/')]
-            length = len(disease_list)
-            for i in range(length):
-                diseases.append(disease_list[i])
-            print (disease_list)
-            disease_dic.update({disease_key: disease_list})
-    return Gc, disease_dic,diseases
+# def readInput1(edgelist,gene-disease):
+#     G = nx.read_edgelist(edgelist)
+#     Gc = max(nx.connected_component_subgraphs(G), key=len)
+#     disease_file  = open(gene-disease, 'r')
+#     diseases = []
+#     disease_dic = {}
+#     componentDic = {}
+#     for line in disease_file:
+#         li = line.strip()
+#         if not li.startswith("#"):
+#             li2 = li.split(' ',1)
+#             disease_key = li2[0]
+#             print ("the key is: "+disease_key)
+#             disease_list = [l for l in (li2[1]).split('/')]
+#             length = len(disease_list)
+#             for i in range(length):
+#                 diseases.append(disease_list[i])
+#             print (disease_list)
+#             disease_dic.update({disease_key: disease_list})
+#     return Gc, disease_dic,diseases
 
 
 # For reading dataset2 type: with edgelist, disgenes_uniprot,endgenes_uniprot,ndnegenes_uniprot

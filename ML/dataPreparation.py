@@ -38,12 +38,6 @@ def split(data1,data2,data3):
     #
     return (strat_train_set_1,strat_test_set_1,strat_train_set_2,strat_test_set_2,strat_train_set_3,strat_test_set_3)
 
-def output():
-    # path = "/home2/lime0400/Module-Detection/"                        # If in the server
-    path = "/Users/limengyang/Workspaces/Module-Detection/"
-    data = readInput(path)
-    (data1, data2, data3) = balance(data)
-    return split(data1, data2, data3)
 
 def balance(data):
     data_dis = data[data['Target']==1]
@@ -65,3 +59,10 @@ def balance(data):
     data3.reset_index(inplace=True)
     data3.drop(['index'],axis=1, inplace = True)
     return (data1, data2, data3)
+
+def output():
+    # path = "/home2/lime0400/Module-Detection/"                        # If in the server
+    path = "/Users/limengyang/Workspaces/Module-Detection/"
+    data = readInput(path)
+    (data1, data2, data3) = balance(data)
+    return split(data1, data2, data3)
