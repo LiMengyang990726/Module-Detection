@@ -7,6 +7,7 @@ import ML.RandomForest as RandomForest
 import ML.NeuralNetwork as NeuralNetwork
 
 ############## Read Input
+# First time, save as output
 train_1,test_1, train_2,test_2, train_3,test_3 = dataPreparation.output()
 
 train_1.to_csv("DS1_train.csv")
@@ -16,6 +17,8 @@ test_2.to_csv("DS2_test.csv")
 train_3.to_csv("DS3_train.csv")
 test_3.to_csv("DS3_test.csv")
 
+
+# Later on, read from the saved output
 train_1 = pd.read_csv("DS1_train.csv")
 train_1.drop(['Unnamed: 0'],axis = 1, inplace = True)
 test_1 = pd.read_csv("DS1_test.csv")
@@ -78,7 +81,7 @@ SVM.SVMKernelRBF(X_train_3_SVM, y_train_3,3)
 SVM.evaluation(X_test_3_SVM,y_test_3,3)
 # HAVEN'T DONE VISUALIZATION
 
-############## Random Forest
+############## Random Forest (which gives the best result)
 X_train_1_RF = X_train_1.drop(['ProteinID'],axis = 1)
 X_test_1_RF = X_test_1.drop(['ProteinID'],axis = 1)
 
@@ -113,4 +116,29 @@ NeuralNetwork.neuralNetwork(X_train_3_NN, y_train_3, 3)
 NeuralNetwork.evaluation(X_test_3_NN, y_test_3, 3)
 
 
+############## Random Forest (After feature selection)
+selected_features = ['EigenvectorCentrality','Modularity','PageRank',
+                          'BP','CC','MF',
+                          'FrequencyA', 'FrequencyC', 'FrequencyD',
+                          'FrequencyE', 'FrequencyF', 'FrequencyG', 'FrequencyH', 'FrequencyI',
+                          'FrequencyK', 'FrequencyL', 'FrequencyM', 'FrequencyN', 'FrequencyP',
+                          'FrequencyQ', 'FrequencyR', 'FrequencyS', 'FrequencyT', 'FrequencyV',
+                          'FrequencyW', 'FrequencyY', 'Aromaticity', 'SSfractionTurn', 'SSfractionSheet']
 
+X_train_1_RF = X_train_1[selected_features]
+X_test_1_RF = X_test_1[selected_features]
+
+X_train_2_RF = X_train_2[selected_features]
+X_test_2_RF = X_test_2[selected_features]
+
+X_train_3_RF = X_train_3[selected_features]
+X_test_3_RF = X_test_3[selected_features]
+
+RandomForest.randomForest(X_train_1_RF,y_train_1,1)
+RandomForest.evaluation(X_test_1_RF,y_test_1,1)
+
+RandomForest.randomForest(X_train_2_RF,y_train_2,2)
+RandomForest.evaluation(X_test_2_RF,y_test_2,2)
+
+RandomForest.randomForest(X_train_3_RF,y_train_3,3)
+RandomForest.evaluation(X_test_3_RF,y_test_3,3)
