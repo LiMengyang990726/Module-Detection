@@ -1,8 +1,6 @@
 import csv
-
 import networkx as nx
 import pandas as pd
-import matplotlib
 import os
 import TopologicalFeatures.topologicalFeatures as TopoFeatures
 import SequenceFeatures.sequenceFeature as SequenceFeatures
@@ -10,28 +8,26 @@ import numpy as np
 
 
 def readInput3(path):
-    G = nx.read_edgelist()    #Missing edgelist
+    G = nx.read_edgelist("./data/dataset2/ppi_edgelist.csv")
     disease_genes = pd.read_csv(os.path.join(path,"asd_genes.txt"),names=["ProteinID"])
     disease_genes = disease_genes["ProteinID"].tolist()
     non_disease_genes = pd.read_csv(os.path.join(path,"nm_genes.txt"),names=["ProteinID"])
     non_disease_genes = non_disease_genes["ProteinID"].tolist()
+    return (G, disease_genes, non_disease_genes)
 
-def selectedTopoFeatures(G):
-    path = "/Users/limengyang/Workspaces/Re-feeding Using New Dataset/"
+def selectedTopoFeatures(G, path,disease_genes):
     TopoFeatures.EigenvectorCentrality(G,path)
-    TopoFeatures.Modularity(G,path)
+    TopoFeatures.Modularity(G,path,disease_genes)
     TopoFeatures.PageRank(G,path)
 
-def selectedSequenceFeatures():
-    # Need to get the sequence coversion form Uniprot
-    # Input
-    inputPath = "/Users/limengyang/Workspaces/Module-Detection/data/ASD_data/"
-    seq_file_dis = os.path.join(inputPath, "disgenes_sequence.txt")
-    seq_file_non_dis = os.path.join(inputPath, "endgenes_sequence.txt")
-    # Output
-    outputPath = "/Users/limengyang/Workspaces/Re-feeding Using New Dataset/"
-    computeSequenceFeatures(seq_file_dis,os.path.join(outputPath,"Disease_genes_sequence_features.csv"))
-    computeSequenceFeatures(seq_file_non_dis,os.path.join(outputPath, "Non_disease_genes_sequence_features.csv"))
+def selectedSequenceFeatures(inputPath,outputPath):
+    seq_file_dis = os.path.join(inputPath, "disgenes_sequence.txt")     # These two files haven't been obtained. Need to get the sequence coversion form Uniprot
+    seq_file_non_dis = os.path.join(inputPath, "endgenes_sequence.txt") # These two files haven't been obtained. Need to get the sequence coversion form Uniprot
+    seq_output_dis = os.path.join(outputPath,"Disease_genes_sequence_features.csv")
+    seq_output_non_dis = os.path.join(outputPath, "Non_disease_genes_sequence_features.csv")
+    #
+    computeSequenceFeatures(seq_file_dis, seq_output_dis)
+    computeSequenceFeatures(seq_file_non_dis, seq_output_non_dis)
 
 def selectedFunctionalFeatures():
     # Require Ms Rama's file
@@ -48,9 +44,13 @@ def dataCombination():
 
     frames = [eigen, modu, page, seq_dis, seq_non_dis, function]
 
-def computeSequenceFeatures(seq_file, output_file):
+    return frames
+
+def dataCleaning():
+
+def computeSequenceFeatures(input_file, output_file):
     # read ids and sequences in a dictionary
-    seq_data=np.genfromtxt(seq_file, dtype=str, delimiter='\t')
+    seq_data=np.genfromtxt(input_file, dtype=str, delimiter='\t')
 
     # write output
     f = open(output_file, mode='w')
@@ -108,3 +108,17 @@ def computeSequenceFeatures(seq_file, output_file):
                             'Aromaticity': aromaticity,
                             'SSfraction': ssfraction})
     f.close()
+
+def main():
+    # Get Input
+    G, disease_genes, non_disease_genes = readInput3("./data/ASD_data/")
+
+    # Topological Features
+    selectedTopoFeatures(G, "./Re-feeding Using New Dataset/",disease_genes)
+
+    # Sequential Features
+    inputPath = "/Users/limengyang/Workspaces/Module-Detection/data/ASD_data/"
+    outputPath = "/Users/limengyang/Workspaces/Re-feeding Using New Dataset/"
+    selectedSequenceFeatures(inputPath,outputPath)
+
+    # Functional Features

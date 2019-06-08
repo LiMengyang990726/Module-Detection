@@ -402,9 +402,9 @@ def ConnectivitySignificance(Gc,disease_genes,path):
 # modularity
 #
 # ==============================================================================
-def Modularity(Gc,path):
+def Modularity(Gc,path,disease_genes):
 
-    f= open(os.path.join(path,"Modularity.csv"),mode='w') # Only the first level neighbors of disease nodes are shown here
+    f = open(os.path.join(path,"Modularity.csv"),mode='w') # Only the first level neighbors of disease nodes are shown here
     fieldnames = ['Gene_ID', 'Modularity']
     f_writer = csv.DictWriter(f, fieldnames=fieldnames)
 
@@ -469,7 +469,7 @@ if __name__ == "__main__":
     EigenvectorCentrality(Gc,path)
     PageRank(Gc,path)
     HarmonicCentrality(Gc,path)
-    Modularity(Gc,path)
+    Modularity(Gc,path,disease_genes)
     # ConnectivitySignificance(Gc,disease_genes,path)
 
     # Write down all ProteinID
