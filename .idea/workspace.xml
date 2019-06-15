@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2acd06c2-003e-49b6-98fa-4795d20c70b0" name="Default Changelist" comment="" />
+    <list default="true" id="2acd06c2-003e-49b6-98fa-4795d20c70b0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/ML/RandomForest.py" beforeDir="false" afterPath="$PROJECT_DIR$/ML/RandomForest.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/SVM.py" beforeDir="false" afterPath="$PROJECT_DIR$/ML/SVM.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ML/dataPreparation.py" beforeDir="false" afterPath="$PROJECT_DIR$/ML/dataPreparation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SequenceFeatures/sequenceFeature.py" beforeDir="false" afterPath="$PROJECT_DIR$/SequenceFeatures/sequenceFeature.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/ASD_data/disgenes_sequence.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/ASD_data/disgenes_sequence.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/re_feeding_feature_generation.py" beforeDir="false" afterPath="$PROJECT_DIR$/re_feeding_feature_generation.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -11,10 +18,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ML/dataPreparation.py">
+        <entry file="file://$PROJECT_DIR$/ML/RandomForest.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="36" column="48" selection-start-line="36" selection-start-column="48" selection-end-line="36" selection-end-column="48" />
+            <state relative-caret-position="90">
+              <caret line="6" column="44" selection-start-line="6" selection-start-column="44" selection-end-line="6" selection-end-column="44" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -25,8 +32,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/re_feeding_feature_generation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="71" column="28" lean-forward="true" selection-start-line="71" selection-start-column="28" selection-end-line="71" selection-end-column="28" />
+            <state relative-caret-position="153">
+              <caret line="12" column="62" selection-start-line="12" selection-start-column="62" selection-end-line="12" selection-end-column="62" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -35,49 +42,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ML/dataCleaning.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/TopologicalFeatures/topologicalFeatures.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="339">
-              <caret line="404" column="23" selection-start-line="404" selection-start-column="23" selection-end-line="404" selection-end-column="23" />
-              <folding>
-                <element signature="e#0#21#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FunctionalFeatures/functionalFeatures.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" selection-start-line="4" selection-end-line="31" selection-end-column="84" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ML/AllMethod.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-863">
-              <caret line="39" column="41" selection-start-line="39" selection-start-column="41" selection-end-line="39" selection-end-column="41" />
-              <folding>
-                <element signature="e#0#44#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="75">
+              <caret line="5" selection-start-line="5" selection-end-line="5" selection-end-column="38" />
             </state>
           </provider>
         </entry>
@@ -110,16 +78,18 @@
         <option value="$PROJECT_DIR$/ML/featureSelection.py" />
         <option value="$PROJECT_DIR$/ML/featureSeperation.py" />
         <option value="$PROJECT_DIR$/ML/FeatureSeperation.py" />
-        <option value="$PROJECT_DIR$/ML/RandomForest.py" />
         <option value="$PROJECT_DIR$/ML/mann_whitney_u_test.py" />
         <option value="$PROJECT_DIR$/ML/normal_checking.py" />
         <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/ML/dataPreparation.py" />
         <option value="$PROJECT_DIR$/ML/methodVisualization.py" />
         <option value="$PROJECT_DIR$/ML/AllMethod.py" />
         <option value="$PROJECT_DIR$/visualizer.py" />
         <option value="$PROJECT_DIR$/Re-feeding Using New Dataset/feature_generation.py" />
         <option value="$PROJECT_DIR$/TopologicalFeatures/topologicalFeatures.py" />
+        <option value="$PROJECT_DIR$/SequenceFeatures/sequenceFeature.py" />
+        <option value="$PROJECT_DIR$/ML/SVM.py" />
+        <option value="$PROJECT_DIR$/ML/dataPreparation.py" />
+        <option value="$PROJECT_DIR$/ML/RandomForest.py" />
         <option value="$PROJECT_DIR$/re_feeding_feature_generation.py" />
       </list>
     </option>
@@ -154,12 +124,6 @@
               <item name="Module-Detection" type="b2602c69:ProjectViewProjectNode" />
               <item name="Module-Detection" type="462c0819:PsiDirectoryNode" />
               <item name="ML" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Module-Detection" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Module-Detection" type="462c0819:PsiDirectoryNode" />
-              <item name="ML" type="462c0819:PsiDirectoryNode" />
-              <item name="RandomForest" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Module-Detection" type="b2602c69:ProjectViewProjectNode" />
@@ -293,12 +257,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="867" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25295508" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25295508" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.32891566" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32891566" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.2746988" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -360,47 +325,10 @@
     <entry file="file://$PROJECT_DIR$/ML/ConfusionMatrix.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/ML/KMeansPCA.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="753">
-          <caret line="65" column="29" selection-start-line="65" selection-start-column="29" selection-end-line="65" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ML/methodVisualization.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="503">
           <caret line="71" column="56" lean-forward="true" selection-start-line="71" selection-start-column="56" selection-end-line="71" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ML/SVM.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="79">
-          <caret line="115" column="27" selection-start-line="115" selection-start-column="27" selection-end-line="115" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ML/RandomForest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="885">
-          <caret line="81" selection-start-line="81" selection-end-line="81" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ML/dataPreparation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="36" column="48" selection-start-line="36" selection-start-column="48" selection-end-line="36" selection-end-column="48" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
@@ -420,16 +348,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ML/NeuralNetwork.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="58" column="31" selection-start-line="58" selection-start-column="31" selection-end-line="58" selection-end-column="31" />
-          <folding>
-            <element signature="e#97#110#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Re-feeding Using New Dataset/EigenvectorCentrality.csv">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2022">
@@ -439,43 +357,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TopologicalFeatures/.ipynb_checkpoints/DataCleaning-checkpoint.ipynb">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TopologicalFeatures/topologicalFeatures.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="339">
-          <caret line="404" column="23" selection-start-line="404" selection-start-column="23" selection-end-line="404" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ML/AllMethod.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-863">
-          <caret line="39" column="41" selection-start-line="39" selection-start-column="41" selection-end-line="39" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#44#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SequenceFeatures/sequenceFeature.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-687">
-          <caret line="30" column="33" lean-forward="true" selection-start-line="30" selection-start-column="33" selection-end-line="30" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ML/dataCleaning.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/FunctionalFeatures/functionalFeatures.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -487,10 +368,90 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Re-feeding Using New Dataset/Disease_genes_sequence_features.csv">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-12566" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SequenceFeatures/sequenceFeature.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="477">
+          <caret line="55" column="48" selection-start-line="55" selection-start-column="48" selection-end-line="55" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TopologicalFeatures/topologicalFeatures.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-945">
+          <caret line="404" column="23" selection-start-line="404" selection-start-column="23" selection-end-line="404" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#21#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ML/NeuralNetwork.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="40" selection-start-line="21" selection-start-column="40" selection-end-line="21" selection-end-column="40" />
+          <folding>
+            <element signature="e#97#110#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ML/dataCleaning.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ML/KMeansPCA.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret lean-forward="true" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ML/SVM.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" column="25" lean-forward="true" selection-start-line="5" selection-start-column="25" selection-end-line="5" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ML/dataPreparation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" selection-start-line="2" selection-end-line="2" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ML/AllMethod.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="5" selection-start-line="5" selection-end-line="5" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ML/RandomForest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="44" selection-start-line="6" selection-start-column="44" selection-end-line="6" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/re_feeding_feature_generation.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="71" column="28" lean-forward="true" selection-start-line="71" selection-start-column="28" selection-end-line="71" selection-end-column="28" />
+        <state relative-caret-position="153">
+          <caret line="12" column="62" selection-start-line="12" selection-start-column="62" selection-end-line="12" selection-end-column="62" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>

@@ -16,14 +16,20 @@ import os
 # Return a dictionary
 def getAAfreq(seq):  #returns a dictionary
     analyse = ProteinAnalysis(seq)
-    x=analyse.get_amino_acids_percent()
-    return x
+    try:
+        x=analyse.get_amino_acids_percent()
+        return x
+    except ZeroDivisionError:
+        print("Here has a AAfreq zero division error" + seq)
 
 # Return single number
 def getAromaticity(seq):
     analyse = ProteinAnalysis(seq)
-    x=analyse.aromaticity()
-    return x
+    try:
+        x=analyse.aromaticity()
+        return x
+    except ZeroDivisionError:
+        print("Here has a Aromaticity zero division error" + seq)
 
 # Return single number
 def getIsoelectric(seq):
@@ -46,8 +52,11 @@ def getInstability(seq):
 # Return three values
 def getSSfraction(seq): #returns a tuple of three floats (Helix, Turn, Sheet)
     analyse = ProteinAnalysis(seq)
-    x=analyse.secondary_structure_fraction()
-    return x
+    try:
+        x=analyse.secondary_structure_fraction()
+        return x
+    except ZeroDivisionError:
+        print("Here has a SSfraction zero division error" + seq)
 
 def getAAscale(seq):
     analyse = ProteinAnalysis(seq)

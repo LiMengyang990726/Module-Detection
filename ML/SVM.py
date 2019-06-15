@@ -1,24 +1,9 @@
 import pandas as pd
-import csv
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
-from copy import deepcopy
 import numpy as np
-from sklearn.cluster import KMeans
-import networkx as nx
-import operator
-import os
-from sklearn.model_selection import train_test_split
-from matplotlib import pyplot as plt
 from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV, cross_val_score, KFold
 from sklearn import preprocessing
 from sklearn import utils
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.datasets import make_classification
-from sklearn.metrics import f1_score
-from sklearn.metrics import accuracy_score
-from sklearn.model_selection import RandomizedSearchCV
 import pickle
 import ConfusionMatrix
 
