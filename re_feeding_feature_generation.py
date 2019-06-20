@@ -8,6 +8,9 @@ import numpy as np
 from sklearn import preprocessing
 from sklearn.model_selection import StratifiedShuffleSplit
 import ML.RandomForest as RandomForest
+import ML.NeuralNetwork as NeuralNetwork
+import ML.SVM as SVM
+import ML.KMeansPCA as KMeansPCA
 
 def readInput3(path):
     G = nx.read_edgelist(os.path.join(path,"ppi_edgelist.csv"))
@@ -21,6 +24,16 @@ def selectedTopoFeatures(G, path,disease_genes):
     TopoFeatures.EigenvectorCentrality(G,path)
     TopoFeatures.Modularity(G,path,disease_genes)
     TopoFeatures.PageRank(G,path)
+
+def allTopoFeatures(G, path, disease_genes):
+    TopoFeatures.EigenvectorCentrality(G, path)
+    TopoFeatures.Modularity(G, path, disease_genes)
+    TopoFeatures.PageRank(G, path)
+    TopoFeatures.BetweennessCentrality(G, path)
+    TopoFeatures.DegreeCentrality(G, path)
+    TopoFeatures.ClosenessCentrality(G, path)
+    TopoFeatures.HarmonicCentrality(G, path)
+    TopoFeatures.AvgSP(G, disease_genes, path)
 
 def selectedSequenceFeatures(inputPath,outputPath):
     seq_file_dis = os.path.join(inputPath, "disgenes_sequence.txt")     # These two files haven't been obtained. Need to get the sequence coversion form Uniprot
@@ -57,6 +70,11 @@ def dataCombination(outputPath):
     eigen = pd.read_csv(os.path.join(outputPath, "EigenvectorCentrality.csv"), names = ['ProteinID', 'Eigenvector Centrality'])
     modu = pd.read_csv(os.path.join(outputPath,"Modularity.csv"), names = ['ProteinID', 'Modularity'])
     page = pd.read_csv(os.path.join(outputPath,"PageRank.csv"), names = ['ProteinID', 'PageRank'])
+    between = pd.read_csv(os.path.join(outputPath,"BetweennessCentrality.csv"), names = ['ProteinID', 'BetweennessCentrality'])
+    degree = pd.read_csv(os.path.join(outputPath,"DegreeCentrality.csv"), names = ['ProteinID', 'DegreeCentrality'])
+    close = pd.read_csv(os.path.join(outputPath,"ClosenessCentrality.csv"), names = ['ProteinID', 'ClosenessCentrality'])
+    harmonic = pd.read_csv(os.path.join(outputPath,"HarmonicCentrality.csv"), names = ['ProteinID', 'HarmonicCentrality'])
+    avgsp = pd.read_csv(os.path.join(outputPath,"AvgSP.csv"), names = ['ProteinID', 'AvgSP'])
     #
     seq_dis = pd.read_csv(os.path.join(outputPath,"Disease_genes_sequence_features.csv"),
                           names = ['ProteinID', 'FrequencyA','FrequencyB',
@@ -68,7 +86,7 @@ def dataCombination(outputPath):
                     'FrequencyR','FrequencyS','FrequencyT',
                     'FrequencyU','FrequencyV','FrequencyW',
                     'FrequencyX','FrequencyY','FrequencyZ',
-                    'Aromaticity','SSfraction'])
+                    'Aromaticity','SSfraction','Isoelectricity'])
     seq_dis['Target'] = 1
     seq_non_dis = pd.read_csv(os.path.join(outputPath,"Non_disease_genes_sequence_features.csv"),
                               names = ['ProteinID', 'FrequencyA','FrequencyB',
@@ -80,7 +98,7 @@ def dataCombination(outputPath):
                     'FrequencyR','FrequencyS','FrequencyT',
                     'FrequencyU','FrequencyV','FrequencyW',
                     'FrequencyX','FrequencyY','FrequencyZ',
-                    'Aromaticity','SSfraction'])
+                    'Aromaticity','SSfraction','Isoelectricity'])
     seq_non_dis['Target'] = 0
     #
     function = pd.read_csv(os.path.join(outputPath,"allFunctionalFeatures.csv"))
@@ -90,12 +108,18 @@ def dataCombination(outputPath):
     t3 = pd.merge(t2,eigen,on='ProteinID')
     t4 = pd.merge(t3,modu,on='ProteinID')
     t5 = pd.merge(t4,page,on='ProteinID')
-    t5.to_csv(os.path.join(outputPath, "AllFeatures.csv"))
-    return t5
+    t6 = pd.merge(t5,between,on='ProteinID')
+    t7 = pd.merge(t6,degree,on='ProteinID')
+    t8 = pd.merge(t7,close,on='ProteinID')
+    t9 = pd.merge(t8,harmonic,on='ProteinID')
+    t10 = pd.merge(t9,avgsp,on='ProteinID')
+    t10.to_csv(os.path.join(outputPath, "AllFeatures.csv"))
+    return t10
 
 def dataCleaning(outputPath, df):
     #
     # Drop not relevant columns
+    df.dropna(inplace=True)
     df.drop(['FrequencyB', 'FrequencyJ', 'FrequencyO', 'FrequencyU', 'FrequencyX', 'FrequencyZ'], axis=1, inplace=True)
     #
     # Split the SSfraction
@@ -124,8 +148,8 @@ def dataCleaning(outputPath, df):
     y_test_set = test_set['Target'].tolist()
     return X_train_set, y_train_set, X_test_set, y_test_set
 
-# TODO: Continue with model feeding
-def feedRandomForestModel(X_train, y_train, X_test, y_test):
+
+def feedModel(X_train, y_train, X_test, y_test):
     #
     # Prepare RF input
     X_train_RF = X_train.drop(['ProteinID'], axis=1)
@@ -134,6 +158,23 @@ def feedRandomForestModel(X_train, y_train, X_test, y_test):
     # Feed into the model
     RandomForest.randomForest(X_train_RF, y_train, 1)
     RandomForest.evaluation(X_test_RF, y_test, 1)
+    #
+    # Prepare NN input
+    X_train_NN, X_test_NN = X_train_RF, X_test_RF
+    NeuralNetwork.neuralNetwork(X_train_NN, y_train, 1)
+    NeuralNetwork.evaluation(X_test_NN, y_test, 1)
+    #
+    # Prepare SVM input
+    X_train_SVM = X_train.drop(['ProteinID'], axis=1).values
+    X_test_SVM = X_test.drop(['ProteinID'], axis=1).values
+    SVM.SVMKernelRBF(X_train_SVM, y_train, 1)
+    SVM.evaluation(X_test_SVM, y_test, 1)
+    #
+    # Prepare KMeans input
+    X_PCA = KMeansPCA.performPCA(
+        pd.concat([X_train.drop(['ProteinID'], axis=1), X_test.drop(['ProteinID'], axis=1)]))
+    y_PCA = y_train + y_test
+    KMeansPCA.Kmeans(X_PCA, y_PCA, 1)
 
 
 def computeSequenceFeatures(input_file, output_file):
@@ -151,7 +192,7 @@ def computeSequenceFeatures(input_file, output_file):
                     'FrequencyR','FrequencyS','FrequencyT',
                     'FrequencyU','FrequencyV','FrequencyW',
                     'FrequencyX','FrequencyY','FrequencyZ',
-                    'Aromaticity','SSfraction']
+                    'Aromaticity','SSfraction','Isoelectricity']
     f_writer = csv.DictWriter(f, fieldnames=fieldnames)
     #
     for p in range(len(seq_data)):
@@ -167,6 +208,7 @@ def computeSequenceFeatures(input_file, output_file):
         #
         aromaticity = SequenceFeatures.getAromaticity(seq)
         ssfraction = SequenceFeatures.getSSfraction(seq)
+        isoelectric = SequenceFeatures.getIsoelectric(seq)
         f_writer.writerow({'Protein_ID': protein_id,
                             'FrequencyA': frequencies[0],
                             'FrequencyB': frequencies[1],
@@ -195,7 +237,8 @@ def computeSequenceFeatures(input_file, output_file):
                             'FrequencyY': frequencies[24],
                             'FrequencyZ': frequencies[25],
                             'Aromaticity': aromaticity,
-                            'SSfraction': ssfraction})
+                            'SSfraction': ssfraction,
+                            'Isoelectricity':isoelectric})
     f.close()
 
 def splitSSfraction(result):
@@ -270,12 +313,20 @@ def normalization(result):
     result['FrequencyW'] = preprocessing.scale(result['FrequencyW'])
     result['FrequencyY'] = preprocessing.scale(result['FrequencyY'])
     result['Aromaticity'] = preprocessing.scale(result['Aromaticity'])
-    result['Eigenvector Centrality'] = preprocessing.scale(result['Eigenvector Centrality'])
-    result['Modularity'] = preprocessing.scale(result['Modularity'])
-    result['PageRank'] = preprocessing.scale(result['PageRank'])
+    result['Isoelectricity'] = preprocessing.scale(result['Isoelectricity'])
     result['SSfractionHelix'] = preprocessing.scale(result['SSfractionHelix'])
     result['SSfractionTurn'] = preprocessing.scale(result['SSfractionTurn'])
     result['SSfractionSheet'] = preprocessing.scale(result['SSfractionSheet'])
+    #
+    result['Eigenvector Centrality'] = preprocessing.scale(result['Eigenvector Centrality'])
+    result['Modularity'] = preprocessing.scale(result['Modularity'])
+    result['PageRank'] = preprocessing.scale(result['PageRank'])
+    result['AvgSP'] = preprocessing.scale(result['AvgSP'])
+    result['ClosenessCentrality'] = preprocessing.scale(result['ClosenessCentrality'])
+    result['HarmonicCentrality'] = preprocessing.scale(result['HarmonicCentrality'])
+    result['DegreeCentrality'] = preprocessing.scale(result['DegreeCentrality'])
+    result['BetweennessCentrality'] = preprocessing.scale(result['BetweennessCentrality'])
+    #
     result['BP'] = preprocessing.scale(result['BP'])
     result['CC'] = preprocessing.scale(result['CC'])
     result['MF'] = preprocessing.scale(result['MF'])
@@ -292,6 +343,7 @@ def main():
 
     # Topological Features
     selectedTopoFeatures(G, outputPath,disease_genes)
+    allTopoFeatures(G, outputPath, disease_genes)
 
     # Sequential Features
     selectedSequenceFeatures(inputPath,outputPath)
@@ -304,5 +356,50 @@ def main():
     (X_train_set, y_train_set, X_test_set, y_test_set) = dataCleaning(outputPath, df)
 
     # Feed into model
-    feedRandomForestModel(X_train_set, y_train_set, X_test_set, y_test_set)
+    feedModel(X_train_set, y_train_set, X_test_set, y_test_set)
+
+
+import csv
+import networkx as nx
+import pandas as pd
+import os
+import TopologicalFeatures.topologicalFeatures as TopoFeatures
+import SequenceFeatures.sequenceFeature as SequenceFeatures
+import numpy as np
+from sklearn import preprocessing
+from sklearn.model_selection import StratifiedShuffleSplit
+import ML.RandomForest as RandomForest
+import ML.NeuralNetwork as NeuralNetwork
+import ML.SVM as SVM
+import ML.KMeansPCA as KMeansPCA
+
+# TODO: copy here to terminal
+
+train_set = pd.read_csv("TrainSet.csv")
+test_set = pd.read_csv("TestSet.csv")
+X_train = train_set.drop(['Target'],axis=1)
+X_train.drop(['Unnamed: 0'],axis=1,inplace=True)
+y_train = train_set['Target'].tolist()
+X_test = test_set.drop(['Target'],axis=1)
+X_test.drop(['Unnamed: 0'],axis=1,inplace=True)
+y_test = test_set['Target'].tolist()
+
+
+X_train_RF = X_train.drop(['ProteinID'], axis=1)
+X_test_RF = X_test.drop(['ProteinID'], axis=1)
+RandomForest.randomForest(X_train_RF, y_train, 1)
+RandomForest.evaluation(X_test_RF, y_test, 1)
+
+X_train_NN, X_test_NN = X_train_RF, X_test_RF
+NeuralNetwork.neuralNetwork(X_train_NN, y_train, 1)
+NeuralNetwork.evaluation(X_test_NN, y_test, 1)
+
+X_train_SVM = X_train.drop(['ProteinID'], axis=1).values
+X_test_SVM = X_test.drop(['ProteinID'], axis=1).values
+SVM.SVMKernelRBF(X_train_SVM, y_train, 1)
+SVM.evaluation(X_test_SVM, y_test, 1)
+
+X_PCA = KMeansPCA.performPCA(pd.concat([X_train.drop(['ProteinID'], axis=1), X_test.drop(['ProteinID'], axis=1)]))
+y_PCA = y_train + y_test
+KMeansPCA.Kmeans(X_PCA, y_PCA, 1)
 

@@ -266,7 +266,7 @@ def HarmonicCentrality(Gc,path):
     for key,value in dic13.items():
         s13 += [value]
 
-    f = open(os.path.join(path,"HarmonicCentrality.cs"),mode = 'w')
+    f = open(os.path.join(path,"HarmonicCentrality.csv"),mode = 'w')
     fieldnames = ['Gene_ID','HarmonicCentrality']
     f_writer = csv.DictWriter(f,fieldnames=fieldnames)
     for i in range(len(s1)):

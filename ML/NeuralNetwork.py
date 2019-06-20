@@ -6,6 +6,11 @@ import pandas as pd
 from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import cross_val_score
+import ML.ConfusionMatrix as ConfusionMatrix
+from keras.models import Sequential
+from keras.layers import Dense
+import numpy
+numpy.random.seed(7)
 
 def neuralNetwork(X_train_NN, y_train, number):
     MAX_ITER = 1000
@@ -52,6 +57,17 @@ def neuralNetwork(X_train_NN, y_train, number):
     with open(pkl_filename, 'wb') as file:
         pickle.dump(clf, file)
 
+def deepNeuralNetwork(X_train_NN, y_train, number):
+
+    model = Sequential()
+    model.add(Dense(12, input_dim=8, activation='relu'))
+    model.add(Dense(8, activation='relu'))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    model.fit(X_train_NN, y_train, epochs=150, batch_size=10)
+    scores = model.evaluate(X, Y)
+    print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+
 def evaluation(X_test_NN,y_test,number):
     # Load Model
     pkl_filename = "neural_network_model_"+str(number)+".pkl"
@@ -86,3 +102,16 @@ def evaluation(X_test_NN,y_test,number):
                   'Accuracy':result[0],'Precision':result[1],'Recall':result[2],'F1 score':result[3]},
                   ignore_index=True)
     output.to_csv("NeuralNetworkOutput_"+str(number)+".csv")
+
+model = Sequential()
+model.add(Dense(64, input_dim=36, activation='relu'))
+model.add(Dense(32, activation='relu'))
+model.add(Dense(16, activation='relu'))
+model.add(Dense(8, activation='relu'))
+model.add(Dense(4, activation='relu'))
+model.add(Dense(2, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+model.compile(loss='mse', optimizer='adam', metrics=['accuracy'])
+model.fit(X_train_NN, y_train, epochs=300, batch_size=10)
+scores = model.evaluate(X_test_NN, y_test)
+print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))

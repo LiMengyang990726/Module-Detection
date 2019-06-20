@@ -5,7 +5,7 @@ from sklearn.model_selection import GridSearchCV, cross_val_score, KFold
 from sklearn import preprocessing
 from sklearn import utils
 import pickle
-import ConfusionMatrix
+import ML.ConfusionMatrix as ConfusionMatrix
 
 ##################################
 # Method 2: Support Vector machine with nested and non-nested cross validation

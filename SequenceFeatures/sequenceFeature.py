@@ -34,8 +34,11 @@ def getAromaticity(seq):
 # Return single number
 def getIsoelectric(seq):
     analyse = ProteinAnalysis(seq)
-    x=analyse.isoelectric_point()
-    return x
+    try:
+        x=analyse.isoelectric_point()
+        return x
+    except IndexError:
+        print("Here has a Isoelectricity zero division error" + seq)
 
 # Return single number
 def getHydropathy(seq):
